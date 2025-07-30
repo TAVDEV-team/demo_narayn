@@ -1,51 +1,130 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+const Navbar = () => {
+  const [openMenu, setOpenMenu] = useState(null);
 
   return (
-    <nav className="bg-[#003366] text-white shadow-md">
+    <nav className="bg-blue-900 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        
-        {/* Logo or School Name */}
-        <div className="text-xl font-bold tracking-wide">
-          <Link to="/">📘 NarayanPur High School</Link>
-        </div>
+        <div className="text-2xl font-bold">Narayanpur High School</div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-6 text-sm font-medium">
-          <Link to="/" className="hover:text-yellow-300">Home</Link>
-          <Link to="/about" className="hover:text-yellow-300">About</Link>
-          <Link to="/governing-body" className="hover:text-yellow-300">Governing Body</Link>
-          <Link to="/notice" className="hover:text-yellow-300">Notice</Link>
-          <Link to="/contact" className="hover:text-yellow-300">Contact</Link>
-        </div>
+        <ul className="hidden md:flex gap-6 relative">
+          {/* Home */}
+          <li>
+            <Link to="/" className="hover:text-yellow-300">
+              Home
+            </Link>
+          </li>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)}>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
+          {/* About Us with submenu */}
+          <li
+            className="relative group"
+            onMouseEnter={() => setOpenMenu("about")}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button className="hover:text-yellow-300">About Us</button>
+            {openMenu === "about" && (
+              <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10">
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/history">History</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/mission-&-vision">Mission & Vision</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/head-teacher">Head Teacher</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100">
+                  <Link to="/achievements">Achievements</Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          {/* Academic */}
+          <li
+            className="relative group"
+            onMouseEnter={() => setOpenMenu("academic")}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button className="hover:text-yellow-300">Academic</button>
+            {openMenu === "academic" && (
+              <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10">
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/routine">Routine</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/syllabus">Syllabus</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100">
+                  <Link to="/curriculum">Curriculum</Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          {/* Administration */}
+          <li
+            className="relative group"
+            onMouseEnter={() => setOpenMenu("admin")}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button className="hover:text-yellow-300">Administration</button>
+            {openMenu === "admin" && (
+              <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10">
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/governing-body">Governing Body</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/teachers">Teachers</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100">
+                  <Link to="/staffs">Staffs</Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          {/* Admission */}
+          <li
+            className="relative group"
+            onMouseEnter={() => setOpenMenu("admission")}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button className="hover:text-yellow-300">Admission</button>
+            {openMenu === "admission" && (
+              <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10">
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/online-form">Online Form</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100">
+                  <Link to="/admission-rules">Admission Rules</Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          {/* Single links (no submenu) */}
+          <li>
+            <Link to="/notice-board" className="hover:text-yellow-300">
+              Notice Board
+            </Link>
+          </li>
+          <li>
+            <Link to="/gallery" className="hover:text-yellow-300">
+              Gallery
+            </Link>
+          </li>
+          <li>
+            <Link to="/contact" className="hover:text-yellow-300">
+              Contact
+            </Link>
+          </li>
+        </ul>
       </div>
-
-      {/* Mobile Menu Dropdown */}
-      {isOpen && (
-        <div className="md:hidden px-4 pb-4 space-y-2 text-sm font-medium bg-[#002244]">
-          <Link to="/" className="block hover:text-yellow-300">Home</Link>
-          <Link to="/about" className="block hover:text-yellow-300">About</Link>
-          <Link to="/governing-body" className="block hover:text-yellow-300">Governing Body</Link>
-          <Link to="/notice" className="block hover:text-yellow-300">Notice</Link>
-          <Link to="/contact" className="block hover:text-yellow-300">Contact</Link>
-        </div>
-      )}
     </nav>
   );
-}
+};
+
+export default Navbar;
