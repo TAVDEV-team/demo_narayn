@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 
 const slides = [
-  "/public/school.jpg",
-  "/public/school1.jpg",
-  "/school2.jpg",
+  "/demo_narayn/school.jpg",
+  "/demo_narayn/school1.jpg",
+  "/demo_narayn/school2.jpg",
 ];
 
 export default function Carousel() {
