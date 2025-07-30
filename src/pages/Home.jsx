@@ -1,5 +1,5 @@
 
-import schoolImg from '/school.jpg';
+import schoolImg from '/sir.jpg';
 
 export default function Home() {
   return (
@@ -25,7 +25,7 @@ export default function Home() {
           <img
             src={schoolImg}
             alt="Viqarunnisa Noon School & College"
-            className="rounded-lg shadow-lg w-full h-auto"
+            className="rounded-lg shadow-lg w-50 h-30 "
           />
         </div>
       </div>

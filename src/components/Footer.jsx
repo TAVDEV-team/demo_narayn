@@ -3,16 +3,16 @@ import React from 'react';
 export default function Footer() {
   return (
     <footer className="relative mt-8">
-      {/* Background Image */}
+      
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('school2.jpg')" }} // <- use your image path
+        style={{ backgroundImage: "url('buildin2.jpg')" }} 
       />
 
-      {/* Black Overlay */}
+     
       <div className="absolute inset-0 bg-black bg-opacity-60" />
 
-      {/* Footer Content */}
+    
       <div className="relative z-10 text-white py-10 px-4 md:px-20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Section 1 */}
