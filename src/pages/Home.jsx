@@ -1,5 +1,5 @@
 
-import schoolImg from '/public/school.jpg';
+import schoolImg from '/school.jpg';
 
 export default function Home() {
   return (

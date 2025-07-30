@@ -1,37 +1,51 @@
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
-import { GiHamburgerMenu } from "react-icons/gi";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-
-
-const Navbar = () => {
-  // const navigate = useNavigate();
-  // const location = useLocation(); // 🔁 Detect path changes
-  // const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-
-  // // 🔄 Re-check auth state on route change
-  // useEffect(() => {
-  //   setIsLoggedIn(!!localStorage.getItem("token"));
-  // }, [location]);
-
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-white text-black py-2 absolute top-0 left-0 w-full z-20">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center">
-          <h1 className="text-4xl font-bold uppercase">Narayanpur High School</h1>
+    <nav className="bg-[#003366] text-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        
+        {/* Logo or School Name */}
+        <div className="text-xl font-bold tracking-wide">
+          <Link to="/">📘 NarayanPur High School</Link>
+        </div>
 
-          <ul className="hidden md:flex space-x-10 text-xl">
-            <li><Link to="/">Home</Link></li>
-            
-          </ul>
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-6 text-sm font-medium">
+          <Link to="/" className="hover:text-yellow-300">Home</Link>
+          <Link to="/about" className="hover:text-yellow-300">About</Link>
+          <Link to="/governing-body" className="hover:text-yellow-300">Governing Body</Link>
+          <Link to="/notice" className="hover:text-yellow-300">Notice</Link>
+          <Link to="/contact" className="hover:text-yellow-300">Contact</Link>
+        </div>
 
-          <div className="md:hidden">
-            <GiHamburgerMenu className="text-3xl cursor-pointer" />
-          </div>
+        {/* Mobile Menu Button */}
+        <div className="md:hidden">
+          <button onClick={() => setIsOpen(!isOpen)}>
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
         </div>
       </div>
-    </div>
-  );
-};
 
-export default Navbar;
+      {/* Mobile Menu Dropdown */}
+      {isOpen && (
+        <div className="md:hidden px-4 pb-4 space-y-2 text-sm font-medium bg-[#002244]">
+          <Link to="/" className="block hover:text-yellow-300">Home</Link>
+          <Link to="/about" className="block hover:text-yellow-300">About</Link>
+          <Link to="/governing-body" className="block hover:text-yellow-300">Governing Body</Link>
+          <Link to="/notice" className="block hover:text-yellow-300">Notice</Link>
+          <Link to="/contact" className="block hover:text-yellow-300">Contact</Link>
+        </div>
+      )}
+    </nav>
+  );
+}
