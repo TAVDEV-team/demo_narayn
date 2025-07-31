@@ -82,6 +82,9 @@ const Navbar = () => {
                 <li className="px-4 py-2 hover:bg-blue-100">
                   <Link to="/staffs">Staffs</Link>
                 </li>
+                <li className="px-4 py-2 hover:bg-blue-100">
+                  <Link to="/staffs">Students</Link>
+                </li>
               </ul>
             )}
           </li>
