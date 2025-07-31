@@ -2,9 +2,9 @@
   
   "name": "my-app",
   
-  "homepage": "https://tavdev-team.github.io/demo_narayn/",
-  
   "private": true,
+
+  "homepage": "https://tavdev-team.github.io/demo_narayn/",
   
   "version": "0.0.0",
   
