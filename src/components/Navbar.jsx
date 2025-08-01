@@ -30,7 +30,7 @@ const Navbar = () => {
                   <Link to="/history">At a glance</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/mission-&-vision">History</Link>
+                  <Link to="/history">History</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
                   <Link to="/head-teacher">Events</Link>
