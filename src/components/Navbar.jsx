@@ -27,13 +27,13 @@ const Navbar = () => {
             {openMenu === "about" && (
               <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10">
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/history">History</Link>
+                  <Link to="/history">At a glance</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/mission-&-vision">Mission & Vision</Link>
+                  <Link to="/mission-&-vision">History</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/head-teacher">Head Teacher</Link>
+                  <Link to="/head-teacher">Events</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100">
                   <Link to="/achievements">Achievements</Link>
@@ -52,13 +52,13 @@ const Navbar = () => {
             {openMenu === "academic" && (
               <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10">
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/routine">Routine</Link>
+                  <Link to="/routine">Class Routine</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
                   <Link to="/syllabus">Syllabus</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100">
-                  <Link to="/curriculum">Curriculum</Link>
+                  <Link to="/curriculum">Notice</Link>
                 </li>
               </ul>
             )}
@@ -77,20 +77,20 @@ const Navbar = () => {
                   <Link to="/governing-body">Governing Body</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/teachers">Teachers</Link>
+                  <Link to="/teachers">Message of HeadMaster</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100">
-                  <Link to="/staffs">Staffs</Link>
+                  <Link to="/staffs">Message of </Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100">
-                  <Link to="/staffs">Students</Link>
+                  <Link to="/staffs">Employee Information</Link>
                 </li>
               </ul>
             )}
           </li>
 
           {/* Admission */}
-          <li
+          {/* <li
             className="relative group"
             onMouseEnter={() => setOpenMenu("admission")}
             onMouseLeave={() => setOpenMenu(null)}
@@ -106,12 +106,12 @@ const Navbar = () => {
                 </li>
               </ul>
             )}
-          </li>
+          </li> */}
 
           {/* Single links (no submenu) */}
           <li>
             <Link to="/notice-board" className="hover:text-yellow-300">
-              Notice Board
+              Student Portal
             </Link>
           </li>
           <li>
