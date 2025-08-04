@@ -3,7 +3,7 @@ import Home from './pages/Home';
 import Layout from './components/Layout';
 import Contact from './pages/Contact';
 import History from './pages/History'
-
+import Fund from './pages/Fund';
 function App() {
   return (
     <Router>
@@ -12,7 +12,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="contact" element={<Contact />} />
           <Route path="history" element={<History />} />
-
+          <Route path="fund" element={<Fund />} />
         </Route>
       </Routes>
     </Router>

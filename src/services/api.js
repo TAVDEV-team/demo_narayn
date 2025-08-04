@@ -14,3 +14,13 @@
 //   if (token) config.headers.Authorization = `Token ${token}`;
 //   return config;
 // });
+
+export async function getAuthHeaders() {
+  const token = localStorage.getItem('token'); // or wherever you store it
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}
+
+
+
