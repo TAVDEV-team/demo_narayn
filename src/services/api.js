@@ -14,3 +14,8 @@
 //   if (token) config.headers.Authorization = `Token ${token}`;
 //   return config;
 // });
+// src/services/api.js
+export function getAuthHeaders() {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Token ${token}` } : {};
+}
