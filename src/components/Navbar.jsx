@@ -1,55 +1,38 @@
+// src/components/Navbar.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-const NAV_ITEMS = [
-  { label: "Home", to: "/" },
-  {
-    label: "About Us",
-    submenu: [
-      { label: "At a glance", to: "/history" },
-      { label: "History", to: "/history" },
-      { label: "Events", to: "/head-teacher" },
-      { label: "Achievements", to: "/achievements" },
-    ],
-  },
-  {
-    label: "Academic",
-    submenu: [
-      { label: "Class Routine", to: "/routine" },
-      { label: "Syllabus", to: "/syllabus" },
-      { label: "Notice", to: "/curriculum" },
-    ],
-  },
-  {
-    label: "Administration",
-    submenu: [
-      { label: "Governing Body", to: "/governing-body" },
-      { label: "Message of HeadMaster", to: "/teachers" },
-      { label: "Employee Information", to: "/staffs" },
-    ],
-  },
-  { label: "Student Portal", to: "/notice-board" },
-  { label: "Gallery", to: "/gallery" },
-  { label: "Contact", to: "/contact" },
-];
-
 const Navbar = () => {
-  const [openMenu, setOpenMenu] = useState(null); 
+  // which top-level submenu is open on desktop ("about", "academic", "admin" or null)
+  const [openMenu, setOpenMenu] = useState(null);
+  // mobile menu open state
   const [mobileOpen, setMobileOpen] = useState(false);
+  // whether page is scrolled (for background/shadow)
+  const [scrolled, setScrolled] = useState(false);
   const mobileRef = useRef(null);
 
-  // Close mobile menu on outside click
+  // scroll detection for background styling
   useEffect(() => {
-    const handler = (e) => {
+    const handler = () => {
+      setScrolled(window.scrollY > 40);
+    };
+    window.addEventListener("scroll", handler);
+    handler();
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  // close mobile menu when clicking outside
+  useEffect(() => {
+    const onClickOutside = (e) => {
       if (mobileOpen && mobileRef.current && !mobileRef.current.contains(e.target)) {
         setMobileOpen(false);
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
   }, [mobileOpen]);
 
-  // Close on Escape
+  // close everything on Escape
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -61,6 +44,7 @@ const Navbar = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // if window resizes to desktop width, ensure mobile is closed
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 768) {
@@ -72,49 +56,135 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-blue-950 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 transition-all bg-blue-950 duration-300 flex items-center w-full"
+    >
+      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center w-full">
+        {/* Logo / Title */}
         <div className="text-2xl font-bold text-white">Narayanpur High School</div>
 
-        
+        {/* Desktop menu */}
         <ul className="hidden md:flex gap-6 relative text-white">
-          {NAV_ITEMS.map((item) => (
-            <li
-              key={item.label}
-              className="relative"
-              onMouseEnter={() => item.submenu && setOpenMenu(item.label)}
-              onMouseLeave={() => item.submenu && setOpenMenu(null)}
+          {/* Home */}
+          <li>
+            <Link to="/" className="hover:text-yellow-300">
+              Home
+            </Link>
+          </li>
+
+          {/* About Us dropdown */}
+          <li
+            className="relative"
+            onMouseEnter={() => setOpenMenu("about")}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button
+              aria-haspopup="true"
+              aria-expanded={openMenu === "about"}
+              className="hover:text-yellow-300 flex items-center gap-1"
             >
-              {item.submenu ? (
-                <>
-                  <button className="hover:text-yellow-300 flex items-center gap-1">
-                    {item.label}
-                  </button>
-                  {openMenu === item.label && (
-                    <ul className="absolute top-full left-0 bg-white text-black w-52 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
-                      {item.submenu.map((sub) => (
-                        <li
-                          key={sub.label}
-                          className="px-4 py-2 hover:bg-blue-100 border-b last:border-b-0"
-                        >
-                          <Link to={sub.to}>{sub.label}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </>
-              ) : (
-                <Link to={item.to} className="hover:text-yellow-300">
-                  {item.label}
-                </Link>
-              )}
-            </li>
-          ))}
+              About Us
+            </button>
+            {openMenu === "about" && (
+              <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/history">At a glance</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/history">History</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/head-teacher">Events</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100">
+                  <Link to="/achievements">Achievements</Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          {/* Academic dropdown */}
+          <li
+            className="relative"
+            onMouseEnter={() => setOpenMenu("academic")}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button
+              aria-haspopup="true"
+              aria-expanded={openMenu === "academic"}
+              className="hover:text-yellow-300 flex items-center gap-1"
+            >
+              Academic
+            </button>
+            {openMenu === "academic" && (
+              <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/routine">Class Routine</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/syllabus">Syllabus</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100">
+                  <Link to="/curriculum">Notice</Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          {/* Administration dropdown */}
+          <li
+            className="relative"
+            onMouseEnter={() => setOpenMenu("admin")}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button
+              aria-haspopup="true"
+              aria-expanded={openMenu === "admin"}
+              className="hover:text-yellow-300 flex items-center gap-1"
+            >
+              Administration
+            </button>
+            {openMenu === "admin" && (
+              <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/governing-body">Governing Body</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/teachers">Message of HeadMaster</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100">
+                  <Link to="/staffs">Employee Information</Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          {/* Other links */}
+          <li>
+            <Link to="/student portal" className="hover:text-yellow-300">
+              Student Portal
+            </Link>
+          </li>
+          <li>
+            <Link to="/fund" className="hover:text-yellow-300">
+              Fund
+            </Link>
+          </li>
+          <li>
+            <Link to="/gallery" className="hover:text-yellow-300">
+              Gallery
+            </Link>
+          </li>
+          <li>
+            <Link to="/contact" className="hover:text-yellow-300">
+              Contact
+            </Link>
+          </li>
         </ul>
 
-      
+        {/* Mobile hamburger */}
         <button
-          aria-label="Toggle menu"
+          aria-label="Toggle mobile menu"
           onClick={() => setMobileOpen((o) => !o)}
           className="md:hidden flex items-center gap-1 text-white focus:outline-none"
         >
@@ -138,27 +208,153 @@ const Navbar = () => {
         </button>
       </div>
 
+      {/* Mobile panel */}
       {mobileOpen && (
         <div
           ref={mobileRef}
           className="md:hidden bg-blue-900 text-white w-full shadow-inner transition-all"
         >
           <div className="px-6 py-4 space-y-4">
-            {NAV_ITEMS.map((item) => (
-              <div key={item.label} className="border-b border-blue-800 pb-2">
-                {item.submenu ? (
-                  <DetailsDisclosure label={item.label} submenu={item.submenu} />
-                ) : (
+            {/* Home */}
+            <div className="border-b border-blue-800 pb-2">
+              <Link
+                to="/"
+                className="block py-2 hover:text-yellow-300"
+                onClick={() => setMobileOpen(false)}
+              >
+                Home
+              </Link>
+            </div>
+
+            {/* About Us with disclosure */}
+            <MobileSection label="About Us" defaultOpen={false} onCloseParent={() => {}}>
+              <div className="pl-2 space-y-1">
+                <Link
+                  to="/history"
+                  className="block py-1 hover:text-yellow-300"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  At a glance
+                </Link>
+                <Link
+                  to="/history"
+                  className="block py-1 hover:text-yellow-300"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  History
+                </Link>
+                <Link
+                  to="/head-teacher"
+                  className="block py-1 hover:text-yellow-300"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Events
+                </Link>
+                <Link
+                  to="/achievements"
+                  className="block py-1 hover:text-yellow-300"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Achievements
+                </Link>
+              </div>
+            </MobileSection>
+
+            {/* Academic */}
+            <div className="border-b border-blue-800 pb-2">
+              <MobileSection label="Academic" defaultOpen={false}>
+                <div className="pl-2 space-y-1">
                   <Link
-                    to={item.to}
-                    className="block py-2 hover:text-yellow-300"
+                    to="/routine"
+                    className="block py-1 hover:text-yellow-300"
                     onClick={() => setMobileOpen(false)}
                   >
-                    {item.label}
+                    Class Routine
                   </Link>
-                )}
-              </div>
-            ))}
+                  <Link
+                    to="/syllabus"
+                    className="block py-1 hover:text-yellow-300"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Syllabus
+                  </Link>
+                  <Link
+                    to="/curriculum"
+                    className="block py-1 hover:text-yellow-300"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Notice
+                  </Link>
+                </div>
+              </MobileSection>
+            </div>
+
+            {/* Administration */}
+            <div className="border-b border-blue-800 pb-2">
+              <MobileSection label="Administration" defaultOpen={false}>
+                <div className="pl-2 space-y-1">
+                  <Link
+                    to="/governing-body"
+                    className="block py-1 hover:text-yellow-300"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Governing Body
+                  </Link>
+                  <Link
+                    to="/teachers"
+                    className="block py-1 hover:text-yellow-300"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Message of HeadMaster
+                  </Link>
+                  <Link
+                    to="/staffs"
+                    className="block py-1 hover:text-yellow-300"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Employee Information
+                  </Link>
+                </div>
+              </MobileSection>
+            </div>
+
+            {/* Other links */}
+            <div className="border-b border-blue-800 pb-2">
+              <Link
+                to="/student portal"
+                className="block py-2 hover:text-yellow-300"
+                onClick={() => setMobileOpen(false)}
+              >
+                Student Portal
+              </Link>
+            </div>
+            <div className="border-b border-blue-800 pb-2">
+              <Link
+                to="/Fund"
+                className="block py-2 hover:text-yellow-300"
+                onClick={() => setMobileOpen(false)}
+              >
+                Fund
+              </Link>
+            </div>
+            <div className="border-b border-blue-800 pb-2">
+              <Link
+                to="/gallery"
+                className="block py-2 hover:text-yellow-300"
+                onClick={() => setMobileOpen(false)}
+              >
+                Gallery
+              </Link>
+            </div>
+            <div>
+              <Link
+                to="/contact"
+                className="block py-2 hover:text-yellow-300"
+                onClick={() => setMobileOpen(false)}
+              >
+                Contact
+              </Link>
+            </div>
           </div>
         </div>
       )}
@@ -166,29 +362,23 @@ const Navbar = () => {
   );
 };
 
-
-const DetailsDisclosure = ({ label, submenu }) => {
-  const [open, setOpen] = useState(false);
+// Reusable disclosure for mobile submenu
+const MobileSection = ({ label, children, defaultOpen = false }) => {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <div>
+    <div className="pb-2">
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex justify-between items-center py-2 hover:text-yellow-300"
+        aria-expanded={open}
+        aria-controls={`mobile-section-${label}`}
       >
         <span>{label}</span>
         <span className="ml-2">{open ? "−" : "+"}</span>
       </button>
       {open && (
-        <div className="mt-1 pl-4 space-y-1">
-          {submenu.map((sub) => (
-            <Link
-              key={sub.label}
-              to={sub.to}
-              className="block py-1 hover:text-yellow-300"
-            >
-              {sub.label}
-            </Link>
-          ))}
+        <div id={`mobile-section-${label}`} className="mt-1 pl-4">
+          {children}
         </div>
       )}
     </div>
