@@ -103,6 +103,31 @@ const Navbar = () => {
             )}
           </li>
 
+          <li
+            className="relative"
+            onMouseEnter={() => setOpenMenu("admission")}
+            onMouseLeave={() => setOpenMenu(null)}
+          >
+            <button
+              aria-haspopup="true"
+              aria-expanded={openMenu === "admission"}
+              className="hover:text-yellow-300 flex items-center gap-1"
+            >
+              Addmission
+            </button>
+            {openMenu === "admission" && (
+              <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/documents">Documents</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/student">student admission</Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
+
           {/* Academic dropdown */}
           <li
             className="relative"
