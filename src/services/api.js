@@ -18,7 +18,7 @@
 export async function getAuthHeaders() {
   const token = localStorage.getItem('token'); // or wherever you store it
   return {
-    Authorization: `Bearer ${token}`,
+    Authorization: `Token ${token}`,
   };
 }
 
