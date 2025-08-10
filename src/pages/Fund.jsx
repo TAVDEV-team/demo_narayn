@@ -60,42 +60,36 @@ async function fetchHistory(signal) {
   return Array.isArray(data) ? data : data.results || [];
 }
 
-async function postAddFunds({ amount, description }, signal) {
+async function postAddFunds({ amount, reason, type, payment_method, date }, signal) {
   const headers = {
     'Content-Type': 'application/json',
     ...(await getAuthHeaders()),
   };
+
+  // build your payload exactly as backend expects
+  const body = JSON.stringify({
+    type,           // "INCOME" or "EXPENSE"
+    amount,
+    reason,
+    payment_method,
+    date,           // format YYYY-MM-DD (you can default to today if you want)
+  });
+
   const res = await fetch(`${BASE}/funds/transactions/`, {
     method: 'POST',
     signal,
     headers,
-    body: JSON.stringify({ amount, description }),
+    body,
   });
+
   return await handleResponse(res);
 }
 
-// --- UI Components ---
-function ErrorBanner({ message, onRetry }) {
-  if (!message) return null;
-  return (
-    <div className="text-red-600 mb-2 flex items-center gap-2">
-      <div className="flex-1">{message}</div>
-      {onRetry && (
-        <button onClick={onRetry} className="underline text-sm">
-          Retry
-        </button>
-      )}
-    </div>
-  );
-}
 
 function WalletOverview({ balance, onAddClick, loading }) {
   return (
     <div className="flex items-center justify-between p-4 pt-16 bg-white shadow rounded mb-4">
       <div className="flex items-center gap-4">
-        {/* <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-          You
-        </div> */}
         <div>
           <div className="text-sm text-gray-500">Current Balance</div>
           <div className="text-2xl font-semibold">
@@ -118,13 +112,11 @@ function TransactionRow({ tx }) {
   const amount = tx.amount ?? 0;
   const balance_after = tx.after_transaction_balance;
 
-  // Define conditional classes
   const amountColorClass = tx.type === 'EXPENSE' ? 'text-red-600' : 'text-green-600';
 
   return (
     <div className="flex items-center justify-between py-2 border-b gap-10">
       <div className="w-1/5 text-sm">{date || '-'}</div>
-      {/* <div className="w-1/6 text-sm capitalize">{tx.type || 'INCOME'}</div> */}
       <div className={`w-1/6 font-medium ${amountColorClass}`}>
         {tx.type === 'EXPENSE' ? '-' : '+'}
         {formatCurrency(amount)}
@@ -141,7 +133,7 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
   const [type, setType] = useState('INCOME'); // INCOME or EXPENSE
   const [amountInput, setAmountInput] = useState('');
   const [reason, setDescription] = useState('');
-  const [payment_method, setPaymentMethod] = useState('Cash'); // default method
+  const [payment_method, setPaymentMethod] = useState('Cash'); // camelCase consistent
   const [validationError, setValidationError] = useState(null);
 
   const parseAmount = () => {
@@ -155,14 +147,11 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
     if (amt === null) return 'Amount must be a number';
     if (amt <= 0) return 'Amount must be greater than zero';
 
-    // if (!['INCOME', 'EXPENSE'].includes(type)) return 'Type must be INCOME or EXPENSE';
-    if (!paymentMethod) return 'Select a payment method';
-
-  
+    if (!payment_method) return 'Select a payment method';
 
     return null;
   };
- 
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const err = validate();
@@ -170,16 +159,14 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
     if (err) return;
     const amount = parseAmount();
 
-    // normalize type to backend-friendly: you could send 'credit'/'debit' or keep INCOME/EXPENSE depending on API
     onSubmit({
-      amount,
-      reason,
-      type: type === 'EXPENSE' ? 'debit' : 'credit',
-      payment_method: payment_method,
-      
-    });
-    console.log(amount,reason,type,payment_method)
+  amount,
+  reason,
+  type,             // INCOME or EXPENSE
+  payment_method,    // from select dropdown
+});
   };
+
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
@@ -195,7 +182,6 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
           Current balance: <strong>{formatCurrency(currentBalance)}</strong>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Type selector */}
           <div>
             <label className="block text-sm font-medium">Type</label>
             <select
@@ -207,8 +193,6 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
               <option value="EXPENSE">EXPENSE</option>
             </select>
           </div>
-
-          {/* Amount */}
           <div>
             <label className="block text-sm font-medium">Amount</label>
             <input
@@ -223,8 +207,6 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
               aria-invalid={!!validationError}
             />
           </div>
-
-          {/* Reason / Description */}
           <div>
             <label className="block text-sm font-medium">Reason (optional)</label>
             <input
@@ -235,8 +217,6 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
               className="w-full border rounded px-3 py-2"
             />
           </div>
-
-          {/* Payment method */}
           <div>
             <label className="block text-sm font-medium">Payment Method</label>
             <select
@@ -248,16 +228,12 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
               <option value="Bkash">Bkash</option>
               <option value="Bank Transfer">Bank Transfer</option>
               <option value="Rocket">Rocket</option>
-              {/* add more as needed */}
             </select>
           </div>
-
-          {/* Validation / API error */}
           {validationError && (
             <div className="text-red-500 text-xs">{validationError}</div>
           )}
           {apiError && <div className="text-red-600 text-sm">{apiError}</div>}
-
           <div className="flex justify-end gap-2">
             <button
               type="button"
@@ -283,7 +259,7 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
 
 // --- Main Page ---
 export default function Fund() {
-  const [balance, setBalance] = useState(0); // confirmed balance from backend
+  const [balance, setBalance] = useState(0);
   const [history, setHistory] = useState([]);
   const [loadingBalance, setLoadingBalance] = useState(true);
   const [loadingHistory, setLoadingHistory] = useState(true);
@@ -294,7 +270,6 @@ export default function Fund() {
   const [addingError, setAddingError] = useState(null);
   const [adding, setAdding] = useState(false);
 
-  // fetchers
   const loadBalance = useCallback(async () => {
     setLoadingBalance(true);
     setErrorBalance(null);
@@ -328,7 +303,6 @@ export default function Fund() {
     loadHistory();
   }, [loadBalance, loadHistory]);
 
-  // derived display balance: confirmed + pending credits - pending debits
   const displayBalance = useMemo(() => {
     let delta = 0;
     pendingTxs.forEach((t) => {
@@ -338,24 +312,21 @@ export default function Fund() {
     return balance + delta;
   }, [balance, pendingTxs]);
 
-  // merge pending + history deduped (if same id, history wins)
   const mergedTransactions = useMemo(() => {
     const map = new Map();
     pendingTxs.forEach((t) => {
       map.set(t.id, t);
     });
     history.forEach((t) => {
-      map.set(t.id, t); // overwrites optimistic if same id
+      map.set(t.id, t);
     });
-    // sort: pending first (still in map but they have unique opt- ids), then rest by created_at desc
     const all = Array.from(map.values());
     all.sort((a, b) => {
-      // pending (status pending) first
       if (a.status === 'pending' && b.status !== 'pending') return -1;
       if (b.status === 'pending' && a.status !== 'pending') return 1;
       const da = new Date(a.created_at || a.timestamp).getTime() || 0;
       const db = new Date(b.created_at || b.timestamp).getTime() || 0;
-      return db - da; // newest first
+      return db - da;
     });
     return all;
   }, [pendingTxs, history]);
@@ -365,40 +336,44 @@ export default function Fund() {
     setShowModal(true);
   };
 
-  const addFunds = async ({ amount, description }) => {
-    setAdding(true);
-    setAddingError(null);
-    // create optimistic
-    const optimistic = {
-      id: `opt-${Date.now()}`,
-      amount,
-      // type: 'INCOME',
-      description: 'Adding funds...',
-      created_at: new Date().toISOString(),
-      balance_after: displayBalance, // best guess
-      // status: 'pending',
-    };
-    setPendingTxs((p) => [optimistic, ...p]);
-    try {
-      const controller = new AbortController();
-      const realTx = await postAddFunds({ amount, description }, controller.signal);
-      // reconcile: remove the optimistic entry (by filtering its opt- id), then prepend realTx if not already present
-      setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
-      setHistory((prev) => {
-        if (prev.some((t) => t.id === realTx.id)) return prev;
-        return [realTx, ...prev];
-      });
-      // refresh confirmed balance if backend returns new or we want authoritative
-      await loadBalance();
-      setShowModal(false);
-    } catch (e) {
-      // rollback optimistic
-      setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
-      setAddingError(e.message || 'Failed to add funds');
-    } finally {
-      setAdding(false);
-    }
+  const addFunds = async ({ amount, reason, type, payment_method }) => {
+  setAdding(true);
+  setAddingError(null);
+
+  // optimistic tx with same fields
+  const optimistic = {
+    id: `opt-${Date.now()}`,
+    amount,
+    description: reason || 'Adding funds...',
+    created_at: new Date().toISOString(),
+    balance_after: displayBalance,
+    type,            // you want to keep the type in optimistic tx
+    payment_method,
   };
+
+  setPendingTxs((p) => [optimistic, ...p]);
+
+  try {
+    const controller = new AbortController();
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const realTx = await postAddFunds({ amount, reason, type, payment_method, date: today }, controller.signal);
+    
+    setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
+    setHistory((prev) => {
+      if (prev.some((t) => t.id === realTx.id)) return prev;
+      return [realTx, ...prev];
+    });
+
+    await loadBalance();
+    setShowModal(false);
+  } catch (e) {
+    setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
+    setAddingError(e.message || 'Failed to add funds');
+  } finally {
+    setAdding(false);
+  }
+};
+
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -421,7 +396,6 @@ export default function Fund() {
         <h3 className="text-lg font-semibold mb-3">Transaction History</h3>
         <div className="flex font-medium border-b pb-2 text-xs uppercase">
           <div className="w-1/5">Date</div>
-          {/* <div className="w-1/6">Type</div> */}
           <div className="w-1/6">Amount</div>
           <div className="w-2/5">Description</div>
           <div className="w-1/6">Balance After</div>
