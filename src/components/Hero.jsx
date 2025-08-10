@@ -4,7 +4,7 @@ export default function Hero({
   imageSrc = "/school.jpg",
   title = "Narayanpur High School",
   description = "Narayanpur High School is a boys & girls educational institute in Narayanpur, Chauddagram, Cumilla.We treat every student as unique! ",
-  ctaHref = "/notice-board",
+  ctaHref = "/register",
   ctaText = "Teachers Portal",
 }) {
   return (
