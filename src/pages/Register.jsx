@@ -58,7 +58,7 @@ export default function RegisterForm() {
 
       if (res.status === 201 || res.status === 200) {
         toast.success("Registration successful!");
-        navigate("/teacher-portal");
+        navigate("/");
       }
     } catch (error) {
       console.error(error);
