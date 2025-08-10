@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import Contact from './pages/Contact';
 import History from './pages/History'
 import Fund from './pages/Fund';
+import Register from './pages/Register';
 function App() {
   return (
     <Router>
@@ -13,6 +14,7 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="history" element={<History />} />
           <Route path="fund" element={<Fund />} />
+          <Route path="register" element={<Register/>}/>
         </Route>
       </Routes>
     </Router>

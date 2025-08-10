@@ -51,7 +51,7 @@ async function fetchBalance(signal) {
 
 async function fetchHistory(signal) {
   const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE}/funds/transactions`, {
+  const res = await fetch(`${BASE}/funds/transactions/`, {
     method: 'GET',
     signal,
     headers,
@@ -65,7 +65,7 @@ async function postAddFunds({ amount, description }, signal) {
     'Content-Type': 'application/json',
     ...(await getAuthHeaders()),
   };
-  const res = await fetch(`${BASE}/funds/transactions`, {
+  const res = await fetch(`${BASE}/funds/transactions/`, {
     method: 'POST',
     signal,
     headers,
@@ -140,8 +140,8 @@ function TransactionRow({ tx }) {
 function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError }) {
   const [type, setType] = useState('INCOME'); // INCOME or EXPENSE
   const [amountInput, setAmountInput] = useState('');
-  const [description, setDescription] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('Cash'); // default method
+  const [reason, setDescription] = useState('');
+  const [payment_method, setPaymentMethod] = useState('Cash'); // default method
   const [validationError, setValidationError] = useState(null);
 
   const parseAmount = () => {
@@ -154,24 +154,31 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
     const amt = parseAmount();
     if (amt === null) return 'Amount must be a number';
     if (amt <= 0) return 'Amount must be greater than zero';
+
     // if (!['INCOME', 'EXPENSE'].includes(type)) return 'Type must be INCOME or EXPENSE';
     if (!paymentMethod) return 'Select a payment method';
+
+  
+
     return null;
   };
-
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
     const err = validate();
     setValidationError(err);
     if (err) return;
     const amount = parseAmount();
+
     // normalize type to backend-friendly: you could send 'credit'/'debit' or keep INCOME/EXPENSE depending on API
     onSubmit({
       amount,
-      description,
+      reason,
       type: type === 'EXPENSE' ? 'debit' : 'credit',
-      payment_method: paymentMethod,
+      payment_method: payment_method,
+      
     });
+    console.log(amount,reason,type,payment_method)
   };
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -222,7 +229,7 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
             <label className="block text-sm font-medium">Reason (optional)</label>
             <input
               type="text"
-              value={description}
+              value={reason}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g., donation, fee, refund"
               className="w-full border rounded px-3 py-2"
@@ -233,7 +240,7 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
           <div>
             <label className="block text-sm font-medium">Payment Method</label>
             <select
-              value={paymentMethod}
+              value={payment_method}
               onChange={(e) => setPaymentMethod(e.target.value)}
               className="w-full border rounded px-3 py-2"
             >
