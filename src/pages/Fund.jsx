@@ -68,11 +68,11 @@ async function postAddFunds({ amount, reason, type, payment_method, date }, sign
 
   // build your payload exactly as backend expects
   const body = JSON.stringify({
-    type,           // "INCOME" or "EXPENSE"
+    type,          
     amount,
     reason,
     payment_method,
-    date,           // format YYYY-MM-DD (you can default to today if you want)
+    date,           
   });
 
   const res = await fetch(`${BASE}/funds/transactions/`, {
@@ -113,27 +113,43 @@ function TransactionRow({ tx }) {
   const balance_after = tx.after_transaction_balance;
 
   const amountColorClass = tx.type === 'EXPENSE' ? 'text-red-600' : 'text-green-600';
+  
 
-  return (
-    <div className="flex items-center justify-between py-2 border-b gap-10">
-      <div className="w-1/5 text-sm">{date || '-'}</div>
-      <div className={`w-1/6 font-medium ${amountColorClass}`}>
-        {tx.type === 'EXPENSE' ? '-' : '+'}
-        {formatCurrency(amount)}
-      </div>
-      <div className="w-2/5 text-sm truncate">{tx.reason || '-'}</div>
-      <div className="w-1/6 text-sm">
-        {balance_after != null ? formatCurrency(balance_after) : '-'}
-      </div>
-    </div>
-  );
+ return (
+<div
+  className={`flex items-center py-6 px-6 border-b rounded-lg transition-colors duration-150
+              hover:bg-gray-50 shadow-lg mb-4 bg-white`}
+>
+  <div className="w-1/5 mr-6 text-base font-semibold text-gray-600 text-left">{date || '-'}</div>
+
+  <div
+    className={`w-1/6 mr-10 space-x-20 text-xl font-bold text-left ${
+      tx.type === 'EXPENSE' ? 'text-red-600' : 'text-green-600'
+    }`}
+  >
+    {tx.type === 'EXPENSE' ? '-' : '+'}
+    {formatCurrency(amount)}
+  </div>
+
+  <div className="w-2/5 mr-10 space-x-32 text-base font-semibold truncate text-gray-800 text-left">
+    {tx.reason || '-'}
+  </div>
+
+  <div className="w-1/6 text-base font-medium text-gray-700 text-left">
+    {balance_after != null ? formatCurrency(balance_after) : '-'}
+  </div>
+</div>
+
+);
+
 }
 
 function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError }) {
-  const [type, setType] = useState('INCOME'); // INCOME or EXPENSE
+  const [type, setType] = useState('INCOME'); 
   const [amountInput, setAmountInput] = useState('');
   const [reason, setDescription] = useState('');
-  const [payment_method, setPaymentMethod] = useState('Cash'); // camelCase consistent
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [payment_method, setPaymentMethod] = useState('Cash');
   const [validationError, setValidationError] = useState(null);
 
   const parseAmount = () => {
@@ -148,6 +164,7 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
     if (amt <= 0) return 'Amount must be greater than zero';
 
     if (!payment_method) return 'Select a payment method';
+    if (!date) return "Please select a date";
 
     return null;
   };
@@ -158,14 +175,21 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
     setValidationError(err);
     if (err) return;
     const amount = parseAmount();
-
+   console.log(amount,
+  reason,
+  type,             
+  payment_method,   
+  date)
     onSubmit({
   amount,
   reason,
-  type,             // INCOME or EXPENSE
-  payment_method,    // from select dropdown
+  type,             
+  payment_method,   
+  date,
+  
 });
   };
+  
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -214,6 +238,15 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
               value={reason}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g., donation, fee, refund"
+              className="w-full border rounded px-3 py-2"
+            />
+          </div>
+           <div>
+            <label className="block text-sm font-medium">Date</label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
               className="w-full border rounded px-3 py-2"
             />
           </div>
@@ -331,12 +364,12 @@ export default function Fund() {
     return all;
   }, [pendingTxs, history]);
 
-  const handleAddClick = () => {
+  const handleAddClick = () => {  
     setAddingError(null);
     setShowModal(true);
   };
 
-  const addFunds = async ({ amount, reason, type, payment_method }) => {
+  const addFunds = async ({ amount, reason, type, payment_method,date}) => {
   setAdding(true);
   setAddingError(null);
 
@@ -347,16 +380,19 @@ export default function Fund() {
     description: reason || 'Adding funds...',
     created_at: new Date().toISOString(),
     balance_after: displayBalance,
-    type,            // you want to keep the type in optimistic tx
+    type,            
     payment_method,
+    date,
   };
 
   setPendingTxs((p) => [optimistic, ...p]);
 
   try {
     const controller = new AbortController();
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-    const realTx = await postAddFunds({ amount, reason, type, payment_method, date: today }, controller.signal);
+    const today = new Date().toISOString().slice(0, 10);
+    const formattedDate = date ? new Date(date).toISOString().slice(0, 10) : today;
+    const realTx = await postAddFunds({ amount, reason, type, payment_method, date: formattedDate }, controller.signal);
+
     
     setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
     setHistory((prev) => {
@@ -393,13 +429,14 @@ export default function Fund() {
         />
       )}
       <div className="bg-white shadow rounded p-4 mt-6">
-        <h3 className="text-lg font-semibold mb-3">Transaction History</h3>
-        <div className="flex font-medium border-b pb-2 text-xs uppercase">
-          <div className="w-1/5">Date</div>
-          <div className="w-1/6">Amount</div>
-          <div className="w-2/5">Description</div>
-          <div className="w-1/6">Balance After</div>
-        </div>
+        <h3 className="text-3xl font-semibold mb-5">Transaction History</h3>
+       <div className="flex font-medium border-b pb-2 text-xs uppercase text-left">
+       <div className="w-1/5 mr-6 text-lg">Date</div>
+       <div className="w-1/6 mr-10 text-lg">Amount</div>
+       <div className="w-2/5 mr-10 text-lg">Reason</div>
+       <div className="w-1/6 text-lg">Balance After</div>
+      </div>
+
 
         {loadingHistory && (
           <div className="py-3 text-center text-sm text-gray-500">Loading history...</div>
