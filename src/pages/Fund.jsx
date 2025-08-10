@@ -13,7 +13,7 @@ function safeDateString(raw) {
   try {
     const d = new Date(raw);
     if (isNaN(d)) return '-';
-    return d.toLocaleString();
+    return d.toLocaleDateString();
   } catch {
     return '-';
   }
@@ -114,15 +114,18 @@ function WalletOverview({ balance, onAddClick, loading }) {
 }
 
 function TransactionRow({ tx }) {
-  const date = safeDateString(tx.created_at || tx.timestamp);
+  const date = safeDateString(tx.date);
   const amount = tx.amount ?? 0;
   const balance_after = tx.after_transaction_balance;
 
+  // Define conditional classes
+  const amountColorClass = tx.type === 'EXPENSE' ? 'text-red-600' : 'text-green-600';
+
   return (
-    <div className="flex items-center justify-between py-2 border-b">
+    <div className="flex items-center justify-between py-2 border-b gap-10">
       <div className="w-1/5 text-sm">{date || '-'}</div>
-      <div className="w-1/6 text-sm capitalize">{tx.type || 'INCOME'}</div>
-      <div className="w-1/6 font-medium">
+      {/* <div className="w-1/6 text-sm capitalize">{tx.type || 'INCOME'}</div> */}
+      <div className={`w-1/6 font-medium ${amountColorClass}`}>
         {tx.type === 'EXPENSE' ? '-' : '+'}
         {formatCurrency(amount)}
       </div>
@@ -130,13 +133,6 @@ function TransactionRow({ tx }) {
       <div className="w-1/6 text-sm">
         {balance_after != null ? formatCurrency(balance_after) : '-'}
       </div>
-      {/* <div className="w-1/12">
-        {isPending && (
-          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-            Pending
-          </span>
-        )}
-      </div> */}
     </div>
   );
 }
@@ -158,9 +154,12 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
     const amt = parseAmount();
     if (amt === null) return 'Amount must be a number';
     if (amt <= 0) return 'Amount must be greater than zero';
-    if (!['INCOME', 'EXPENSE'].includes(type)) return 'Type must be INCOME or EXPENSE';
-    if (!payment_method) return 'Select a payment method';
-    console.log(amt)
+
+    // if (!['INCOME', 'EXPENSE'].includes(type)) return 'Type must be INCOME or EXPENSE';
+    if (!paymentMethod) return 'Select a payment method';
+
+  
+
     return null;
   };
  
@@ -373,11 +372,11 @@ export default function Fund() {
     const optimistic = {
       id: `opt-${Date.now()}`,
       amount,
-      type: 'INCOME',
+      // type: 'INCOME',
       description: 'Adding funds...',
       created_at: new Date().toISOString(),
       balance_after: displayBalance, // best guess
-      status: 'pending',
+      // status: 'pending',
     };
     setPendingTxs((p) => [optimistic, ...p]);
     try {
@@ -422,7 +421,7 @@ export default function Fund() {
         <h3 className="text-lg font-semibold mb-3">Transaction History</h3>
         <div className="flex font-medium border-b pb-2 text-xs uppercase">
           <div className="w-1/5">Date</div>
-          <div className="w-1/6">Type</div>
+          {/* <div className="w-1/6">Type</div> */}
           <div className="w-1/6">Amount</div>
           <div className="w-2/5">Description</div>
           <div className="w-1/6">Balance After</div>
