@@ -68,11 +68,11 @@ async function postAddFunds({ amount, reason, type, payment_method, date }, sign
 
   // build your payload exactly as backend expects
   const body = JSON.stringify({
-    type,           // "INCOME" or "EXPENSE"
+    type,          
     amount,
     reason,
     payment_method,
-    date,           // format YYYY-MM-DD (you can default to today if you want)
+    date,           
   });
 
   const res = await fetch(`${BASE}/funds/transactions/`, {
@@ -130,10 +130,10 @@ function TransactionRow({ tx }) {
 }
 
 function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError }) {
-  const [type, setType] = useState('INCOME'); // INCOME or EXPENSE
+  const [type, setType] = useState('INCOME'); 
   const [amountInput, setAmountInput] = useState('');
   const [reason, setDescription] = useState('');
-  const [payment_method, setPaymentMethod] = useState('Cash'); // camelCase consistent
+  const [payment_method, setPaymentMethod] = useState('Cash');
   const [validationError, setValidationError] = useState(null);
 
   const parseAmount = () => {
@@ -162,8 +162,8 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
     onSubmit({
   amount,
   reason,
-  type,             // INCOME or EXPENSE
-  payment_method,    // from select dropdown
+  type,             
+  payment_method,   
 });
   };
 
@@ -347,7 +347,7 @@ export default function Fund() {
     description: reason || 'Adding funds...',
     created_at: new Date().toISOString(),
     balance_after: displayBalance,
-    type,            // you want to keep the type in optimistic tx
+    type,            
     payment_method,
   };
 
@@ -355,7 +355,7 @@ export default function Fund() {
 
   try {
     const controller = new AbortController();
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const today = new Date().toISOString().slice(0, 10); 
     const realTx = await postAddFunds({ amount, reason, type, payment_method, date: today }, controller.signal);
     
     setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
