@@ -26,14 +26,14 @@ export default function Hero({
         <div className="space-y-6">
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">{title}</h1>
           <p className="text-lg max-w-prose">{description}</p>
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <a
               href={ctaHref}
               className="inline-block bg-yellow-500 hover:bg-amber-600 text-black font-semibold px-6 py-3 mx-10 rounded-md shadow hover:shadow-lg transition"
             >
               {ctaText}
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
