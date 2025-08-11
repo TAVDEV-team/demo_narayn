@@ -61,19 +61,21 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center w-full">
         {/* Logo / Title */}
-        <div className="text-2xl font-bold text-white">Narayanpur High School</div>
+        <Link to="/" className="text-2xl font-bold text-white hover:text-yellow-300">
+          Narayanpur High School
+        </Link>
 
         {/* Desktop menu */}
         <ul className="hidden md:flex gap-6 relative text-white">
           {/* Home */}
-          <li>
+          {/* <li>
             <Link to="/" className="hover:text-yellow-300">
               Home
             </Link>
-          </li>
+          </li> */}
 
           {/* About Us dropdown */}
-          <li
+          {/* <li
             className="relative"
             onMouseEnter={() => setOpenMenu("about")}
             onMouseLeave={() => setOpenMenu(null)}
@@ -101,7 +103,7 @@ const Navbar = () => {
                 </li>
               </ul>
             )}
-          </li>
+          </li> */}
 
           <li
             className="relative"
@@ -139,19 +141,19 @@ const Navbar = () => {
               aria-expanded={openMenu === "academic"}
               className="hover:text-yellow-300 flex items-center gap-1"
             >
-              Academic
+              Portals
             </button>
             {openMenu === "academic" && (
               <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/routine">Class Routine</Link>
+                  <Link to="/student-portal">Students Portal</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/syllabus">Syllabus</Link>
+                  <Link to="/teacher-portal">Teachers Portal</Link>
                 </li>
-                <li className="px-4 py-2 hover:bg-blue-100">
+                {/* <li className="px-4 py-2 hover:bg-blue-100">
                   <Link to="/curriculum">Notice</Link>
-                </li>
+                </li> */}
               </ul>
             )}
           </li>
@@ -186,8 +188,8 @@ const Navbar = () => {
 
           {/* Other links */}
           <li>
-            <Link to="/student portal" className="hover:text-yellow-300">
-              Student Portal
+            <Link to="/notice" className="hover:text-yellow-300">
+              Notice
             </Link>
           </li>
           <li>
