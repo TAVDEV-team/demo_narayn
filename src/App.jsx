@@ -6,6 +6,10 @@ import Contact from './pages/Contact';
 import Fund from './pages/Fund';
 import Register from './pages/Register';
 import AdmissionDocuments from "./pages/AdmissionDocuments";
+import ApprovedNotices from "./pages/ApprovedNotices";
+import CreateNotice from "./pages/CreateNotice";
+import PendingNotices from "./pages/PendingNotices";
+import NoticeDetail from "./pages/NoticeDetail";
 
 function App() {
   return (
@@ -23,6 +27,12 @@ function App() {
           <Route path="/documents" element={<AdmissionDocuments />} />
           {/* Optional: catch-all for any unknown paths */}
           <Route path="*" element={<Navigate to="/" replace />} />
+           <Route path="notice-approved" element={<ApprovedNotices />} />
+        <Route path="notices-create" element={<CreateNotice />} />
+        <Route path="notice-pending" element={<PendingNotices />} />
+        <Route path="notices/:id" element={<NoticeDetail />} />
+
+
         </Route>
       </Routes>
     </Router>

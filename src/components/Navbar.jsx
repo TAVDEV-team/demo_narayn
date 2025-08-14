@@ -60,10 +60,18 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 z-50 transition-all bg-blue-950 duration-300 flex items-center w-full"
     >
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center w-full">
-        {/* Logo / Title */}
-        <Link to="/" className="text-2xl font-bold text-white hover:text-yellow-300">
-          Narayanpur High School
-        </Link>
+       
+<Link to="/" className="flex items-center gap-3 hover:opacity-90">
+  <img
+  src="/logo.png"
+  alt="School Logo"
+  className="h-10 w-10 object-contain" 
+/>
+  <span className="text-4xl font-bold text-white hover:text-yellow-300">
+    Narayanpur High School
+  </span>
+</Link>
+
 
         {/* Desktop menu */}
         <ul className="hidden md:flex gap-6 relative text-white">
@@ -187,11 +195,37 @@ const Navbar = () => {
           </li>
 
           {/* Other links */}
-          <li>
-            <Link to="/notice" className="hover:text-yellow-300">
-              Notice
-            </Link>
-          </li>
+          {/* Notice dropdown */}
+<li
+  className="relative"
+  onMouseEnter={() => setOpenMenu("notice")}
+  onMouseLeave={() => setOpenMenu(null)}
+>
+  <button
+    aria-haspopup="true"
+    aria-expanded={openMenu === "notice"}
+    className="hover:text-yellow-300 flex items-center gap-1"
+  >
+    Notice
+  </button>
+  {openMenu === "notice" && (
+    <ul className="absolute top-full left-0 bg-white text-black w-56 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
+      <li className="px-4 py-2 hover:bg-blue-100 border-b">
+        <Link to="/notice-approved">Approved Notices</Link>
+      </li>
+      <li className="px-4 py-2 hover:bg-blue-100 border-b">
+        <Link to="/notices-create">Create Notice</Link>
+      </li>
+      <li className="px-4 py-2 hover:bg-blue-100 border-b">
+        <Link to="/notice-pending">Pending Notices</Link>
+      </li>
+      <li className="px-4 py-2 hover:bg-blue-100">
+        <Link to="/notice-details">Notice Details</Link>
+      </li>
+    </ul>
+  )}
+</li>
+
           <li>
             <Link to="/fund" className="hover:text-yellow-300">
               Fund
