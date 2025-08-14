@@ -241,6 +241,11 @@ const Navbar = () => {
               Contact
             </Link>
           </li>
+          <li>
+            <Link to="/login" className="hover:text-yellow-300">
+              Login
+            </Link>
+          </li>
         </ul>
 
         {/* Mobile hamburger */}

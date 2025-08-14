@@ -10,6 +10,7 @@ import ApprovedNotices from "./pages/ApprovedNotices";
 import CreateNotice from "./pages/CreateNotice";
 import PendingNotices from "./pages/PendingNotices";
 import NoticeDetail from "./pages/NoticeDetail";
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           {/* <Route path="history" element={<History />} /> */}
           <Route path="fund" element={<Fund />} />
           <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
 
           {/* Redirect /notice-board to / */}
           <Route path="notice-board" element={<Navigate to="/" replace />} />
