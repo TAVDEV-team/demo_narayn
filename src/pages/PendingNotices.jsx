@@ -43,7 +43,7 @@ export default function PendingNotices() {
           notices.map((notice) => (
             <div
               key={notice.id}
-              className="border p-4 rounded-md shadow-sm hover:shadow-md transition"
+              className="border p-4 rounded-md shadow-sm hover:shadow-md transition bg-indigo-100"
             >
               <div className="flex justify-between items-center">
                 <div>
