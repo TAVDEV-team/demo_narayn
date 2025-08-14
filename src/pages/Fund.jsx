@@ -88,7 +88,7 @@ async function postAddFunds({ amount, reason, type, payment_method, date }, sign
 
 function WalletOverview({ balance, onAddClick, loading }) {
   return (
-    <div className="flex items-center justify-between p-4 pt-16 bg-white shadow rounded mb-4">
+    <div className="flex items-center justify-between p-4 pt-16 bg-sky-50 shadow rounded mb-4 mt-10">
       <div className="flex items-center gap-4">
         <div>
           <div className="text-sm text-gray-500">Current Balance</div>
@@ -193,7 +193,7 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
+      <div className="bg-sky-50 rounded-2xl shadow-xl w-full max-w-md p-6 relative">
         <button
           aria-label="Close"
           onClick={onClose}
@@ -428,7 +428,7 @@ export default function Fund() {
           apiError={addingError}
         />
       )}
-      <div className="bg-white shadow rounded p-4 mt-6">
+      <div className="bg-sky-50 shadow rounded p-4 mt-6">
         <h3 className="text-3xl font-semibold mb-5">Transaction History</h3>
        <div className="flex font-medium border-b pb-2 text-xs uppercase text-left">
        <div className="w-1/5 mr-6 text-lg">Date</div>
