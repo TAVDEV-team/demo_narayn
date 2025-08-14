@@ -29,12 +29,12 @@ export default function ApprovedNotices() {
       </div>
 
   
-      <div className="space-y-4">
+      <div className="space-y-4 ">
         {notices.length > 0 ? (
           notices.map((notice) => (
             <div
               key={notice.slug}
-              className="border p-4 rounded-md shadow-sm hover:shadow-md transition flex justify-between items-center"
+              className="border p-4 rounded-md shadow-sm hover:shadow-md transition flex justify-between items-center bg-green-100"
             >
               <div>
                 <h3 className="text-lg font-semibold text-gray-800">
