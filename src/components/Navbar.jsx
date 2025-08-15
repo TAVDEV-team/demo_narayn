@@ -1,6 +1,8 @@
 // src/components/Navbar.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { getAuthHeaders } from "../services/api";
+
 
 const Navbar = () => {
   // which top-level submenu is open on desktop ("about", "academic", "admin" or null)
@@ -10,6 +12,19 @@ const Navbar = () => {
   // whether page is scrolled (for background/shadow)
   const [scrolled, setScrolled] = useState(false);
   const mobileRef = useRef(null);
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
+ const [logoutMessage, setLogoutMessage] = useState("");
+const [isLoggingOut, setIsLoggingOut] = useState(false);
+const [logoutError, setLogoutError] = useState(null);
+
+
+
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  setIsLoggedIn(!!token);
+}, []);
+
+
 
   // scroll detection for background styling
   useEffect(() => {
@@ -55,6 +70,52 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+
+  
+
+const handleLogout = async () => {
+  setIsLoggingOut(true);
+  setLogoutError(null);
+  setLogoutMessage("");
+
+  try {
+    const token = localStorage.getItem("token");
+    const res = await fetch(
+      "https://narayanpur-high-school.onrender.com/api/user/logout/",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Token ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Server error: ${res.status} ${text}`);
+    }
+
+    // Remove token locally
+    localStorage.removeItem("token");
+
+    // Update state so Navbar re-renders instantly
+    setIsLoggedIn(false);
+
+    // Show a temporary message
+    setLogoutMessage("✅ Logged out successfully");
+
+    // Remove message after 3 seconds
+    setTimeout(() => setLogoutMessage(""), 3000);
+  } catch (error) {
+    console.error("Logout failed:", error);
+    setLogoutError(error.message);
+  } finally {
+    setIsLoggingOut(false);
+  }
+};
+
+
+
   return (
     <nav
       className="fixed top-0 left-0 right-0 z-50 transition-all bg-blue-950 duration-300 flex items-center w-full"
@@ -75,44 +136,7 @@ const Navbar = () => {
 
         {/* Desktop menu */}
         <ul className="hidden md:flex gap-6 relative text-white">
-          {/* Home */}
-          {/* <li>
-            <Link to="/" className="hover:text-yellow-300">
-              Home
-            </Link>
-          </li> */}
-
-          {/* About Us dropdown */}
-          {/* <li
-            className="relative"
-            onMouseEnter={() => setOpenMenu("about")}
-            onMouseLeave={() => setOpenMenu(null)}
-          >
-            <button
-              aria-haspopup="true"
-              aria-expanded={openMenu === "about"}
-              className="hover:text-yellow-300 flex items-center gap-1"
-            >
-              About Us
-            </button>
-            {openMenu === "about" && (
-              <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
-                <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/history">At a glance</Link>
-                </li>
-                <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/history">History</Link>
-                </li>
-                <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/head-teacher">Events</Link>
-                </li>
-                <li className="px-4 py-2 hover:bg-blue-100">
-                  <Link to="/achievements">Achievements</Link>
-                </li>
-              </ul>
-            )}
-          </li> */}
-
+          
           <li
             className="relative"
             onMouseEnter={() => setOpenMenu("admission")}
@@ -241,11 +265,27 @@ const Navbar = () => {
               Contact
             </Link>
           </li>
-          <li>
-            <Link to="/login" className="hover:text-yellow-300">
-              Login
-            </Link>
-          </li>
+      <li>
+  {isLoggedIn ? (
+    <button
+      onClick={handleLogout}
+      className="hover:text-yellow-300"
+      disabled={isLoggingOut}
+    >
+      {isLoggingOut ? "Logging out..." : "Logout"}
+    </button>
+  ) : (
+    <Link to="/login" className="hover:text-yellow-300">
+      Login
+    </Link>
+  )}
+  {logoutMessage && <span className="text-green-400 ml-2">{logoutMessage}</span>}
+  {logoutError && <span className="text-red-400 ml-2">{logoutError}</span>}
+</li>
+
+
+
+
         </ul>
 
         {/* Mobile hamburger */}
@@ -421,6 +461,25 @@ const Navbar = () => {
                 Contact
               </Link>
             </div>
+            <div className="border-b border-blue-800 pb-2">
+  {isLoggedIn ? (
+    <button
+      onClick={handleLogout}
+      className="block w-full text-left py-2 hover:text-yellow-300"
+    >
+      Logout
+    </button>
+  ) : (
+    <Link
+      to="/login"
+      className="block py-2 hover:text-yellow-300"
+      onClick={() => setMobileOpen(false)}
+    >
+      Login
+    </Link>
+  )}
+</div>
+
           </div>
         </div>
       )}
