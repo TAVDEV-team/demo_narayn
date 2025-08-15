@@ -1,7 +1,8 @@
 // src/components/Navbar.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { getAuthHeaders } from "../services/api";
+
+import AddStudent from '../pages/AddStudent';
 
 
 const Navbar = () => {
@@ -155,7 +156,7 @@ const handleLogout = async () => {
                   <Link to="/documents">Documents</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/student">student admission</Link>
+                  <Link to="/student">AddStudent</Link>
                 </li>
               </ul>
             )}
