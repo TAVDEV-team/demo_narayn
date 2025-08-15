@@ -209,7 +209,7 @@ const handleLogout = async () => {
                   <Link to="/governing-body">Governing Body</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/teachers">Message of HeadMaster</Link>
+                  <Link to="/headmaster">HeadMaster</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100">
                   <Link to="/staffs">Employee Information</Link>
@@ -282,8 +282,6 @@ const handleLogout = async () => {
   {logoutMessage && <span className="text-green-400 ml-2">{logoutMessage}</span>}
   {logoutError && <span className="text-red-400 ml-2">{logoutError}</span>}
 </li>
-
-
 
 
         </ul>
