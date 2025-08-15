@@ -7,8 +7,10 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false); // ✅ NEW
 
   const handleSubmit = () => {
+    setLoading(true); // ✅ start loading
     const payload = { username, password };
 
     axios.post("https://narayanpur-high-school.onrender.com/api/user/token/", payload)
@@ -25,6 +27,9 @@ const Login = () => {
       .catch((err) => {
         const errorMsg = err.response?.data?.detail || "Login failed. Please check your credentials.";
         setMessage({ type: "error", text: `❌ ${errorMsg}` });
+      })
+      .finally(() => {
+        setLoading(false); // ✅ stop loading
       });
   };
 
@@ -64,9 +69,10 @@ const Login = () => {
 
             <button
               onClick={handleSubmit}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md shadow-md transition duration-200"
+              disabled={loading} // ✅ prevent clicks while loading
+              className={`w-full ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"} text-white font-semibold py-2 rounded-md shadow-md transition duration-200`}
             >
-              Login
+              {loading ? "⏳ Logging in..." : "Login"} {/* ✅ show loading text */}
             </button>
           </div>
         </div>
