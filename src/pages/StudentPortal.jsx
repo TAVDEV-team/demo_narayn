@@ -1,19 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { GraduationCap, BookOpen, PenTool, NotebookText, Scroll } from "lucide-react"; // fancy icons
+import {BookOpen, GraduationCap, PenTool, NotebookText, Scroll } from "lucide-react"; // fancy icons
 
 const classes = [
   {
     grade: 6,
     title: "Class 6",
     description: "Syllabus, routine, notices",
-    icon: <GraduationCap size={48} className="text-indigo-600" />,
+    icon: <BookOpen  size={48} className="text-indigo-600" />,
   },
   {
     grade: 7,
     title: "Class 7",
     description: "Syllabus, routine, notices",
-    icon: <BookOpen size={48} className="text-green-600" />,
+    icon: <NotebookText size={48} className="text-green-600" />,
   },
   {
     grade: 8,
@@ -21,17 +21,19 @@ const classes = [
     description: "Syllabus, routine, notices",
     icon: <PenTool size={48} className="text-pink-600" />,
   },
+  
   {
     grade: 9,
     title: "Class 9",
     description: "Syllabus, routine, notices",
-    icon: <NotebookText size={48} className="text-yellow-600" />,
+    icon: <Scroll size={48} className="text-yellow-600" />,
   },
+  
   {
     grade: 10,
     title: "Class 10",
     description: "Syllabus, routine, notices",
-    icon: <Scroll size={48} className="text-purple-600" />,
+    icon: <GraduationCap size={48} className="text-purple-600" />,
   },
 ];
 
