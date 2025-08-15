@@ -13,6 +13,8 @@ import NoticeDetail from "./pages/NoticeDetail";
 import Login from './pages/Login';
 import StudentPortal from "./pages/StudentPortal";
 import ClassStudents from "./pages/ClassStudents";
+import ClassGroups from "./pages/ClassGroups";
+import AddStudent from './pages/AddStudent';
 
 function App() {
   return (
@@ -37,9 +39,9 @@ function App() {
         <Route path="notices/:id" element={<NoticeDetail />} />
         <Route path="/portal" element={<StudentPortal />} />
         <Route path="/class/:grade" element={<ClassStudents />} />
-       
-
-
+         <Route path="/class/9" element={<ClassGroups />} />
+          <Route path="/class/10" element={<ClassGroups />} />
+          <Route path="student" element={<AddStudent />} />
 
         </Route>
       </Routes>
