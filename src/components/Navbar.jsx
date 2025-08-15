@@ -284,8 +284,6 @@ const handleLogout = async () => {
 </li>
 
 
-
-
         </ul>
 
         {/* Mobile hamburger */}
