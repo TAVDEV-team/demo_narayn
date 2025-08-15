@@ -3,7 +3,7 @@
   "name": "my-app",
   
   "private": true,
-
+  
   "homepage": "https://tavdev-team.github.io/demo_narayn/",
   
   "version": "0.0.0",
@@ -36,6 +36,9 @@
   
     
   "axios": "^1.11.0",
+  
+    
+  "lucide-react": "^0.539.0",
   
     
   "react": "^19.1.0",
