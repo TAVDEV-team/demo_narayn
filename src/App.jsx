@@ -11,6 +11,8 @@ import CreateNotice from "./pages/CreateNotice";
 import PendingNotices from "./pages/PendingNotices";
 import NoticeDetail from "./pages/NoticeDetail";
 import Login from './pages/Login';
+import StudentPortal from "./pages/StudentPortal";
+import ClassStudents from "./pages/ClassStudents";
 
 function App() {
   return (
@@ -33,6 +35,10 @@ function App() {
         <Route path="notices-create" element={<CreateNotice />} />
         <Route path="notice-pending" element={<PendingNotices />} />
         <Route path="notices/:id" element={<NoticeDetail />} />
+        <Route path="/portal" element={<StudentPortal />} />
+        <Route path="/class/:grade" element={<ClassStudents />} />
+       
+
 
 
         </Route>
