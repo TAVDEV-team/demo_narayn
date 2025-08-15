@@ -16,6 +16,7 @@ import ClassStudents from "./pages/ClassStudents";
 
 import ClassGroups from "./pages/ClassGroups";
 import AddStudent from './pages/AddStudent';
+import HeadMasterProfile from './pages/HeadMasterProfile';
 
 
 
@@ -46,6 +47,7 @@ function App() {
          <Route path="/class/9" element={<ClassGroups />} />
           <Route path="/class/10" element={<ClassGroups />} />
           <Route path="student" element={<AddStudent />} />
+           <Route path="headmaster" element={<HeadMasterProfile />} />
 
 
         </Route>
@@ -55,3 +57,4 @@ function App() {
 }
 
 export default App;
+// conflict
