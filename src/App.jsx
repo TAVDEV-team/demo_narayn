@@ -13,6 +13,7 @@ import NoticeDetail from "./pages/NoticeDetail";
 import Login from './pages/Login';
 import StudentPortal from "./pages/StudentPortal";
 import ClassStudents from "./pages/ClassStudents";
+import HeadMasterProfile from "./pages/HeadMasterProfile";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="/portal" element={<StudentPortal />} />
         <Route path="/class/:grade" element={<ClassStudents />} />
        
+        <Route path="headmaster" element={<HeadMasterProfile />} />
 
 
 
