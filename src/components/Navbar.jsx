@@ -154,7 +154,7 @@ const Navbar = () => {
             {openMenu === "academic" && (
               <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/student-portal">Students Portal</Link>
+                  <Link to="/portal">Students Portal</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
                   <Link to="/teacher-portal">Teachers Portal</Link>
@@ -219,9 +219,9 @@ const Navbar = () => {
       <li className="px-4 py-2 hover:bg-blue-100 border-b">
         <Link to="/notice-pending">Pending Notices</Link>
       </li>
-      <li className="px-4 py-2 hover:bg-blue-100">
+      {/* <li className="px-4 py-2 hover:bg-blue-100">
         <Link to="/notice-details">Notice Details</Link>
-      </li>
+      </li> */}
     </ul>
   )}
 </li>
