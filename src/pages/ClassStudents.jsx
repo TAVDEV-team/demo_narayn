@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { FaPhoneAlt, FaEnvelope, FaIdBadge } from "react-icons/fa";
 
 export default function ClassStudents() {
   const { grade, group } = useParams();
@@ -49,8 +50,9 @@ export default function ClassStudents() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 mt-20">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-10 px-4 mt-20">
       <div className="max-w-6xl mx-auto">
+
         <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Class {grade}
           {group ? ` - ${group.charAt(0).toUpperCase() + group.slice(1)}` : ""} Students
@@ -85,6 +87,7 @@ export default function ClassStudents() {
                   <p className="text-gray-600">
                     Email: {student.account.user.email || "N/A"}
                   </p> */}
+
                 </div>
               </div>
             ))}
