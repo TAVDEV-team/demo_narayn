@@ -25,12 +25,19 @@ export default function ClassGroups() {
   const { grade } = useParams(); 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-10 px-4 mt-20">
+    // <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-10 px-4 mt-20">
+       <div 
+  className="relative h-screen w-screen bg-cover bg-center mt-16"
+  style={{ backgroundImage: "url('/b.jpg')" }}
+>
       <div className="max-w-6xl mx-auto text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
+        <h1 className="text-3xl md:text-4xl font-bold  mb-3">
           📚 Class {grade} - Select Your Group
         </h1>
-        <p className="text-gray-600 text-lg">Choose your study stream</p>
+        <p className="text-lg text-gray-700 font-semibold relative inline-block after:content-[''] after:block after:w-12 after:h-[2px] after:bg-indigo-500 after:mt-1 after:mx-auto">
+    Choose Your Study Sream
+</p>
+
       </div>
 
       <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">

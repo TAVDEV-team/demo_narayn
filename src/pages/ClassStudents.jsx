@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 export default function ClassStudents() {
-  const { grade } = useParams();
+  const { grade, group } = useParams();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,9 +13,23 @@ export default function ClassStudents() {
         const res = await axios.get(
           "https://narayanpur-high-school.onrender.com/api/user/students/"
         );
-        const filtered = res.data.filter(
-          (student) => student.aclass === `Class ${grade}`
-        );
+
+        let filtered;
+        if (group) {
+          // Case: Class with group (9/10)
+          filtered = res.data.filter(
+            (student) =>
+              student.aclass === `Class ${grade}` &&
+              student.group &&
+              student.group.toLowerCase() === group.toLowerCase()
+          );
+        } else {
+          // Case: Class without group (6/7/8)
+          filtered = res.data.filter(
+            (student) => student.aclass === `Class ${grade}`
+          );
+        }
+
         setStudents(filtered);
       } catch (err) {
         console.error("Error fetching students:", err);
@@ -24,7 +38,7 @@ export default function ClassStudents() {
       }
     };
     fetchStudents();
-  }, [grade]);
+  }, [grade, group]);
 
   if (loading) {
     return (
@@ -38,44 +52,39 @@ export default function ClassStudents() {
     <div className="min-h-screen bg-gray-50 py-10 px-4 mt-20">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          Class {grade} Students
+          Class {grade}
+          {group ? ` - ${group.charAt(0).toUpperCase() + group.slice(1)}` : ""} Students
         </h1>
-        {students.length === 0 ? (
-          <p className="text-gray-500">No students found for this class.</p>
-        ) : (
-          <div className="grid grid-cols-1 gap-6">
 
+        {students.length === 0 ? (
+          <p className="text-gray-500 text-center">
+            No students found {group ? `for ${group}` : ""}.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {students.map((student) => (
               <div
                 key={student.account.id}
-                className="flex bg-white shadow-md rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition"
+                className="flex flex-col items-center bg-white shadow-md rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition"
               >
-                {/* Student Image */}
                 <img
                   src={student.account.image}
                   alt={student.account.full_name}
-                  className="w-32 h-32 object-cover"
+                  className="w-32 h-32 object-cover mt-4 rounded-full border-4 border-indigo-200"
                 />
-
-                {/* Student Info */}
-                <div className="p-4">
+                <div className="p-4 text-center">
                   <h2 className="text-lg font-semibold text-gray-800">
-                    {student.account.full_name.trim()
+                    {student.account.full_name?.trim()
                       ? student.account.full_name
                       : student.account.user.username}
                   </h2>
-                  <p className="text-gray-600">
-                    Roll: {student.roll_number}
-                  </p>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600">Roll: {student.roll_number}</p>
+                  {/* <p className="text-gray-600">
                     Mobile: {student.account.mobile}
                   </p>
                   <p className="text-gray-600">
-                    Email:{" "}
-                    {student.account.user.email
-                      ? student.account.user.email
-                      : "N/A"}
-                  </p>
+                    Email: {student.account.user.email || "N/A"}
+                  </p> */}
                 </div>
               </div>
             ))}

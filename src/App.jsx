@@ -41,11 +41,13 @@ function App() {
         <Route path="notice-pending" element={<PendingNotices />} />
         <Route path="notices/:id" element={<NoticeDetail />} />
         <Route path="/portal" element={<StudentPortal />} />
-        <Route path="/class/:grade" element={<ClassStudents />} />
 
          <Route path="/class/9" element={<ClassGroups />} />
           <Route path="/class/10" element={<ClassGroups />} />
           <Route path="student" element={<AddStudent />} />
+          <Route path="/class/:grade/:group" element={<ClassStudents />} />
+            <Route path="/class/:grade" element={<ClassStudents />} />
+          
 
 
         </Route>
