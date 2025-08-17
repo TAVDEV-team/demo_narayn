@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Home from './pages/Home';
 import Layout from './components/Layout';
 import Contact from './pages/Contact';
-// import History from './components/History';
 import Fund from './pages/Fund';
 import Register from './pages/Register';
 import AdmissionDocuments from "./pages/AdmissionDocuments";
@@ -13,11 +12,9 @@ import NoticeDetail from "./pages/NoticeDetail";
 import Login from './pages/Login';
 import StudentPortal from "./pages/StudentPortal";
 import ClassStudents from "./pages/ClassStudents";
-
 import ClassGroups from "./pages/ClassGroups";
 import AddStudent from './pages/AddStudent';
-import HeadMasterProfile from './pages/HeadMasterProfile';
-
+import GradeHandler from './pages/GradeHandler'; // ✅ import the new handler
 
 
 function App() {
@@ -27,32 +24,25 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="contact" element={<Contact />} />
-          {/* <Route path="history" element={<History />} /> */}
           <Route path="fund" element={<Fund />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
 
-          {/* Redirect /notice-board to / */}
           <Route path="notice-board" element={<Navigate to="/" replace />} />
           <Route path="/documents" element={<AdmissionDocuments />} />
-          {/* Optional: catch-all for any unknown paths */}
           <Route path="*" element={<Navigate to="/" replace />} />
-           <Route path="notice-approved" element={<ApprovedNotices />} />
-        <Route path="notices-create" element={<CreateNotice />} />
-        <Route path="notice-pending" element={<PendingNotices />} />
-        <Route path="notices/:id" element={<NoticeDetail />} />
-        <Route path="/portal" element={<StudentPortal />} />
-
-         <Route path="/class/9" element={<ClassGroups />} />
-          <Route path="/class/10" element={<ClassGroups />} />
+          <Route path="notice-approved" element={<ApprovedNotices />} />
+          <Route path="notices-create" element={<CreateNotice />} />
+          <Route path="notice-pending" element={<PendingNotices />} />
+          <Route path="notices/:id" element={<NoticeDetail />} />
+          <Route path="/portal" element={<StudentPortal />} />
           <Route path="student" element={<AddStudent />} />
 
+          {/* ✅ Use GradeHandler to manage 6-8 vs 9-10 */}
+          <Route path="/class/:grade" element={<GradeHandler />} />
+
+          {/* Students inside a specific group (only used for 9-10) */}
           <Route path="/class/:grade/:group" element={<ClassStudents />} />
-            <Route path="/class/:grade" element={<ClassStudents />} />
-          
-
-
-
         </Route>
       </Routes>
     </Router>
