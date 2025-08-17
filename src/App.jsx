@@ -14,7 +14,8 @@ import StudentPortal from "./pages/StudentPortal";
 import ClassStudents from "./pages/ClassStudents";
 import ClassGroups from "./pages/ClassGroups";
 import AddStudent from './pages/AddStudent';
-import GradeHandler from './pages/GradeHandler'; // ✅ import the new handler
+import GradeHandler from './pages/GradeHandler';
+import HeadMasterProfile from './pages/HeadMasterProfile';
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route path="notices/:id" element={<NoticeDetail />} />
           <Route path="/portal" element={<StudentPortal />} />
           <Route path="student" element={<AddStudent />} />
+          <Route path="headmaster" element={<HeadMasterProfile/>} />
 
           {/* ✅ Use GradeHandler to manage 6-8 vs 9-10 */}
           <Route path="/class/:grade" element={<GradeHandler />} />
