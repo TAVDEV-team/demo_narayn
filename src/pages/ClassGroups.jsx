@@ -28,7 +28,7 @@ export default function ClassGroups() {
     // <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-10 px-4 mt-20">
        <div 
   className="relative h-screen w-screen bg-cover bg-center mt-16"
-  style={{ backgroundImage: "url('/b.jpg')" }}
+  style={{ backgroundImage: "url('/b2.jpeg')" }}
 >
       <div className="max-w-6xl mx-auto text-center mb-10">
         <h1 className="text-3xl md:text-4xl font-bold  mb-3">

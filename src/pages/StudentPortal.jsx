@@ -48,12 +48,15 @@ export default function StudentPortal() {
 
       {/* Heading */}
       <div className="max-w-6xl mx-auto text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-          🎓 Student Portal
-        </h1>
-        <p className="text-lg text-gray-700 font-semibold relative inline-block after:content-[''] after:block after:w-12 after:h-[2px] after:bg-indigo-500 after:mt-1 after:mx-auto">
+       <h1 className="text-3xl md:text-4xl bg-sky-950 font-bold text-white mb-3 mt-20 rounded-xl py-3 px-6 shadow-md text-center">
+  🎓 Student Portal
+</h1>
+
+<p className="text-xl bg-sky-900 font-semibold text-white rounded-lg py-2 px-32 shadow-md text-center inline-block">
   Select your class
 </p>
+
+
 
       </div>
 
