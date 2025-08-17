@@ -39,19 +39,29 @@ const classes = [
 
 export default function StudentPortal() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-10 px-4 mt-20">
+  <div 
+  className="relative h-screen w-screen bg-cover bg-center mt-16"
+  style={{ backgroundImage: "url('/back.avif')" }}
+>
+
+  
+
       {/* Heading */}
       <div className="max-w-6xl mx-auto text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-          🎓 Student Portal
-        </h1>
-        <p className="text-gray-600 text-lg">
-          Select your class .
-        </p>
+       <h1 className="text-3xl md:text-4xl bg-sky-950 font-bold text-white mb-3 mt-20 rounded-xl py-3 px-6 shadow-md text-center">
+  🎓 Student Portal
+</h1>
+
+<p className="text-xl bg-sky-900 font-semibold text-white rounded-lg py-2 px-32 shadow-md text-center inline-block">
+  Select your class
+</p>
+
+
+
       </div>
 
       {/* Grid */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 hover:shadow-sm ">
         {classes.map((cls) => (
           <Link
             key={cls.grade}
