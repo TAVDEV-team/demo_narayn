@@ -66,13 +66,12 @@ async function postAddFunds({ amount, reason, type, payment_method, date }, sign
     ...(await getAuthHeaders()),
   };
 
-  // build your payload exactly as backend expects
   const body = JSON.stringify({
-    type,          
+    type,
     amount,
     reason,
     payment_method,
-    date,           
+    date,
   });
 
   const res = await fetch(`${BASE}/funds/transactions/`, {
@@ -85,67 +84,79 @@ async function postAddFunds({ amount, reason, type, payment_method, date }, sign
   return await handleResponse(res);
 }
 
+// --- UI Components ---
+// --- Wallet Overview (redesigned) ---
+// import { Wallet, ArrowUpCircle, ArrowDownCircle } from "lucide-react";
+
+// --- Wallet Overview (solid color version) ---
+import { Wallet, ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 
 function WalletOverview({ balance, onAddClick, loading }) {
   return (
-    <div className="flex items-center justify-between p-4 pt-16 bg-sky-50 shadow rounded mb-4 mt-10">
-      <div className="flex items-center gap-4">
+    <div className="relative bg-blue-950 rounded-2xl p-8 shadow-xl text-white overflow-hidden mt-20">
+      {/* Subtle pattern overlay */}
+      <div className="absolute inset-0 bg-indigo-700/30 backdrop-blur-sm rounded-2xl"></div>
+
+      <div className="relative flex items-center justify-between">
         <div>
-          <div className="text-sm text-gray-500">Current Balance</div>
-          <div className="text-2xl font-semibold">
-            {loading ? '...' : formatCurrency(balance)}
+          <div className="flex items-center gap-2 text-sm opacity-80">
+            <Wallet size={18} /> Current Balance
           </div>
+          <div className="text-5xl font-extrabold tracking-tight mt-2">
+            {loading ? "..." : formatCurrency(balance)}
+          </div>
+          <p className="mt-2 text-sm opacity-80">
+            Updated just now • Keep tracking your funds
+          </p>
+        </div>
+        <button
+          onClick={onAddClick}
+          className="px-6 py-3 bg-white text-indigo-700 font-semibold rounded-xl shadow-lg hover:scale-105 transform transition"
+        >
+          + Add Funds
+        </button>
+      </div>
+
+      {/* Quick stats */}
+      <div className="relative mt-6 grid grid-cols-2 gap-4 text-sm">
+        <div className="flex items-center gap-2 bg-white/10 rounded-xl p-3">
+          <ArrowUpCircle className="text-green-300" size={20} />
+          <span>Income Boost</span>
+        </div>
+        <div className="flex items-center gap-2 bg-white/10 rounded-xl p-3">
+          <ArrowDownCircle className="text-red-300" size={20} />
+          <span>Expense Control</span>
         </div>
       </div>
-      <button
-        onClick={onAddClick}
-        className="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700"
-      >
-        Add Funds
-      </button>
     </div>
   );
 }
+
 
 function TransactionRow({ tx }) {
   const date = safeDateString(tx.date);
   const amount = tx.amount ?? 0;
   const balance_after = tx.after_transaction_balance;
 
-  const amountColorClass = tx.type === 'EXPENSE' ? 'text-red-600' : 'text-green-600';
-  
+  const isExpense = tx.type === "EXPENSE";
+  const AmountIcon = isExpense ? ArrowDownCircle : ArrowUpCircle;
 
- return (
-<div
-  className={`flex items-center py-6 px-6 border-b rounded-lg transition-colors duration-150
-              hover:bg-gray-50 shadow-lg mb-4 bg-white`}
->
-  <div className="w-1/5 mr-6 text-base font-semibold text-gray-600 text-left">{date || '-'}</div>
-
-  <div
-    className={`w-1/6 mr-10 space-x-20 text-xl font-bold text-left ${
-      tx.type === 'EXPENSE' ? 'text-red-600' : 'text-green-600'
-    }`}
-  >
-    {tx.type === 'EXPENSE' ? '-' : '+'}
-    {formatCurrency(amount)}
-  </div>
-
-  <div className="w-2/5 mr-10 space-x-32 text-base font-semibold truncate text-gray-800 text-left">
-    {tx.reason || '-'}
-  </div>
-
-  <div className="w-1/6 text-base font-medium text-gray-700 text-left">
-    {balance_after != null ? formatCurrency(balance_after) : '-'}
-  </div>
-</div>
-
-);
-
+  return (
+    <div className="grid grid-cols-4 py-4 text-gray-700 border-b last:border-none hover:bg-gray-50 transition items-center">
+      <div>{date || "-"}</div>
+      <div className={`flex items-center gap-2 font-semibold ${isExpense ? "text-red-600" : "text-green-600"}`}>
+        <AmountIcon size={18} />
+        {isExpense ? "-" : "+"}{formatCurrency(amount)}
+      </div>
+      <div className="truncate">{tx.reason || "-"}</div>
+      <div className="font-medium">{balance_after != null ? formatCurrency(balance_after) : "-"}</div>
+    </div>
+  );
 }
 
+
 function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError }) {
-  const [type, setType] = useState('INCOME'); 
+  const [type, setType] = useState('INCOME');
   const [amountInput, setAmountInput] = useState('');
   const [reason, setDescription] = useState('');
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
@@ -162,10 +173,8 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
     const amt = parseAmount();
     if (amt === null) return 'Amount must be a number';
     if (amt <= 0) return 'Amount must be greater than zero';
-
     if (!payment_method) return 'Select a payment method';
-    if (!date) return "Please select a date";
-
+    if (!date) return 'Please select a date';
     return null;
   };
 
@@ -175,25 +184,12 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
     setValidationError(err);
     if (err) return;
     const amount = parseAmount();
-   console.log(amount,
-  reason,
-  type,             
-  payment_method,   
-  date)
-    onSubmit({
-  amount,
-  reason,
-  type,             
-  payment_method,   
-  date,
-  
-});
+    onSubmit({ amount, reason, type, payment_method, date });
   };
-  
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-sky-50 rounded-2xl shadow-xl w-full max-w-md p-6 relative">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg w-full max-w-md p-8 relative">
         <button
           aria-label="Close"
           onClick={onClose}
@@ -241,7 +237,7 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
               className="w-full border rounded px-3 py-2"
             />
           </div>
-           <div>
+          <div>
             <label className="block text-sm font-medium">Date</label>
             <input
               type="date"
@@ -279,7 +275,7 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
             <button
               type="submit"
               disabled={!!validate() || submitting}
-              className="px-5 py-2 bg-blue-600 text-white rounded disabled:opacity-50 flex items-center"
+              className="px-5 py-2 bg-blue-600 text-white rounded-full disabled:opacity-50 flex items-center"
             >
               {submitting ? 'Saving...' : 'Submit'}
             </button>
@@ -347,12 +343,8 @@ export default function Fund() {
 
   const mergedTransactions = useMemo(() => {
     const map = new Map();
-    pendingTxs.forEach((t) => {
-      map.set(t.id, t);
-    });
-    history.forEach((t) => {
-      map.set(t.id, t);
-    });
+    pendingTxs.forEach((t) => map.set(t.id, t));
+    history.forEach((t) => map.set(t.id, t));
     const all = Array.from(map.values());
     all.sort((a, b) => {
       if (a.status === 'pending' && b.status !== 'pending') return -1;
@@ -364,61 +356,63 @@ export default function Fund() {
     return all;
   }, [pendingTxs, history]);
 
-  const handleAddClick = () => {  
+  const handleAddClick = () => {
     setAddingError(null);
     setShowModal(true);
   };
 
-  const addFunds = async ({ amount, reason, type, payment_method,date}) => {
-  setAdding(true);
-  setAddingError(null);
+  const addFunds = async ({ amount, reason, type, payment_method, date }) => {
+    setAdding(true);
+    setAddingError(null);
 
-  // optimistic tx with same fields
-  const optimistic = {
-    id: `opt-${Date.now()}`,
-    amount,
-    description: reason || 'Adding funds...',
-    created_at: new Date().toISOString(),
-    balance_after: displayBalance,
-    type,            
-    payment_method,
-    date,
+    const optimistic = {
+      id: `opt-${Date.now()}`,
+      amount,
+      reason: reason || 'Adding funds...',
+      created_at: new Date().toISOString(),
+      balance_after: displayBalance,
+      type,
+      payment_method,
+      date,
+    };
+
+    setPendingTxs((p) => [optimistic, ...p]);
+
+    try {
+      const controller = new AbortController();
+      const today = new Date().toISOString().slice(0, 10);
+      const formattedDate = date
+        ? new Date(date).toISOString().slice(0, 10)
+        : today;
+      const realTx = await postAddFunds(
+        { amount, reason, type, payment_method, date: formattedDate },
+        controller.signal
+      );
+
+      setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
+      setHistory((prev) => {
+        if (prev.some((t) => t.id === realTx.id)) return prev;
+        return [realTx, ...prev];
+      });
+
+      await loadBalance();
+      setShowModal(false);
+    } catch (e) {
+      setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
+      setAddingError(e.message || 'Failed to add funds');
+    } finally {
+      setAdding(false);
+    }
   };
 
-  setPendingTxs((p) => [optimistic, ...p]);
-
-  try {
-    const controller = new AbortController();
-    const today = new Date().toISOString().slice(0, 10);
-    const formattedDate = date ? new Date(date).toISOString().slice(0, 10) : today;
-    const realTx = await postAddFunds({ amount, reason, type, payment_method, date: formattedDate }, controller.signal);
-
-    
-    setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
-    setHistory((prev) => {
-      if (prev.some((t) => t.id === realTx.id)) return prev;
-      return [realTx, ...prev];
-    });
-
-    await loadBalance();
-    setShowModal(false);
-  } catch (e) {
-    setPendingTxs((p) => p.filter((t) => t.id !== optimistic.id));
-    setAddingError(e.message || 'Failed to add funds');
-  } finally {
-    setAdding(false);
-  }
-};
-
-
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-5xl mx-auto px-6">
       <WalletOverview
         balance={displayBalance}
         loading={loadingBalance}
         onAddClick={handleAddClick}
       />
-      {errorBalance && <ErrorBanner message={`Failed to load balance: ${errorBalance}`} onRetry={loadBalance} />}
+
       {showModal && (
         <AddFundsModal
           onClose={() => setShowModal(false)}
@@ -428,25 +422,26 @@ export default function Fund() {
           apiError={addingError}
         />
       )}
-      <div className="bg-sky-50 shadow rounded p-4 mt-6">
-        <h3 className="text-3xl font-semibold mb-5">Transaction History</h3>
-       <div className="flex font-medium border-b pb-2 text-xs uppercase text-left">
-       <div className="w-1/5 mr-6 text-lg">Date</div>
-       <div className="w-1/6 mr-10 text-lg">Amount</div>
-       <div className="w-2/5 mr-10 text-lg">Reason</div>
-       <div className="w-1/6 text-lg">Balance After</div>
-      </div>
 
+      <div className="mt-12">
+        <h3 className="text-4xl font-semibold mb-6 text-center text-amber-950">Transaction History</h3>
+        <div className="grid grid-cols-4 pb-3 text-sm font-medium text-gray-500 uppercase border-b mt-10">
+          <div className='text-xl font-bold text-black'>Date</div>
+          <div className='text-xl font-bold text-black'>Amount</div>
+          <div className='text-xl font-bold text-black'>Reason</div>
+          <div className='text-xl font-bold text-black'>Balance After</div>
+        </div>
 
         {loadingHistory && (
-          <div className="py-3 text-center text-sm text-gray-500">Loading history...</div>
+          <div className="py-6 text-center text-gray-400">Loading history...</div>
         )}
-        {errorHistory && <ErrorBanner message={errorHistory} onRetry={loadHistory} />}
         {!loadingHistory && mergedTransactions.length === 0 && (
-          <div className="py-4 text-center text-gray-500">No transactions yet.</div>
+          <div className="py-6 text-center text-gray-400">No transactions yet.</div>
         )}
         {!loadingHistory &&
-          mergedTransactions.map((tx) => <TransactionRow key={tx.id} tx={tx} />)}
+          mergedTransactions.map((tx) => (
+            <TransactionRow key={tx.id} tx={tx} />
+          ))}
       </div>
     </div>
   );
