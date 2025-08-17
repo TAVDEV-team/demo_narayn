@@ -16,20 +16,21 @@ export default function ClassStudents() {
         );
 
         let filtered;
-        if (group) {
-          // Case: Class with group (9/10)
-          filtered = res.data.filter(
-            (student) =>
-              student.aclass === `Class ${grade}` &&
-              student.group &&
-              student.group.toLowerCase() === group.toLowerCase()
-          );
-        } else {
-          // Case: Class without group (6/7/8)
-          filtered = res.data.filter(
-            (student) => student.aclass === `Class ${grade}`
-          );
-        }
+if (group && group !== "all") {
+  // Class with a real group (9/10)
+  filtered = res.data.filter(
+    (student) =>
+      student.aclass.startsWith(`Class ${grade}`) &&
+      student.group &&
+      student.group.toLowerCase() === group.toLowerCase()
+  );
+} else {
+  // Class without group OR redirected "all"
+  filtered = res.data.filter(
+    (student) => student.aclass.startsWith(`Class ${grade}`)
+  );
+}
+
 
         setStudents(filtered);
       } catch (err) {
@@ -73,52 +74,54 @@ export default function ClassStudents() {
   }
 
   return (
+   <div className="min-h-screen bg-sky-50 py-10 px-4 mt-16">
+  <div className="max-w-6xl mx-auto">
+    {/* Header */}
+    <h1 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center bg-blue-950 rounded-xl py-2 px-8 shadow-lg">
+      Class {grade}
+      {group ? ` - ${group.charAt(0).toUpperCase() + group.slice(1)}` : ""} 
+    </h1>
 
-    <div className="min-h-screen bg-sky-50 py-10 px-4 mt-20">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center bg-sky-950 rounded-xl py-3 px-6 shadow-md">
-  Class {grade}
-  {group ? ` - ${group.charAt(0).toUpperCase() + group.slice(1)}` : ""} Students
-
-</h1>
-
-
-        {students.length === 0 ? (
-
-          <p className="text-gray-500 text-center">
-            No students found {group ? `for ${group}` : ""}.
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {students.map((student) => (
-             <div
+    {/* Empty state */}
+    {students.length === 0 ? (
+      <p className="text-gray-500 text-center text-lg">
+        No students found {group ? `for ${group}` : ""}.
+      </p>
+    ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {students.map((student) => (
+          <div
   key={student.account.id}
-  className="flex flex-col sm:flex-row items-center sm:items-start bg-white shadow-md rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition p-4"
+  className="flex flex-row items-center sm:items-start gap-4 bg-white shadow-md rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-200 p-5"
 >
-  <img
-    src={student.account.image}
-    alt={student.account.full_name}
-    className="w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-full border-4 border-indigo-200"
-  />
-  <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
-    <h2 className="text-lg font-semibold text-gray-800">
-      {student.account.full_name?.trim()
-        ? student.account.full_name
-        : student.account.user.username}
-    </h2>
-    <p className="text-gray-600">Roll: {student.roll_number}</p>
-    {/* <p className="text-gray-600">Mobile: {student.account.mobile}</p>
-    <p className="text-gray-600">
-      Email: {student.account.user.email || "N/A"}
-    </p> */}
+
+            {/* Student Image */}
+            <img
+              src={student.account.image || "/default-avatar.png"}
+              alt={student.account.full_name || student.account.user.username}
+              className="w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-full border-4 border-indigo-200"
+            />
+
+            {/* Student Info */}
+            <div className="mt-4 sm:mt-0 sm:ml-6 sm:text-left flex-1">
+              <h2 className="text-xl font-semibold text-gray-800">
+                {student.account.full_name?.trim() || student.account.user.username}
+              </h2>
+              <p className="text-gray-600 text-base mt-1">
+                <span className="font-semibold">Roll:</span> {student.roll_number}
+              </p>
+              <p className="text-gray-600 text-base mt-1">
+                <span className="font-semibold">Religion:</span> {student.account.display_religion}
+              </p>
+              <p className="text-gray-600 text-base mt-1">
+                <span className="font-semibold">Gender:</span> {student.account.display_gender}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
   </div>
 </div>
-
-
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
   );
 }
