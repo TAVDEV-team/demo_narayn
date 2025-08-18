@@ -213,7 +213,10 @@ const handleLogout = async () => {
                   <Link to="/headmaster">HeadMaster</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100">
-                  <Link to="/staffs">Employee Information</Link>
+                  <Link to="/teacher">Teacher Information</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100">
+                  <Link to="/staffs">Staff Information</Link>
                 </li>
               </ul>
             )}

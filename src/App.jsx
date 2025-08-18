@@ -19,7 +19,9 @@ import HeadMasterProfile from './pages/HeadMasterProfile';
 import Gallery from './pages/Gallery';
 import TeacherDashboard from './pages/TeacherDashboard';
 import AddResult from "./pages/AddResult";
-
+import TeacherInformation from './pages/TeacherInfo';
+import StaffsInformation from './pages/StaffsInformation';
+import GoverningBody from './components/GoverningBody';
 
 function App() {
   return (
@@ -52,6 +54,9 @@ function App() {
 
           <Route path="/teacher-portal" element={<TeacherDashboard />} />
           <Route path="/students/:id/add-result" element={<AddResult />} />
+           <Route path="/teacher" element={<TeacherInformation />} />
+           <Route path="/staffs" element={<StaffsInformation />} />
+           <Route path="/governing-body" element={<GoverningBody/>} />
         </Route>
       </Routes>
     </Router>
