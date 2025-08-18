@@ -78,7 +78,7 @@ const Login = () => {
         </div>
 
         <div className="w-1/2 flex justify-center">
-          <img src="/buildin2.jpg" alt="" className="min-h-[50vh] object-contain" />
+          <img src="/tea.avif" alt="" className="min-h-[50vh] object-contain" />
         </div>
 
       </div>
