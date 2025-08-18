@@ -18,6 +18,7 @@ import GradeHandler from './pages/GradeHandler';
 import HeadMasterProfile from './pages/HeadMasterProfile';
 import Gallery from './pages/Gallery';
 import TeacherDashboard from './pages/TeacherDashboard';
+import AddResult from "./pages/AddResult";
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
           <Route path="/class/:grade/:group" element={<ClassStudents />} />
 
           <Route path="/teacher-portal" element={<TeacherDashboard />} />
+          <Route path="/students/:id/add-result" element={<AddResult />} />
         </Route>
       </Routes>
     </Router>
