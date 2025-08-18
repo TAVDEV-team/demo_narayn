@@ -16,6 +16,8 @@ import ClassGroups from "./pages/ClassGroups";
 import AddStudent from './pages/AddStudent';
 import GradeHandler from './pages/GradeHandler';
 import HeadMasterProfile from './pages/HeadMasterProfile';
+import Gallery from './pages/Gallery';
+import TeacherDashboard from './pages/TeacherDashboard';
 
 
 function App() {
@@ -39,12 +41,15 @@ function App() {
           <Route path="/portal" element={<StudentPortal />} />
           <Route path="student" element={<AddStudent />} />
           <Route path="headmaster" element={<HeadMasterProfile/>} />
+           <Route path="gallery" element={<Gallery/>} />
 
           {/* ✅ Use GradeHandler to manage 6-8 vs 9-10 */}
           <Route path="/class/:grade" element={<GradeHandler />} />
 
           {/* Students inside a specific group (only used for 9-10) */}
           <Route path="/class/:grade/:group" element={<ClassStudents />} />
+
+          <Route path="/teacher-portal" element={<TeacherDashboard />} />
         </Route>
       </Routes>
     </Router>
