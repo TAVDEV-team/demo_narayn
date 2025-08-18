@@ -46,7 +46,7 @@ export default function TeacherDashboard() {
       d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
     ></path>
   </svg>
-  Loading students...
+  Loading...
 </p>
 
       </div>
@@ -85,21 +85,21 @@ export default function TeacherDashboard() {
       <div className="mt-10 flex flex-wrap gap-4">
         <button
           onClick={() => navigate("/student")}
-          className="px-5 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700"
+          className="px-5 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-900"
         >
-          ➕ Add Student
+        Add Student
         </button>
         <button
           onClick={() => navigate("/notices-create")}
-          className="px-5 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700"
+          className="px-5 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-900"
         >
-          📢 Add Notice
+        Add Notice
         </button>
         <button
           onClick={() => navigate("/portal")}
-          className="px-5 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700"
+          className="px-5 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-900"
         >
-          📊 Add Result
+        Add Result
         </button>
       </div>
     </div>

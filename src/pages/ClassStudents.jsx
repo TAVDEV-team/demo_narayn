@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaPhoneAlt, FaEnvelope, FaIdBadge } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 export default function ClassStudents() {
   const { grade, group } = useParams();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
+  
   useEffect(() => {
     const fetchStudents = async () => {
       try {
@@ -116,6 +120,13 @@ if (group && group !== "all") {
               <p className="text-gray-600 text-base mt-1">
                 <span className="font-semibold">Gender:</span> {student.account.display_gender}
               </p>
+             <button
+  onClick={() => navigate(`/students/${student.account.id}/add-result`)}
+  className="px-5 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-900"
+>
+  Add result
+</button>
+
             </div>
           </div>
         ))}
