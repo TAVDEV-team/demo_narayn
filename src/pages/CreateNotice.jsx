@@ -11,6 +11,8 @@ export default function CreateNotice() {
     is_active: true,
   });
 
+  const [status, setStatus] = useState({ type: "", message: "" }); // ✅ Success / Error message
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm({
@@ -26,7 +28,12 @@ export default function CreateNotice() {
         "https://narayanpur-high-school.onrender.com/api/nphs/notices/",
         form
       );
-      alert("✅ Notice created successfully!");
+
+      setStatus({
+        type: "success",
+        message: "✅ Notice created successfully!",
+      });
+
       setForm({
         title: "",
         description: "",
@@ -37,36 +44,51 @@ export default function CreateNotice() {
       });
     } catch (err) {
       console.error(err);
-      alert("❌ Failed to create notice.");
+      setStatus({
+        type: "error",
+        message: "❌ Failed to create notice. Please try again.",
+      });
     }
   };
 
   return (
     <div className="min-h-screen bg-sky-50 py-10 px-4 mt-16">
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-3 text-center">
+        <h1 className="text-3xl font-bold text-blue-950 mb-6 border-b pb-3 text-center">
           Create New Notice
         </h1>
+
+        {/* ✅ Professional Inline Message */}
+        {status.message && (
+          <div
+            className={`mb-6 px-4 py-3 rounded-lg text-center font-medium ${
+              status.type === "success"
+                ? "bg-green-100 text-green-700 border border-green-300"
+                : "bg-red-100 text-red-700 border border-red-300"
+            }`}
+          >
+            {status.message}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
-          
+          {/* Title */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Title
-            </label>
+            <label className="block text-blue-950 font-medium mb-1">Title</label>
             <input
               type="text"
               name="title"
               value={form.title}
               onChange={handleChange}
               placeholder="Enter notice title"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full border border-blue-950 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-950 focus:outline-none"
               required
             />
           </div>
 
-        
+          {/* Description */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-blue-950 font-medium mb-1">
               Description
             </label>
             <textarea
@@ -75,26 +97,14 @@ export default function CreateNotice() {
               onChange={handleChange}
               placeholder="Enter notice description"
               rows="5"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full border border-blue-950 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-950 focus:outline-none"
               required
             />
           </div>
 
-         
-          {/* <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="approved_by_headmaster"
-              checked={form.approved_by_headmaster}
-              onChange={handleChange}
-              className="h-5 w-5 text-blue-500 focus:ring-blue-400 rounded"
-            />
-            <label className="text-gray-700">Approved by Headmaster</label>
-          </div> */}
-
-         
+          {/* Notice Date */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-blue-950 font-medium mb-1">
               Notice Date
             </label>
             <input
@@ -102,44 +112,16 @@ export default function CreateNotice() {
               name="notice_for_date"
               value={form.notice_for_date}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full border border-blue-950 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-950 focus:outline-none"
               required
             />
           </div>
 
-         
-          {/* <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Slug
-            </label>
-            <input
-              type="text"
-              name="slug"
-              value={form.slug}
-              onChange={handleChange}
-              placeholder="Unique identifier for notice"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              required
-            />
-          </div> */}
-
-          
-          {/* <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="is_active"
-              checked={form.is_active}
-              onChange={handleChange}
-              className="h-5 w-5 text-blue-500 focus:ring-blue-400 rounded"
-            />
-            <label className="text-gray-700">Active</label>
-          </div> */}
-
-          
+          {/* Submit */}
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+              className="w-full bg-blue-950 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-900 transition-colors duration-200"
             >
               ➕ Create Notice
             </button>
