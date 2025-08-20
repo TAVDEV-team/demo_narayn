@@ -55,10 +55,10 @@ const ContactPage = () => {
           {/* Social Icons */}
           <div className="flex gap-3 mt-4 text-2xl">
             <FaFacebook />
-            <FaTwitter />
+            {/* <FaTwitter /> */}
             <FaGooglePlusG />
             <FaLinkedin />
-            <FaInstagram />
+            {/* <FaInstagram /> */}
           </div>
         </div>
 
