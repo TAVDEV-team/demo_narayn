@@ -91,7 +91,7 @@ function WalletOverview({ balance, onAddClick, loading }) {
 }
 
 function TransactionRow({ tx }) {
-  const date = safeDateString(tx.date);
+  const date = safeDateString(tx.date || tx.created_at || tx.timestamp);
   const amount = tx.amount ?? 0;
   const balance_after = tx.after_transaction_balance;
   const isExpense = tx.type === "EXPENSE";
@@ -198,6 +198,51 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
   );
 }
 
+// --- Date Filter Modal ---
+function DateFilterModal({ onClose, onSubmit }) {
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [error, setError] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!startDate || !endDate) {
+      setError('Both dates are required');
+      return;
+    }
+    if (new Date(startDate) > new Date(endDate)) {
+      setError('Start date cannot be after end date');
+      return;
+    }
+    setError(null);
+    onSubmit({ startDate, endDate });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg w-full max-w-md p-8 relative">
+        <button aria-label="Close" onClick={onClose} className="absolute top-3 right-3 text-gray-600 hover:text-gray-800">✕</button>
+        <h2 className="text-xl font-semibold mb-4">Filter Transactions by Date</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium">Start Date</label>
+            <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full border rounded px-3 py-2"/>
+          </div>
+          <div>
+            <label className="block text-sm font-medium">End Date</label>
+            <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full border rounded px-3 py-2"/>
+          </div>
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+          <div className="flex justify-end gap-2">
+            <button type="button" onClick={onClose} className="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+            <button type="submit" className="px-5 py-2 bg-blue-950 text-white rounded-full">Filter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 // --- Main Page ---
 export default function Fund() {
   const [balance, setBalance] = useState(0);
@@ -210,6 +255,9 @@ export default function Fund() {
   const [pendingTxs, setPendingTxs] = useState([]);
   const [addingError, setAddingError] = useState(null);
   const [adding, setAdding] = useState(false);
+
+  const [showDateFilter, setShowDateFilter] = useState(false);
+  const [filteredTransactions, setFilteredTransactions] = useState(null);
 
   const loadBalance = useCallback(async () => {
     setLoadingBalance(true); setErrorBalance(null);
@@ -271,16 +319,29 @@ export default function Fund() {
     } finally { setAdding(false); }
   };
 
+  const handleDateFilterSubmit = ({ startDate, endDate }) => {
+    const filtered = mergedTransactions.filter(tx => {
+      const txDate = new Date(tx.date || tx.created_at || tx.timestamp);
+      return txDate >= new Date(startDate) && txDate <= new Date(endDate);
+    });
+    setFilteredTransactions(filtered);
+    setShowDateFilter(false);
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-6 pb-20">
       <WalletOverview balance={displayBalance} loading={loadingBalance} onAddClick={handleAddClick} />
 
       {showModal && <AddFundsModal onClose={()=>setShowModal(false)} currentBalance={displayBalance} onSubmit={addFunds} submitting={adding} apiError={addingError} />}
+      {showDateFilter && <DateFilterModal onClose={()=>setShowDateFilter(false)} onSubmit={handleDateFilterSubmit} />}
 
       <div className="mt-12">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-4xl font-semibold text-blue-950">Transaction History</h3>
-          <button onClick={()=>window.print()} className="flex items-center gap-2 bg-blue-950 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition"><Printer size={18}/>Save PDF</button>
+          <div className="flex gap-2">
+            <button onClick={()=>setShowDateFilter(true)} className="flex items-center gap-2 bg-blue-950 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition">Filter by Date</button>
+            <button onClick={()=>window.print()} className="flex items-center gap-2 bg-blue-950 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition"><Printer size={18}/>Save PDF</button>
+          </div>
         </div>
         <div className="overflow-x-auto rounded-lg border border-gray-200">
           <table className="w-full text-left border-collapse">
@@ -293,12 +354,38 @@ export default function Fund() {
               </tr>
             </thead>
             <tbody>
-              {loadingHistory && <tr><td colSpan="4" className="py-6 text-center text-gray-400">Loading history...</td></tr>}
-              {!loadingHistory && mergedTransactions.length===0 && <tr><td colSpan="4" className="py-6 text-center text-gray-400">No transactions yet.</td></tr>}
-              {!loadingHistory && mergedTransactions.map(tx=><TransactionRow key={tx.id} tx={tx} />)}
+              {loadingHistory && (
+                <tr>
+                  <td colSpan="4" className="py-6 text-center text-gray-400">Loading history...</td>
+                </tr>
+              )}
+
+              {!loadingHistory && (filteredTransactions || mergedTransactions).length === 0 && (
+                <tr>
+                  <td colSpan="4" className="py-6 text-center text-gray-400">No transactions found.</td>
+                </tr>
+              )}
+
+              {!loadingHistory &&
+                (filteredTransactions || mergedTransactions).map(tx => (
+                  <TransactionRow key={tx.id} tx={tx} />
+                ))
+              }
             </tbody>
           </table>
         </div>
+
+        {/* Clear Filter button */}
+        {filteredTransactions && filteredTransactions.length > 0 && (
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={() => setFilteredTransactions(null)}
+              className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
+            >
+              Clear Filter
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
