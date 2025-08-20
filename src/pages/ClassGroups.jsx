@@ -3,10 +3,26 @@ import { Link, useParams } from "react-router-dom";
 import { FlaskConical, Calculator, Book } from "lucide-react";
 
 const groups = [
-  { id: "science", title: "Science", icon: <FlaskConical size={60} className="text-blue-600" /> },
-  { id: "commerce", title: "Business Studies", icon: <Calculator size={60} className="text-green-600" /> },
-  { id: "arts", title: "Humanity", icon: <Book size={60} className="text-pink-600" /> },
+  { 
+    id: "science", 
+    title: "Science", 
+    icon: <FlaskConical size={60} className="text-blue-600" />, 
+    stats: { total: 120, male: 70, female: 50 } 
+  },
+  { 
+    id: "commerce", 
+    title: "Business Studies", 
+    icon: <Calculator size={60} className="text-green-600" />, 
+    stats: { total: 90, male: 40, female: 50 } 
+  },
+  { 
+    id: "arts", 
+    title: "Humanity", 
+    icon: <Book size={60} className="text-pink-600" />, 
+    stats: { total: 150, male: 60, female: 90 } 
+  },
 ];
+
 
 export default function ClassGroups() {
   const { grade } = useParams(); 
@@ -34,14 +50,26 @@ export default function ClassGroups() {
           <Link
             key={group.id}
             to={`/class/${grade}/${group.id}`}
-            className="aspect-square rounded-2xl shadow-md border border-gray-300 flex flex-col items-center justify-center p-4 sm:p-6
-                       hover:shadow-xl hover:-translate-y-1 transition-all duration-200
-                       focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-slate-200"
+            className="aspect-square rounded-3xl shadow-lg border border-gray-300 flex flex-col items-center justify-center p-5 sm:p-6
+               hover:shadow-2xl hover:-translate-y-2 transition-all duration-300
+               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+               bg-gradient-to-br from-white to-slate-300"
           >
             <div className="mb-4">{group.icon}</div>
             <h2 className="text-lg sm:text-xl font-semibold text-gray-800 text-center">
               {group.title}
             </h2>
+             <div className="flex flex-col space-y-1 text-center">
+      <span className="text-sm font-medium ">
+        Total Students: <span className="font-bold">{group.stats.total}</span>
+      </span>
+      <span className="text-sm font-medium ">
+        Male: <span className="font-bold">{group.stats.total}</span>
+      </span>
+      <span className="text-sm font-medium ">
+        Female: <span className="font-bold">{group.stats.total}</span>
+      </span>
+    </div>
           </Link>
         ))}
       </div>
