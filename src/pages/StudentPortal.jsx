@@ -3,12 +3,58 @@ import { Link } from "react-router-dom";
 import { BookOpen, GraduationCap, PenTool, NotebookText, Scroll } from "lucide-react"; // fancy icons
 
 const classes = [
-  { grade: 6, title: "Class 6", description: "Syllabus, routine, notices", icon: <BookOpen size={48} className="text-indigo-600" /> },
-  { grade: 7, title: "Class 7", description: "Syllabus, routine, notices", icon: <NotebookText size={48} className="text-green-600" /> },
-  { grade: 8, title: "Class 8", description: "Syllabus, routine, notices", icon: <PenTool size={48} className="text-pink-600" /> },
-  { grade: 9, title: "Class 9", description: "Syllabus, routine, notices", icon: <Scroll size={48} className="text-yellow-600" /> },
-  { grade: 10, title: "Class 10", description: "Syllabus, routine, notices", icon: <GraduationCap size={48} className="text-purple-600" /> },
+  { 
+    grade: 6, 
+    title: "Class 6", 
+    description: {
+      total: 56,      
+      male: 19,        
+      female: 37      
+    }, 
+    icon: <BookOpen size={48} className="text-indigo-600" /> 
+  },
+  { 
+    grade: 7, 
+    title: "Class 7", 
+    description: {
+      total: 50,
+      male: 28,
+      female: 22
+    }, 
+    icon: <NotebookText size={48} className="text-green-600" /> 
+  },
+  { 
+    grade: 8, 
+    title: "Class 8", 
+    description: {
+      total: 54,
+      male: 23,
+      female: 31
+    }, 
+    icon: <PenTool size={48} className="text-pink-600" /> 
+  },
+  { 
+    grade: 9, 
+    title: "Class 9", 
+    description: {
+      total: 45,
+      male: 23,
+      female: 22
+    }, 
+    icon: <Scroll size={48} className="text-yellow-600" /> 
+  },
+  { 
+    grade: 10, 
+    title: "Class 10", 
+    description: {
+      total: 42,
+      male: 20,
+      female: 22
+    }, 
+    icon: <GraduationCap size={48} className="text-purple-600" /> 
+  },
 ];
+
 
 export default function StudentPortal() {
   return (
@@ -30,20 +76,37 @@ export default function StudentPortal() {
 
       {/* Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {classes.map((cls) => (
-          <Link
-            key={cls.grade}
-            to={`/class/${cls.grade}`}
-            className="aspect-square rounded-2xl shadow-md border border-gray-300 flex flex-col items-center justify-center p-4 sm:p-6
-                       hover:shadow-xl hover:-translate-y-1 transition-all duration-200
-                       focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-slate-200"
-            aria-label={`Open Class ${cls.grade} dashboard`}
-          >
-            <div className="mb-4">{cls.icon}</div>
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-800">{cls.title}</h2>
-            {/* <p className="text-sm text-gray-500 mt-1">{cls.description}</p> */}
-          </Link>
-        ))}
+       {classes.map((cls) => (
+  <Link
+    key={cls.grade}
+    to={`/class/${cls.grade}`}
+    className="aspect-square rounded-3xl shadow-lg border border-gray-300 flex flex-col items-center justify-center p-5 sm:p-6
+               hover:shadow-2xl hover:-translate-y-2 transition-all duration-300
+               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+               bg-gradient-to-br from-white to-slate-300"
+    aria-label={`Open Class ${cls.grade} dashboard`}
+  >
+    <div className="mb-4">
+      <div className="p-4 rounded-full  shadow-inner">{cls.icon}</div>
+    </div>
+
+    <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">{cls.title}</h2>
+
+    <div className="flex flex-col space-y-1 text-center">
+      <span className="text-sm font-medium ">
+        Total Students: <span className="font-bold">{cls.description.total}</span>
+      </span>
+      <span className="text-sm font-medium ">
+        Male: <span className="font-bold">{cls.description.male}</span>
+      </span>
+      <span className="text-sm font-medium ">
+        Female: <span className="font-bold">{cls.description.female}</span>
+      </span>
+    </div>
+  </Link>
+))}
+
+
       </div>
     </div>
   );
