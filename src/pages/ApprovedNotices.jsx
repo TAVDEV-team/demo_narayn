@@ -20,10 +20,10 @@ export default function ApprovedNotices() {
       {/* Digital Board Header */}
       <div className="mb-10 text-center mt-20 bg-blue-950 text-white py-5 sm:py-6 rounded-2xl md:rounded-3xl shadow-xl">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-lg">
-          📌 নোটিশ বোর্ড
+          📌 Notice Board
         </h1>
         <p className="text-sm sm:text-base md:text-lg mt-1 sm:mt-2 opacity-90 font-medium">
-          বিদ্যালয়ের অনুমোদিত সকল বিজ্ঞপ্তি এখানে প্রকাশিত হয়
+          All approved notices of the school are published here
         </p>
       </div>
 
@@ -33,14 +33,14 @@ export default function ApprovedNotices() {
           <div className="flex justify-center items-center space-x-2 text-blue-950">
             <Loader2 className="animate-spin w-6 h-6 sm:w-7 sm:h-7" />
             <span className="font-semibold text-sm sm:text-base md:text-lg">
-              লোড হচ্ছে...
+              loading...
             </span>
           </div>
         ) : notices.length > 0 ? (
           notices.map((notice) => (
             <div
               key={notice.slug}
-              className="w-full bg-slate-200 border border-blue-950 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition p-3 sm:p-4 flex flex-col justify-between"
+              className="w-full bg-slate-100 border border-blue-950 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition p-3 sm:p-4 flex flex-col justify-between"
             >
               {/* Notice Header */}
               <h3 className="text-base sm:text-lg font-semibold text-blue-950 border-b border-blue-950 pb-1 mb-2 truncate">
@@ -49,7 +49,7 @@ export default function ApprovedNotices() {
 
               {/* Notice Meta */}
               <p className="text-xs sm:text-sm text-blue-950 mb-2 opacity-80 truncate">
-                তারিখ:{" "}
+                Date:{" "}
                 {new Date(notice.notice_for_date).toLocaleDateString({
                   day: "2-digit",
                   month: "short",
@@ -59,18 +59,20 @@ export default function ApprovedNotices() {
 
               {/* See More Button */}
               <div className="text-right mt-auto">
-                <Link
-                  to={`/notices/${notice.id}`}
-                  className="inline-block bg-blue-950 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm shadow-sm hover:shadow-md hover:scale-105 transition"
-                >
-                  বিস্তারিত →
-                </Link>
+               <Link
+  to={`/notices/${notice.id}`}
+  state={{ from: "approved" }}   // ✅ pass state
+  className="inline-block bg-blue-950 text-white px-4 py-2 rounded-xl font-medium shadow-md hover:shadow-lg hover:scale-105 transition"
+>
+  Details →
+</Link>
+
               </div>
             </div>
           ))
         ) : (
           <p className="text-blue-950 text-center font-medium text-base sm:text-lg">
-            বর্তমানে কোন অনুমোদিত নোটিশ নেই
+            Currently, there are no approved notices
           </p>
         )}
       </div>
