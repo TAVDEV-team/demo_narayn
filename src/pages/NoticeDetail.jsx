@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 
 export default function NoticeDetail() {
   const { id } = useParams();
-  const location = useLocation(); // ✅ get state from Link
+  const location = useLocation(); 
   const fromPage = location.state?.from || "approved";
 
   const [notice, setNotice] = useState(null);
@@ -21,9 +21,9 @@ export default function NoticeDetail() {
 
   if (loading)
     return (
-      <div className="flex flex-col justify-center items-center min-h-screen text-blue-950">
+      <div className="bg-sky-50 flex flex-col justify-center items-center min-h-screen text-blue-950">
         <Loader2 className="animate-spin w-8 h-8 mb-2" />
-        <p className="text-lg font-semibold">লোড হচ্ছে...</p>
+        <p className="text-lg font-semibold">loading...</p>
       </div>
     );
 
@@ -65,13 +65,14 @@ export default function NoticeDetail() {
       </div>
 
       {/* Footer Line */}
-      {fromPage === "approved" && notice.is_approved && (
-        <div className="border-t border-green-300 mt-16 pt-6 relative z-10">
-          <p className="text-right font-semibold text-green-700 text-lg">
-            অনুমোদিত প্রধান শিক্ষক
-          </p>
-        </div>
-      )}
+      {fromPage === "approved" && notice.approved_by_headmaster && (
+  <div className=" mt-96 pt-32 relative z-10">
+    <p className="text-right font-semibold text-green-700 text-lg">
+      Approved by headmaster
+    </p>
+  </div>
+)}
+
 
       {/* Decorative Corners */}
       <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-green-400 rounded-tl-lg"></div>

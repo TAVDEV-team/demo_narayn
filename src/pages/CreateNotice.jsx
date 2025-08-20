@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 
-export default function CreateNotice() {
+export default function CreateNotice({ onCreate }) { // ✅ accept callback
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -11,7 +12,8 @@ export default function CreateNotice() {
     is_active: true,
   });
 
-  const [status, setStatus] = useState({ type: "", message: "" }); // ✅ Success / Error message
+  const [status, setStatus] = useState({ type: "", message: "" });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -23,6 +25,7 @@ export default function CreateNotice() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post(
         "https://narayanpur-high-school.onrender.com/api/nphs/notices/",
@@ -42,12 +45,17 @@ export default function CreateNotice() {
         slug: "",
         is_active: true,
       });
+
+      // ✅ refresh pending list immediately
+      if (onCreate) onCreate();
     } catch (err) {
       console.error(err);
       setStatus({
         type: "error",
         message: "❌ Failed to create notice. Please try again.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,7 +66,7 @@ export default function CreateNotice() {
           Create New Notice
         </h1>
 
-        {/* ✅ Professional Inline Message */}
+        {/* Status Message */}
         {status.message && (
           <div
             className={`mb-6 px-4 py-3 rounded-lg text-center font-medium ${
@@ -121,9 +129,17 @@ export default function CreateNotice() {
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full bg-blue-950 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-900 transition-colors duration-200"
+              className="w-full bg-blue-950 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-900 transition-colors duration-200 flex justify-center items-center"
+              disabled={loading}
             >
-              ➕ Create Notice
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin w-5 h-5 mr-2" />
+                  Creating...
+                </>
+              ) : (
+                "➕ Create Notice"
+              )}
             </button>
           </div>
         </form>
