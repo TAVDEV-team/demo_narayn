@@ -1,31 +1,78 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
-export default function Message({ title, message, signName, signRole, sideImages }) {
+export default function Message() {
+  const imageRef = useRef(null);
+
+  // Optional parallax effect
+//   useEffect(() => {
+//   const handleScroll = () => {
+//     if (imageRef.current) {
+//       const offset = window.scrollY;
+//       // Smooth transform: subtle rise
+//       imageRef.current.style.transform = `translateY(${offset * 0.15}px)`;
+//       // Smooth fade: clamp to 0.3 minimum
+//       const opacity = Math.max(1 - offset / 600, 0.3);
+//       imageRef.current.style.opacity = opacity;
+//     }
+//   };
+//   window.addEventListener("scroll", handleScroll);
+//   return () => window.removeEventListener("scroll", handleScroll);
+// }, []);
+
+
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-      {/* Left side - Message */}
-      <div className="md:col-span-2">
-        <h2 className="text-2xl font-bold text-sky-900 mb-4">{title}</h2>
-        <p className="text-gray-700 leading-relaxed mb-6">{message}</p>
-        <p className="font-semibold text-sky-800">{signName}</p>
-        <p className="text-gray-600">{signRole}</p>
+    <div className="max-w-7xl mx-auto px-20 py-12 grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-gray-50">
+      {/* Headmaster Image */}
+      <div className="w-96" ref={imageRef}>
+        <img
+          src="/sir.jpg" // replace with your uploaded headmaster image
+          alt="Headmaster"
+          className="w-full h-auto rounded-md shadow-lg object-cover"
+        />
       </div>
 
-      {/* Right side - Images */}
-      <div className="flex flex-col space-y-4">
-        <div className="flex justify-center space-x-4">
-          {sideImages.map((img, idx) => (
-            <div key={idx} className="text-center">
-              <img
-                src={img.src}
-                alt={img.name}
-                className="w-52 h-60 object-cover border rounded-md shadow-md mx-auto"
-              />
-              <p className="mt-2 text-sm font-medium text-gray-800">{img.name}</p>
-              <p className="text-xs text-gray-500">{img.role}</p>
-            </div>
-          ))}
-        </div>
+      {/* Quote Section */}
+      <div className="relative text-gray-900">
+        <svg
+          className="absolute -top-8 left-0 w-12 h-12 text-gray-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5v14l7-7-7-7z"
+          />
+        </svg>
+
+        <p className="text-3xl md:text-5xl font-serif leading-relaxed">
+          “Your headmaster message goes here, exactly like a Harvard style
+          quote inside these stylish quotation marks.”
+        </p>
+
+        <p className="mt-6 font-semibold text-lg">
+          Headmaster Name
+        </p>
+        <p className="text-gray-600">School Name</p>
+
+        <button className="mt-4 inline-flex items-center text-gray-700 hover:text-gray-900 font-medium">
+          Read more about his work
+          <svg
+            className="ml-2 w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );

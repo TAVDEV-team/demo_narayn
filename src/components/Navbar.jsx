@@ -156,7 +156,7 @@ const handleLogout = async () => {
                   <Link to="/documents">Documents</Link>
                 </li>
                 {/* <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/student">AddStudent</Link>
+                  <Link to="/message">Message of headmaster</Link>
                 </li> */}
               </ul>
             )}
