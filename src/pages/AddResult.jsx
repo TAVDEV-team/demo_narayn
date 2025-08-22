@@ -1,20 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddResult() {
-  const { id } = useParams(); // student ID
+  const { id, group } = useParams();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
+    examType: "",
     subject: "",
-    exam: 0,
-    mcq: 2147483647, // default max as per your backend
-    practical: 2147483647,
-    written: 2147483647,
+    mcq: "",
+    practical: "",
+    written: "",
   });
 
-  const [message, setMessage] = useState(""); // inline message
-  const [error, setError] = useState(false); // success or error
+  const [subjects, setSubjects] = useState([]);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState(false);
+
+  // Fetch subjects from backend
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      try {
+        const res = await axios.get(
+          "https://narayanpur-high-school.onrender.com/api/nphs/Subject/"
+        );
+        const normalized = res.data.map((s) => ({
+          id: s.id,
+          name: s.name,
+        }));
+        setSubjects(normalized);
+      } catch (err) {
+        console.error("Error fetching subjects:", err);
+        setSubjects([]);
+      }
+    };
+    fetchSubjects();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,35 +48,27 @@ export default function AddResult() {
     setError(false);
 
     try {
-      // include authentication token if required
-      const token = localStorage.getItem("token"); 
+      const token = localStorage.getItem("token");
       await axios.post(
-  "https://narayanpur-high-school.onrender.com/api/result/",
-  {
-    student: id,
-    subject: formData.subject,
-    exam: parseInt(formData.exam),
-    mcq: parseInt(formData.mcq),
-    practical: formData.practical ? parseInt(formData.practical) : undefined, // only send if provided
-    written: parseInt(formData.written),
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
-
+        "https://narayanpur-high-school.onrender.com/api/result/",
+        {
+          student: id,
+          subject: formData.subject,
+          exam_type: formData.examType,
+          mcq: formData.mcq ? parseInt(formData.mcq) : null,
+          practical: formData.practical ? parseInt(formData.practical) : null,
+          written: formData.written ? parseInt(formData.written) : null,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       setMessage("Result added successfully ✅");
-      setError(false);
-      // Optionally reset the form
       setFormData({
+        examType: "",
         subject: "",
-        exam: 0,
-        mcq: 0,
+        mcq: "",
         practical: "",
-        written: 0,
+        written: "",
       });
     } catch (err) {
       console.error("Error adding result:", err);
@@ -64,43 +78,51 @@ export default function AddResult() {
   };
 
   return (
-    <div className="min-h-screen bg-sky-50 flex items-center justify-center p-6">
-      <div className="bg-white p-10 rounded-2xl shadow-lg w-full max-w-xl">
-        <h1 className="text-3xl font-bold mb-6 text-center text-sky-700">
-          Add Result
+    <div className="min-h-screen bg-sky-50 flex items-center justify-center p-4">
+      <div className="bg-white w-full max-w-lg p-8 rounded-2xl shadow-lg">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-sky-700">
+          Add Result {group && `- ${group}`}
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Exam Type */}
+          <div>
+            <label className="block font-semibold mb-1 text-gray-700">
+              Exam Type
+            </label>
+            <select
+              name="examType"
+              value={formData.examType}
+              onChange={handleChange}
+              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              required
+            >
+              <option value="">-- Select Exam Type --</option>
+              <option value="Half-Yearly">Half-Yearly</option>
+              <option value="Final">Final</option>
+              <option value="Test">Test</option>
+            </select>
+          </div>
+
           {/* Subject */}
           <div>
             <label className="block font-semibold mb-1 text-gray-700">
               Subject
             </label>
-            <input
-              type="text"
+            <select
               name="subject"
               value={formData.subject}
               onChange={handleChange}
-              placeholder="Enter Subject Name"
               className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
               required
-            />
-          </div>
-
-          {/* Exam */}
-          <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              Exam Marks
-            </label>
-            <input
-              type="number"
-              name="exam"
-              value={formData.exam}
-              onChange={handleChange}
-              placeholder="Enter Exam Marks"
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-              required
-            />
+            >
+              <option value="">-- Select Subject --</option>
+              {subjects.map((subj) => (
+                <option key={subj.id} value={subj.name}>
+                  {subj.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* MCQ */}
@@ -115,25 +137,23 @@ export default function AddResult() {
               onChange={handleChange}
               placeholder="Enter MCQ Marks"
               className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-              required
             />
           </div>
 
           {/* Practical */}
           <div>
-  <label className="block font-semibold mb-1 text-gray-700">
-    Practical Marks (optional)
-  </label>
-  <input
-    type="number"
-    name="practical"
-    value={formData.practical}
-    onChange={handleChange}
-    placeholder="Enter Practical Marks if any"
-    className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-  />
-</div>
-
+            <label className="block font-semibold mb-1 text-gray-700">
+              Practical Marks
+            </label>
+            <input
+              type="number"
+              name="practical"
+              value={formData.practical}
+              onChange={handleChange}
+              placeholder="Enter Practical Marks"
+              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+            />
+          </div>
 
           {/* Written */}
           <div>
@@ -147,29 +167,32 @@ export default function AddResult() {
               onChange={handleChange}
               placeholder="Enter Written Marks"
               className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-              required
             />
           </div>
 
-          {/* Inline Message */}
+          {/* Message */}
           {message && (
-            <p className={`text-center font-semibold ${error ? "text-red-600" : "text-green-600"}`}>
+            <p
+              className={`text-center font-semibold ${
+                error ? "text-red-600" : "text-green-600"
+              }`}
+            >
               {message}
             </p>
           )}
 
           {/* Buttons */}
-          <div className="flex justify-between mt-4">
+          <div className="flex flex-col sm:flex-row justify-between gap-3 mt-4">
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="px-6 py-3 bg-gray-300 rounded-lg font-semibold hover:bg-gray-400"
+              className="w-full sm:w-auto px-6 py-3 bg-gray-300 rounded-lg font-semibold hover:bg-gray-400"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-3 bg-sky-600 text-white rounded-lg font-semibold hover:bg-sky-700"
+              className="w-full sm:w-auto px-6 py-3 bg-sky-600 text-white rounded-lg font-semibold hover:bg-sky-700"
             >
               Save Result
             </button>
@@ -179,3 +202,5 @@ export default function AddResult() {
     </div>
   );
 }
+// trsiha
+
