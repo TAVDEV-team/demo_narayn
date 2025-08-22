@@ -260,6 +260,11 @@ const handleLogout = async () => {
             </Link>
           </li>
           <li>
+            <Link to="/results" className="hover:text-yellow-300">
+              Result
+            </Link>
+          </li>
+          <li>
             <Link to="/gallery" className="hover:text-yellow-300">
               Gallery
             </Link>

@@ -22,6 +22,9 @@ import AddResult from "./pages/AddResult";
 import TeacherInformation from './pages/TeacherInfo';
 import StaffsInformation from './pages/StaffsInformation';
 import GoverningBody from './components/GoverningBody';
+import ExamCard from './pages/ExamCard';
+import ResultsClasses from "./pages/ResultsClasses";
+import ResultsTable from "./pages/ResultsTable";
 
 function App() {
   return (
@@ -57,6 +60,9 @@ function App() {
            <Route path="/teacher" element={<TeacherInformation />} />
            <Route path="/staffs" element={<StaffsInformation />} />
            <Route path="/governing-body" element={<GoverningBody/>} />
+            <Route path="/results" element={<ExamCard />} />
+        <Route path="/results/:examId" element={<ResultsClasses />} />
+        <Route path="/results/:examId/:classId" element={<ResultsTable />} />
         </Route>
       </Routes>
     </Router>
