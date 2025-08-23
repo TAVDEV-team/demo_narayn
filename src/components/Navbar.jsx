@@ -274,6 +274,11 @@ const handleLogout = async () => {
               Contact
             </Link>
           </li>
+           <li>
+            <Link to="/register" className="hover:text-yellow-300">
+              Register
+            </Link>
+          </li>
       <li>
   {isLoggedIn ? (
     <button

@@ -81,7 +81,7 @@ if (group && group !== "all") {
    <div className="min-h-screen bg-sky-50 py-10 px-4 mt-16">
   <div className="max-w-6xl mx-auto">
     {/* Header */}
-    <h1 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center bg-blue-950 rounded-xl py-2 px-8 shadow-lg">
+    <h1 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center bg-blue-950 rounded-xl py-2 px-8 shadow-lg mt-5">
       Class {grade}
       {group ? ` - ${group.charAt(0).toUpperCase() + group.slice(1)}` : ""} 
     </h1>
