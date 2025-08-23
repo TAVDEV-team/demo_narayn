@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default function AddStudent() {
   const [formData, setFormData] = useState({
-    student_class: "", // changed from batch
+    class_name: "",
     group: "science",
     account: {
       user: {
@@ -14,76 +14,70 @@ export default function AddStudent() {
         password: "",
         confirm_password: "",
       },
-      image: null, // file
+      image: null,
       date_of_birth: "",
       mobile: "",
-      religion: "islam",
+      religion: "",
       address: "",
       joining_date: "",
       last_educational_institute: "",
     },
   });
 
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     const keys = name.split(".");
+    setFormData((prev) => {
+      let copy = { ...prev };
+      let temp = copy;
+      for (let i = 0; i < keys.length - 1; i++) {
+        temp[keys[i]] = { ...temp[keys[i]] };
+        temp = temp[keys[i]];
+      }
+      temp[keys[keys.length - 1]] = files ? files[0] : value;
+      return copy;
+    });
+  };
 
-    if (files) {
-      setFormData({
-        ...formData,
-        [keys[0]]: { ...formData[keys[0]], [keys[1]]: files[0] },
-      });
-      return;
-    }
-
-    if (keys.length === 1) setFormData({ ...formData, [name]: value });
-    else if (keys.length === 2)
-      setFormData({
-        ...formData,
-        [keys[0]]: { ...formData[keys[0]], [keys[1]]: value },
-      });
-    else if (keys.length === 3)
-      setFormData({
-        ...formData,
-        [keys[0]]: {
-          ...formData[keys[0]],
-          [keys[1]]: { ...formData[keys[0]][keys[1]], [keys[2]]: value },
-        },
-      });
+  const buildFormData = (data, form = new FormData(), parentKey = "") => {
+    Object.entries(data).forEach(([key, value]) => {
+      const formKey = parentKey ? `${parentKey}.${key}` : key;
+      if (value instanceof File) {
+        form.append(formKey, value);
+      } else if (typeof value === "object" && value !== null) {
+        buildFormData(value, form, formKey);
+      } else if (value !== undefined && value !== null) {
+        form.append(formKey, value);
+      }
+    });
+    return form;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    if (!formData.account.user.username) {
+      formData.account.user.username =
+        (formData.account.user.first_name + formData.account.user.last_name)
+          .toLowerCase()
+          .replace(/\s/g, "") || "student" + Date.now();
+    }
+
+    if (!formData.account.user.password) {
+      formData.account.user.password = "student1234";
+      formData.account.user.confirm_password = "student1234";
+    }
+
     try {
       const token = localStorage.getItem("token");
-
-      const data = new FormData();
-      data.append("class", formData.student_class); // API key = class
-      data.append("group", formData.group);
-
-      Object.entries(formData.account.user).forEach(([key, val]) => {
-        if (val) data.append(`account[user][${key}]`, val); // append only if filled
-      });
-
-      if (formData.account.image)
-        data.append("account[image]", formData.account.image);
-
-      data.append("account[date_of_birth]", formData.account.date_of_birth);
-      data.append("account[mobile]", formData.account.mobile);
-      data.append("account[religion]", formData.account.religion);
-      data.append("account[address]", formData.account.address);
-      data.append("account[joining_date]", formData.account.joining_date);
-
-      if (formData.account.last_educational_institute)
-        data.append(
-          "account[last_educational_institute]",
-          formData.account.last_educational_institute
-        );
-
-      console.log("==== Submitted Form Data ====");
-      for (let pair of data.entries()) {
-        console.log(pair[0], ":", pair[1]);
-      }
+      const data = buildFormData(formData);
 
       await axios.post(
         "https://narayanpur-high-school.onrender.com/api/user/students/",
@@ -95,242 +89,179 @@ export default function AddStudent() {
           },
         }
       );
-      alert("Student added successfully!");
+
+      setSuccessMessage("✅ Student added successfully!");
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      alert("Failed to add student.");
+      console.error("Server response:", err.response?.data || err.message);
+      setErrorMessage("❌ Failed to add student. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const getValue = (name) => {
+    const keys = name.split(".");
+    let val = formData;
+    for (let key of keys) {
+      if (!val[key]) return "";
+      val = val[key];
+    }
+    return val;
+  };
+
+  const renderInput = ({ label, name, type = "text", required = false }) => (
+    <div className="flex flex-col space-y-1">
+      <label className="text-sm md:text-base font-medium text-gray-700">
+        {label} {required && <span className="text-red-600">*</span>}
+      </label>
+      <input
+        type={type}
+        name={name}
+        value={type === "file" ? undefined : getValue(name)}
+        onChange={handleChange}
+        required={required}
+        accept={type === "file" ? "image/*" : undefined}
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 md:px-4 md:py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-sm md:text-base"
+      />
+    </div>
+  );
+
   return (
-    <div className="max-w-4xl mx-auto my-12 p-8 bg-white rounded-3xl shadow-lg border border-gray-200">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+    <section className="bg-sky-50">
+    <div className="max-w-4xl mx-auto my-6 md:my-12 p-4 sm:p-6 md:p-10 bg-white rounded-2xl shadow-lg border border-gray-200">
+      <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">
         🎓 Add New Student
       </h2>
 
+      {successMessage && (
+        <p className="text-green-600 font-semibold mb-4 text-center text-sm md:text-base">
+          {successMessage}
+        </p>
+      )}
+      {errorMessage && (
+        <p className="text-red-600 font-semibold mb-4 text-center text-sm md:text-base">
+          {errorMessage}
+        </p>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Section 1: Class & Group */}
+        {/* Class & Group */}
         <div>
-          <h3 className="text-lg font-semibold text-indigo-600 mb-3">
+          <h3 className="text-base md:text-lg font-semibold text-indigo-600 mb-3 mt-5">
             Class & Group Info
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="font-medium text-gray-700">
+              <label className="text-sm md:text-base font-medium text-gray-700">
                 Class <span className="text-red-600">*</span>
               </label>
               <select
-                name="student_class"
-                value={formData.student_class}
+                name="class_name"
+                value={formData.class_name}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 md:px-4 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-sm md:text-base"
               >
                 <option value="">Select Class</option>
-                <option value="6">Class 6</option>
-                <option value="7">Class 7</option>
-                <option value="8">Class 8</option>
-                <option value="9">Class 9</option>
-                <option value="10">Class 10</option>
+                {[6, 7, 8, 9, 10].map((cls) => (
+                  <option key={cls} value={cls}>
+                    Class {cls}
+                  </option>
+                ))}
               </select>
             </div>
-            <div>
-              <label className="font-medium text-gray-700">Group</label>
-              <select
-                name="group"
-                value={formData.group}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              >
-                <option value="science">Science</option>
-                <option value="commerce">Commerce</option>
-                <option value="arts">Arts</option>
-              </select>
-            </div>
+
+            {(formData.class_name === "9" || formData.class_name === "10") && (
+              <div>
+                <label className="text-sm md:text-base font-medium text-gray-700">
+                  Group
+                </label>
+                <select
+                  name="group"
+                  value={formData.group}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 md:px-4 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-sm md:text-base"
+                >
+                  {["science", "business", "humanities"].map((g) => (
+                    <option key={g} value={g}>
+                      {g.charAt(0).toUpperCase() + g.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Section 2: Account Info */}
+        {/* User Account Info */}
         <div>
-          <h3 className="text-lg font-semibold text-indigo-600 mb-3">
+          <h3 className="text-base md:text-lg font-semibold text-indigo-600 mb-3">
             User Account Info
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* <div>
-              <label className="font-medium text-gray-700">Username</label>
-              <input
-                name="account.user.username"
-                placeholder="Username"
-                value={formData.account.user.username}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div> */}
-            <div>
-              <label className="font-medium text-gray-700">
-                First Name <span className="text-red-600">*</span>
-              </label>
-              <input
-                name="account.user.first_name"
-                placeholder="First Name"
-                value={formData.account.user.first_name}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">Last Name</label>
-              <input
-                name="account.user.last_name"
-                placeholder="Last Name"
-                value={formData.account.user.last_name}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">Email</label>
-              <input
-                name="account.user.email"
-                placeholder="Email"
-                type="email"
-                value={formData.account.user.email}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">
-                Password <span className="text-red-600">*</span>
-              </label>
-              <input
-                name="account.user.password"
-                placeholder="Password"
-                type="password"
-                value={formData.account.user.password}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">
-                Confirm Password <span className="text-red-600">*</span>
-              </label>
-              <input
-                name="account.user.confirm_password"
-                placeholder="Confirm Password"
-                type="password"
-                value={formData.account.user.confirm_password}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
+            {[
+              { label: "First Name", name: "account.user.first_name", required: true },
+              { label: "Last Name", name: "account.user.last_name" },
+              { label: "Email", name: "account.user.email", type: "email" },
+              { label: "Password", name: "account.user.password", type: "password" },
+              { label: "Confirm Password", name: "account.user.confirm_password", type: "password" },
+            ].map(renderInput)}
           </div>
         </div>
 
-        {/* Section 3: Additional Info */}
+        {/* Additional Info */}
         <div>
-          <h3 className="text-lg font-semibold text-indigo-600 mb-3">
+          <h3 className="text-base md:text-lg font-semibold text-indigo-600 mb-3">
             Additional Info
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="font-medium text-gray-700">Image</label>
-              <input
-                name="account.image"
-                type="file"
-                accept="image/*"
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">
-                Date of Birth <span className="text-red-600">*</span>
-              </label>
-              <input
-                name="account.date_of_birth"
-                type="date"
-                value={formData.account.date_of_birth}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">
-                Mobile <span className="text-red-600">*</span>
-              </label>
-              <input
-                name="account.mobile"
-                placeholder="Mobile"
-                value={formData.account.mobile}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">Religion</label>
-              <input
-                name="account.religion"
-                placeholder="Religion"
-                value={formData.account.religion}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">
-                Address <span className="text-red-600">*</span>
-              </label>
-              <input
-                name="account.address"
-                placeholder="Address"
-                value={formData.account.address}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">
-                Admission Date <span className="text-red-600">*</span>
-              </label>
-              <input
-                name="account.joining_date"
-                type="date"
-                value={formData.account.joining_date}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="font-medium text-gray-700">
-                Last Educational Institute
-              </label>
-              <input
-                name="account.last_educational_institute"
-                placeholder="Last Educational Institute"
-                value={formData.account.last_educational_institute}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-              />
-            </div>
+            {[
+              { label: "Image", name: "account.image", type: "file" },
+              { label: "Date of Birth", name: "account.date_of_birth", type: "date", required: true },
+              { label: "Mobile", name: "account.mobile", required: true },
+              { label: "Religion", name: "account.religion" },
+              { label: "Address", name: "account.address", required: true },
+              { label: "Admission Date", name: "account.joining_date", type: "date", required: true },
+              { label: "Last Educational Institute", name: "account.last_educational_institute" },
+            ].map(renderInput)}
           </div>
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-950 text-white font-semibold px-4 py-3 rounded-xl shadow hover:bg-indigo-700 transition-all"
+          className="w-full bg-blue-950 text-white font-semibold px-4 py-3 rounded-xl shadow hover:bg-blue-900 transition-all flex items-center justify-center text-sm md:text-base"
+          disabled={loading}
         >
-          Add Student
+          {loading ? (
+            <>
+              <svg
+                className="animate-spin h-5 w-5 mr-2 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                ></path>
+              </svg>
+              Processing...
+            </>
+          ) : (
+            "Add Student"
+          )}
         </button>
       </form>
     </div>
+    </section>
   );
 }
