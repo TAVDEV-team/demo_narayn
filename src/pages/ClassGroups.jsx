@@ -34,7 +34,7 @@ export default function ClassGroups() {
     >
       {/* Header */}
     <div className="max-w-6xl mx-auto text-center mb-12">
-  <h1 className="w-full text-2xl sm:text-3xl md:text-4xl font-bold text-white bg-blue-950 mb-4 rounded-xl py-3 px-4 sm:px-6 shadow-md mt-5">
+  <h1 className="w-full text-2xl sm:text-3xl md:text-4xl font-bold mt-10 text-white bg-blue-950 mb-4 rounded-xl py-3 px-4 sm:px-6 shadow-md">
     📚 Class {grade} - Select Your Group
   </h1>
   {/* <p className="inline-block mt-2 text-lg sm:text-xl md:text-2xl text-white bg-sky-900 rounded-lg py-2 px-20 shadow-md">
