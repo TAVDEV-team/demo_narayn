@@ -93,7 +93,7 @@ export default function RegisterForm() {
 const [classes, setClasses] = useState([]);
 
 useEffect(() => {
-  axios.get("https://narayanpur-high-school.onrender.com/api/nphs/classes/") // replace with your API
+  axios.get("https://narayanpur-high-school.onrender.com/api/nphs/classes/") 
     .then((res) => {
       console.log(res.data); // check the shape here
       setClasses(res.data);
