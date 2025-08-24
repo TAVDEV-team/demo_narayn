@@ -3,10 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddResult() {
-  const { id, group } = useParams();
+  const { id, group } = useParams(); // id = student id
   const navigate = useNavigate();
 
+  const [exams, setExams] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+
   const [formData, setFormData] = useState({
+    aclass: "",   // will store numeric class id
     examType: "",
     subject: "",
     mcq: "",
@@ -14,16 +18,41 @@ export default function AddResult() {
     written: "",
   });
 
-  const [subjects, setSubjects] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState(false);
 
-  // Fetch subjects from backend
+  // Fetch student details (to get class id)
+  useEffect(() => {
+    const fetchStudent = async () => {
+      try {
+        const res = await axios.get(
+          `https://narayanpur-high-school.onrender.com/api/nphs/student/${id}/`
+        );
+        console.log("Student fetched:", res.data);
+
+        // if aclass is object {id, name}, pick id
+        const classId =
+          typeof res.data.aclass === "object"
+            ? res.data.aclass.id
+            : res.data.aclass;
+
+        setFormData((prev) => ({
+          ...prev,
+          aclass: classId,
+        }));
+      } catch (err) {
+        console.error("Error fetching student:", err);
+      }
+    };
+    fetchStudent();
+  }, [id]);
+
+  // Fetch subjects
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
         const res = await axios.get(
-          "https://narayanpur-high-school.onrender.com/api/nphs/Subject/"
+          "https://narayanpur-high-school.onrender.com/api/nphs/subject/"
         );
         const normalized = res.data.map((s) => ({
           id: s.id,
@@ -38,6 +67,22 @@ export default function AddResult() {
     fetchSubjects();
   }, []);
 
+  // Fetch exams
+  useEffect(() => {
+    const fetchExams = async () => {
+      try {
+        const res = await axios.get(
+          "https://narayanpur-high-school.onrender.com/api/result/exam/"
+        );
+        setExams(res.data);
+      } catch (err) {
+        console.error("Error fetching exams:", err);
+        setExams([]);
+      }
+    };
+    fetchExams();
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -49,21 +94,27 @@ export default function AddResult() {
 
     try {
       const token = localStorage.getItem("token");
+
+      const payload = {
+        aclass: parseInt(formData.aclass), // now guaranteed numeric
+        student: parseInt(id),
+        subject: parseInt(formData.subject),
+        exam: parseInt(formData.examType),
+        mcq: formData.mcq ? parseInt(formData.mcq) : null,
+        practical: formData.practical ? parseInt(formData.practical) : null,
+        written: formData.written ? parseInt(formData.written) : null,
+      };
+      console.log("Payload being sent:", payload);
+
       await axios.post(
         "https://narayanpur-high-school.onrender.com/api/result/",
-        {
-          student: id,
-          subject: formData.subject,
-          exam_type: formData.examType,
-          mcq: formData.mcq ? parseInt(formData.mcq) : null,
-          practical: formData.practical ? parseInt(formData.practical) : null,
-          written: formData.written ? parseInt(formData.written) : null,
-        },
+        payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setMessage("Result added successfully ✅");
       setFormData({
+        aclass: formData.aclass,
         examType: "",
         subject: "",
         mcq: "",
@@ -71,14 +122,14 @@ export default function AddResult() {
         written: "",
       });
     } catch (err) {
-      console.error("Error adding result:", err);
+      console.error("Error adding result:", err.response?.data || err.message);
       setMessage("Failed to add result ❌");
       setError(true);
     }
   };
 
   return (
-    <div className="min-h-screen bg-sky-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-sky-50 flex items-center justify-center p-4 mt-10">
       <div className="bg-white w-full max-w-lg p-8 rounded-2xl shadow-lg">
         <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-sky-700">
           Add Result {group && `- ${group}`}
@@ -98,9 +149,11 @@ export default function AddResult() {
               required
             >
               <option value="">-- Select Exam Type --</option>
-              <option value="Half-Yearly">Half-Yearly</option>
-              <option value="Final">Final</option>
-              <option value="Test">Test</option>
+              {exams.map((exam) => (
+                <option key={exam.id} value={exam.id}>
+                  {exam.exam_title}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -118,7 +171,7 @@ export default function AddResult() {
             >
               <option value="">-- Select Subject --</option>
               {subjects.map((subj) => (
-                <option key={subj.id} value={subj.name}>
+                <option key={subj.id} value={subj.id}>
                   {subj.name}
                 </option>
               ))}
@@ -202,5 +255,3 @@ export default function AddResult() {
     </div>
   );
 }
-// trsiha
-
