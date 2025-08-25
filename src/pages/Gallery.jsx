@@ -69,12 +69,7 @@ export default function Gallery() {
       data.append("category", formData.category); // <-- send category ID
       data.append("date_uploaded", new Date().toISOString());
 
-      await axios.post(
-        "https://narayanpur-high-school.onrender.com/api/gallery/photos/",
-        data,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
+      
       setStatus("success");
       setFormData({ title: "", description: "", image: null, category: "" });
       fetchPhotos();
@@ -100,12 +95,13 @@ export default function Gallery() {
   };
 
   // Group photos by category
-  const groupedPhotos = photos.reduce((groups, photo) => {
-    const cat = photo.category?.name || "Uncategorized";
-    if (!groups[cat]) groups[cat] = [];
-    groups[cat].push(photo);
-    return groups;
-  }, {});
+ const groupedPhotos = photos.reduce((groups, photo) => {
+  const cat = photo.category?.name || "Uncategorized";
+  if (!groups[cat]) groups[cat] = [];
+  groups[cat].push(photo);
+  return groups;
+}, {});
+
 
   return (
     <div className="min-h-screen bg-sky-50 py-12 px-4 md:px-8">
@@ -114,10 +110,31 @@ export default function Gallery() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-4xl font-extrabold text-center text-sky-900 mb-12"
+          className="text-4xl font-extrabold text-center text-white bg-blue-950 rounded-full  mb-12  "
         >
-          📸 Our School Gallery
+          
+          
+           {!showForm && (
+          <div className=" gap-4 mt-8 mb-8">
+           
+               <h1 className="text-center ">Our School gallery</h1>
+            <button
+              onClick={() => setShowForm(true)}
+              className="bg-sky-50 text-blue-950  text-lg px-4 gap-20  rounded-lg hover:bg-sky-200  transition mb-5"
+            >
+              Add Photo
+            </button>
+            <button
+              onClick={() => setShowCategoryForm(true)}
+              className="bg-sky-50 text-blue-950 text-lg px-4  rounded-lg hover:bg-sky-200 transition mb-5"
+            >
+              Add Category
+            </button>
+          </div>
+        )}
         </motion.h1>
+
+       
 
         {/* Upload Form */}
         {showForm && (
@@ -244,63 +261,54 @@ export default function Gallery() {
         )}
 
         {/* Gallery grouped by category */}
-        {!showForm &&
-          Object.keys(groupedPhotos).map((categoryName, idx) => (
-            <div key={idx} className="mb-12">
-              <h2 className="text-2xl font-bold text-sky-800 mb-6">{categoryName}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {groupedPhotos[categoryName].map((photo, index) => (
-                  <motion.div
-                    key={photo.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="relative overflow-hidden rounded-2xl shadow-lg group"
+        
+{!showForm &&
+  categories.map((category) => (
+    <div key={category.id} className="mb-12">
+      <h2 className="text-2xl font-bold text-sky-800 mb-6">{category.name}</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {category.photos.length === 0 ? (
+          <p className="text-gray-500 col-span-full">No photos in this category.</p>
+        ) : (
+          category.photos.map((photo, index) => (
+            <motion.div
+              key={photo.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className="relative overflow-hidden rounded-2xl shadow-lg group"
+            >
+              <img
+                src={photo.image}
+                alt={photo.title}
+                className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500"
+              />
+              <div className="absolute top-2 right-2 flex flex-col items-end">
+                <button
+                  onClick={() => setMenuOpen(menuOpen === photo.id ? null : photo.id)}
+                  className="bg-black bg-opacity-40 text-white px-2 py-1 rounded-full hover:bg-opacity-70 transition"
+                >
+                  ⋮
+                </button>
+                {menuOpen === photo.id && (
+                  <button
+                    onClick={() => handleDelete(photo.id)}
+                    className="mt-2 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 transition"
                   >
-                    <img
-                      src={photo.image}
-                      alt={photo.title}
-                      className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500"
-                    />
-                    <div className="absolute top-2 right-2 flex flex-col items-end">
-                      <button
-                        onClick={() => setMenuOpen(menuOpen === photo.id ? null : photo.id)}
-                        className="bg-black bg-opacity-40 text-white px-2 py-1 rounded-full hover:bg-opacity-70 transition"
-                      >
-                        ⋮
-                      </button>
-                      {menuOpen === photo.id && (
-                        <button
-                          onClick={() => handleDelete(photo.id)}
-                          className="mt-2 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 transition"
-                        >
-                          🗑 Delete
-                        </button>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
+                    🗑 Delete
+                  </button>
+                )}
               </div>
-            </div>
-          ))}
+            </motion.div>
+          ))
+        )}
+      </div>
+    </div>
+  ))}
+
 
         {/* Add Photo / Add Category Buttons */}
-        {!showForm && (
-          <div className="flex justify-center gap-4 mt-8">
-            <button
-              onClick={() => setShowForm(true)}
-              className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition"
-            >
-              ➕ Add Photo
-            </button>
-            <button
-              onClick={() => setShowCategoryForm(true)}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
-            >
-              ➕ Add Category
-            </button>
-          </div>
-        )}
+        
       </div>
     </div>
   );
