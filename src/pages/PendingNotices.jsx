@@ -38,11 +38,11 @@ export default function PendingNotices() {
     <section className="py-4 px-4 sm:px-8 md:px-16 lg:px-24 bg-sky-50 min-h-screen">
       {/* Header */}
       <div className="mb-10 text-center mt-16 bg-blue-950 text-white py-6 sm:py-4 md:py-5 rounded-3xl shadow-xl max-w-4xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold tracking-wide drop-shadow-lg">
+        <h1 className="text-2xl sm:text-2xl md:text-3xl font-extrabold tracking-wide drop-shadow-lg">
           Pending Notices Review
         </h1>
-        <p className="text-base sm:text-lg md:text-xl mt-2 sm:mt-3 opacity-90 font-medium">
-          Welcome, respected Headmaster. Please review and approve the pending notices.
+        <p className="text-base sm:text-lg md:text-lg mt-2 sm:mt-3 opacity-90 font-medium">
+          please approve the pending notices.
         </p>
       </div>
 
