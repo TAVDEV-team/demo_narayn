@@ -25,6 +25,7 @@ import GoverningBody from './components/GoverningBody';
 import ExamCard from './pages/ExamCard';
 import ResultsClasses from "./pages/ResultsClasses";
 import ResultsTable from "./pages/ResultsTable";
+import Routine from './pages/Routine';
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
             <Route path="/results" element={<ExamCard />} />
         <Route path="/results/:examId" element={<ResultsClasses />} />
         <Route path="/results/:examId/:classId" element={<ResultsTable />} />
+        <Route path="routine" element={<Routine />} />
         </Route>
       </Routes>
     </Router>

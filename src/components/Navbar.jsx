@@ -148,16 +148,16 @@ const handleLogout = async () => {
               aria-expanded={openMenu === "admission"}
               className="hover:text-yellow-300 flex items-center gap-1"
             >
-              Addmission
+              Academic
             </button>
             {openMenu === "admission" && (
               <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg z-10 mt-1 rounded-md overflow-hidden">
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
                   <Link to="/documents">Documents</Link>
                 </li>
-                {/* <li className="px-4 py-2 hover:bg-blue-100 border-b">
-                  <Link to="/message">Message of headmaster</Link>
-                </li> */}
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/routine">Routine</Link>
+                </li>
               </ul>
             )}
           </li>
