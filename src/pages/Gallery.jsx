@@ -31,6 +31,7 @@ export default function Gallery() {
         "https://narayanpur-high-school.onrender.com/api/gallery/categories/"
       );
       setCategories(res.data);
+      console.log(res.data)
     } catch (err) {
       console.error("Error fetching categories:", err);
     }
@@ -120,13 +121,13 @@ export default function Gallery() {
                <h1 className="text-center ">Our School gallery</h1>
             <button
               onClick={() => setShowForm(true)}
-              className="bg-sky-50 text-blue-950  text-lg px-4 gap-20  rounded-lg hover:bg-sky-200  transition mb-5"
+              className="bg-sky-50 text-blue-950  text-lg px-4 gap-20  rounded-lg hover:bg-sky-200  transition m-5"
             >
               Add Photo
             </button>
             <button
               onClick={() => setShowCategoryForm(true)}
-              className="bg-sky-50 text-blue-950 text-lg px-4  rounded-lg hover:bg-sky-200 transition mb-5"
+              className="bg-sky-50 text-blue-950 text-lg px-4  rounded-lg hover:bg-sky-200 transition m-5"
             >
               Add Category
             </button>
