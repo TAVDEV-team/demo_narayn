@@ -21,8 +21,9 @@ const galleryImages = [
 export default function Home() {
   return (
     <>
-      <Hero />
-
+      <Hero
+      // title="Abdulla all mamun"
+      />
             <WelcomeMessage />
        <Message
   title="Narayanpur High School"
@@ -43,3 +44,4 @@ export default function Home() {
     </>
   );
 }
+
