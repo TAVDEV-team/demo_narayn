@@ -57,7 +57,7 @@ function App() {
           <Route path="/class/:grade/:group" element={<ClassStudents />} />
 
           <Route path="/teacher-portal" element={<TeacherDashboard />} />
-          <Route path="/students/:id/add-result" element={<AddResult />} />
+          <Route path="/add-result" element={<AddResult />} />
            <Route path="/teacher" element={<TeacherInformation />} />
            <Route path="/staffs" element={<StaffsInformation />} />
             <Route path="/results" element={<ExamCard />} />
