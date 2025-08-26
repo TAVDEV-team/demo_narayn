@@ -96,7 +96,7 @@ export default function TeacherDashboard() {
         Add Notice
         </button>
         <button
-          onClick={() => navigate("/portal")}
+          onClick={() => navigate("/add-result")}
           className="px-5 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-900"
         >
         Add Result
