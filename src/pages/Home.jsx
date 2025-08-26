@@ -1,7 +1,6 @@
 import React from "react";
 import Hero from "../components/Hero";
 import Message from "../components/Message";
-import GoverningBody from "../components/GoverningBody";
 import History from "../components/History";
 import PhotoGallery from "../components/PhotoGallery";
 import WelcomeMessage from "../components/WelcomeMessage";
@@ -37,7 +36,7 @@ export default function Home() {
 />
        
 
-        <GoverningBody />
+        
         <History />
          <PhotoGallery images={galleryImages} />
       
