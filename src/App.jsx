@@ -26,6 +26,9 @@ import ResultsClasses from "./pages/ResultsClasses";
 import ResultsTable from "./pages/ResultsTable";
 import Routine from './pages/Routine';
 import GoverningBody from './pages/GoverningBody';
+import SyllabusPage from './pages/Syllabus';
+import SyllabusViewer from "./pages/SyllabusViewer";
+
 
 function App() {
   return (
@@ -65,6 +68,8 @@ function App() {
         <Route path="/results/:examId/:classId" element={<ResultsTable />} />
         <Route path="routine" element={<Routine />} />
         <Route path="governing-body" element={<GoverningBody/>} />
+        <Route path="syllabus" element={<SyllabusPage/>} />
+        <Route path="/syllabus/:id" element={<SyllabusViewer />} />
         </Route>
       </Routes>
     </Router>

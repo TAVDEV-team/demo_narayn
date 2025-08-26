@@ -129,7 +129,9 @@ const handleLogout = async () => {
   alt="School Logo"
   className="h-10 w-10 object-contain" 
 />
-
+  <span className="text-4xl font-bold text-white hover:text-yellow-300">
+    Narayanpur High School
+  </span>
 </Link>
 
 
@@ -155,6 +157,9 @@ const handleLogout = async () => {
                 </li>
                 <li className="px-4 py-2 hover:bg-blue-100 border-b">
                   <Link to="/routine">Routine</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-blue-100 border-b">
+                  <Link to="/syllabus">Syllabus</Link>
                 </li>
               </ul>
             )}
