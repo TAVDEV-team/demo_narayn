@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const [sidebarOpen, setSidebarOpen] = useState(false);
+// const [sidebarOpen, setSidebarOpen] = useState(false);
 
 import {
   MapPin,
