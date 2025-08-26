@@ -67,12 +67,20 @@ export default function Gallery() {
       data.append("title", formData.title);
       data.append("description", formData.description);
       data.append("image", formData.image);
-      data.append("category", formData.category); // <-- send category ID
+      data.append("category", 1);
+      // data.append("category", parseInt(formData.category, 10));
+
       data.append("date_uploaded", new Date().toISOString());
 
-      
+      await axios.post(
+        "https://narayanpur-high-school.onrender.com/api/gallery/photos/",
+        data,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
       setStatus("success");
-      setFormData({ title: "", description: "", image: null, category: "" });
+      setFormData({ title: "", description: "", image: null, category: 1 });
+      console.log(data)
       fetchPhotos();
       setShowForm(false);
     } catch (error) {
@@ -82,6 +90,7 @@ export default function Gallery() {
       setLoading(false);
     }
   };
+
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this photo?")) return;
@@ -294,9 +303,9 @@ export default function Gallery() {
                 {menuOpen === photo.id && (
                   <button
                     onClick={() => handleDelete(photo.id)}
-                    className="mt-2 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 transition"
+                    className="mt-2 bg-red-600 text-white p-3 py-1 rounded-md text-sm hover:bg-red-700 transition"
                   >
-                    🗑 Delete
+                     Delete
                   </button>
                 )}
               </div>

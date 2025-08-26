@@ -14,7 +14,7 @@ export default function ClassResult() {
         `https://narayanpur-high-school.onrender.com/api/result/class_result/${examId}/${classId}/`
       )
       .then((res) => {
-        setResults(res.data.student_results || []); // ✅ array
+        setResults(res.data.student_results || []);
         setSummary({
           total_students: res.data.total_students,
           total_marks: res.data.total_marks,
@@ -93,7 +93,7 @@ export default function ClassResult() {
                 </td>
                <td className="border px-4 py-2 text-center">
   <a
-    href={`https://narayanpur-high-school.onrender.com/api/result/card_pdf/${examId}/${res.id}/`}
+    href={`https://narayanpur-high-school.onrender.com/api/result/card_pdf/${examId}/${classId}/${res.id}/`}
     rel="noopener noreferrer"
     className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
   >
