@@ -1,116 +1,83 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { FaSpinner } from "react-icons/fa"; // For loading spinner
 
 export default function GoverningBody() {
   const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(false); // Error state
 
   useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const res = await axios.get(
-          "https://narayanpur-high-school.onrender.com/api/user/governing-body/"
-        );
+    axios
+      .get("https://narayanpur-high-school.onrender.com/api/user/governing/")
+      .then((res) => {
         setMembers(res.data);
-      } catch (err) {
-        console.error("Error fetching governing body members:", err);
-      } finally {
         setLoading(false);
-      }
-    };
-
-    fetchMembers();
+      })
+      .catch((err) => {
+        console.error("Error fetching governing body:", err);
+        setError(true);
+        setLoading(false);
+      });
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center bg-sky-50 items-center">
-        <p className="flex items-center gap-2 text-2xl font-bold text-sky-700">
-          <svg
-            className="animate-spin h-5 w-5 text-sky-700"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-            ></path>
-          </svg>
-          Loading governing body...
-        </p>
-      </div>
-    );
-  }
-
   return (
-   <div className="min-h-screen bg-sky-50 py-10 px-4">
-  <div className="max-w-6xl mx-auto space-y-10">
-    {/* Heading */}
-    <div className="w-full">
-     <h1 className="text-3xl md:text-4xl font-bold text-white bg-blue-950 text-center py-8 rounded-md shadow-md">
-    Governing Body
-  </h1>
-    </div>
+    <section className="bg-sky-50 py-12 min-h-screen mt-10">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-4xl font-extrabold text-center text-blue-900 mb-10"
+      >
+        Governing Body
+      </motion.h1>
 
-    {/* Member cards */}
-    {members.length === 0 ? (
-      <p className="text-center text-gray-500 text-lg">No members found.</p>
-    ) : (
-      <div className="space-y-6">
-        {members.map((member) => (
-          <div
-            key={member.account.id}
-            className="flex bg-white shadow-md rounded-xl overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-200"
-          >
-            <div className="w-32 h-32 flex-shrink-0">
+      {loading ? (
+        <div className="flex flex-col items-center justify-center mt-20">
+          <FaSpinner className="animate-spin text-blue-600 text-4xl mb-4" />
+          <p className="text-blue-700 font-medium text-lg">Loading members...</p>
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center mt-20">
+          <p className="text-red-600 font-medium text-lg">
+            Failed to load governing body members.
+          </p>
+        </div>
+      ) : members.length === 0 ? (
+        <p className="text-center text-gray-500 text-lg mt-10">
+          No members found.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-6 md:px-20">
+          {members.map((member, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white shadow-lg rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-2xl transition"
+            >
               <img
-                src={member.account.image || "/default-avatar.png"}
-                alt={member.account.full_name || member.account.user.username}
-                className="w-full h-full object-cover rounded-full border-4 border-indigo-200"
+                src={member.account?.image || "https://via.placeholder.com/150"}
+                alt={member.account?.user?.first_name}
+                className="w-28 h-28 rounded-full object-cover mb-4 border-4 border-blue-200"
               />
-            </div>
-
-            <div className="flex-1 p-4 flex flex-col justify-center ml-6 space-y-1">
-              <h2 className="text-xl font-semibold text-gray-800">
-                {member.account.full_name?.trim() || member.account.user.username}
+              <h2 className="text-xl font-bold text-gray-800">
+                {member.account?.user?.first_name} {member.account?.user?.last_name}
               </h2>
-              {member.designation && (
-                <p className="text-gray-600">
-                  <span className="font-semibold">Designation:</span> {member.designation}
-                </p>
-              )}
-              {member.account.email && (
-                <p className="text-gray-600">
-                  <span className="font-semibold">Email:</span> {member.account.email}
-                </p>
-              )}
-              {member.account.phone && (
-                <p className="text-gray-600">
-                  <span className="font-semibold">Phone:</span> {member.account.phone}
-                </p>
-              )}
-              {member.account.gender && (
-                <p className="text-gray-600">
-                  <span className="font-semibold">Gender:</span> {member.account.gender}
-                </p>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-</div>
+              <p className="text-blue-700 font-semibold capitalize">{member.designation}</p>
+              <p className="text-gray-600 text-sm mt-1">{member.profession}</p>
 
+              <div className="mt-4 text-gray-500 text-sm">
+                <p>{member.account?.user?.email}</p>
+                <p>{member.account?.mobile}</p>
+                <p>{member.account?.address}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
