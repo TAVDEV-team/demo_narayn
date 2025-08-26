@@ -67,7 +67,9 @@ export default function Gallery() {
       data.append("title", formData.title);
       data.append("description", formData.description);
       data.append("image", formData.image);
-      data.append("category", formData.category); // <-- send category ID
+      data.append("category", 1);
+      // data.append("category", parseInt(formData.category, 10));
+
       data.append("date_uploaded", new Date().toISOString());
 
       await axios.post(
@@ -77,7 +79,8 @@ export default function Gallery() {
       );
 
       setStatus("success");
-      setFormData({ title: "", description: "", image: null, category: "" });
+      setFormData({ title: "", description: "", image: null, category: 1 });
+      console.log(data)
       fetchPhotos();
       setShowForm(false);
     } catch (error) {
@@ -87,6 +90,7 @@ export default function Gallery() {
       setLoading(false);
     }
   };
+
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this photo?")) return;
@@ -264,7 +268,7 @@ export default function Gallery() {
           </div>
         )}
 
-        {/* Gallery grouped by category */}
+
         {!showForm &&
           Object.keys(groupedPhotos).map((categoryName, idx) => (
             <div key={idx} className="mb-12">
@@ -301,6 +305,7 @@ export default function Gallery() {
                     </div>
                   </motion.div>
                 ))}
+
               </div>
             </div>
           ))}
