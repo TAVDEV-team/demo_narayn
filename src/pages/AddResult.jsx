@@ -16,36 +16,57 @@ export default function AddResult() {
     student: "",
     mcq: "",
     practical: "",
-    written: ""
+    written: "",
   });
 
   // Loading & message states
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
-  // Fetch dropdown data
-  useEffect(() => {
-    const fetchDropdowns = async () => {
+// Fetch dropdown data (classes, exams, subjects only)
+useEffect(() => {
+  const fetchDropdowns = async () => {
+    setLoading(true);
+    try {
+      const [classesRes, examsRes, subjectsRes] = await Promise.all([
+        axios.get("https://narayanpur-high-school.onrender.com/api/nphs/classes/"),
+        axios.get("https://narayanpur-high-school.onrender.com/api/result/exam/"),
+        axios.get("https://narayanpur-high-school.onrender.com/api/nphs/subject/"),
+      ]);
+      setClasses(classesRes.data);
+      setExams(examsRes.data);
+      setSubjects(subjectsRes.data);
+    } catch (error) {
+      setMessage({ type: "error", text: "⚠️ Failed to fetch dropdown data." });
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchDropdowns();
+}, []);
+
+// Fetch students when class is selected
+useEffect(() => {
+  if (!form.aclass) return; // if no class selected, skip
+  const fetchStudents = async () => {
+    try {
       setLoading(true);
-      try {
-        const [classesRes, examsRes, subjectsRes, studentsRes] = await Promise.all([
-          axios.get("https://narayanpur-high-school.onrender.com/api/nphs/classes/"),
-          axios.get("https://narayanpur-high-school.onrender.com/api/result/exam/"),
-          axios.get("https://narayanpur-high-school.onrender.com/api/nphs/subject/"),
-          axios.get("https://narayanpur-high-school.onrender.com/api/user/students/")
-        ]);
-        setClasses(classesRes.data);
-        setExams(examsRes.data);
-        setSubjects(subjectsRes.data);
-        setStudents(studentsRes.data);
-      } catch (error) {
-        setMessage({ type: "error", text: "⚠️ Failed to fetch dropdown data." });
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDropdowns();
-  }, []);
+      const res = await axios.get(
+        `https://narayanpur-high-school.onrender.com/api/nphs/classes/${form.aclass}/`
+      );
+      // API should return class details + students
+      setStudents(res.data.students || []);
+      console.log(res.data.students)
+    } catch (error) {
+      setMessage({ type: "error", text: "⚠️ Failed to fetch students for this class." });
+      setStudents([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchStudents();
+}, [form.aclass]);
+
 
   // Handle input change
   const handleChange = (e) => {
@@ -61,21 +82,33 @@ export default function AddResult() {
 
     try {
       const payload = {
-        ...form,
-        aclass: Number(form.aclass),
-        exam: Number(form.exam),
-        subject: Number(form.subject),
-        student: Number(form.student),
-        mcq: Number(form.mcq),
-        practical: Number(form.practical),
-        written: Number(form.written),
-      };
+  ...form,
+  aclass: Number(form.aclass),
+  exam: Number(form.exam),
+  subject: Number(form.subject),
+  student: Number(form.student), // <-- just this, no .id
+  mcq: Number(form.mcq),
+  practical: Number(form.practical),
+  written: Number(form.written),
+};
+console.log("Payload:", JSON.stringify(payload, null, 2));
+
       await axios.post("https://narayanpur-high-school.onrender.com/api/result/", payload);
       setMessage({ type: "success", text: "✅ Result added successfully!" });
-      setForm({ aclass: "", exam: "", subject: "", student: "", mcq: "", practical: "", written: "" });
+      setForm({ aclass: 0, exam: 0, subject: 0, student: 0, mcq: 0, practical: 0, written: 0 });
     } catch (error) {
-      setMessage({ type: "error", text: "❌ Failed to add result. Please check inputs." });
-    } finally {
+  if (error.response) {
+    // Server responded with a status code
+    console.log("Backend error:", error.response.data); // 👈 for debugging
+    setMessage({ type: "error", text: JSON.stringify(error.response.data) });
+  } else if (error.request) {
+    setMessage({ type: "error", text: "⚠️ No response from server." });
+  } else {
+    setMessage({ type: "error", text: error.message });
+  }
+}
+
+     finally {
       setLoading(false);
     }
   };
@@ -133,18 +166,25 @@ export default function AddResult() {
 
           {/* Student dropdown */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Student</label>
-            <select
-              name="student"
-              value={form.student}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
-              required
-            >
-              <option value="">Select Student</option>
-              {students.map(st => <option key={st.id} value={st.id}>{st.name}</option>)}
-            </select>
-          </div>
+  <label className="block text-gray-700 font-medium mb-1">Student</label>
+  <select
+  name="student"
+  value={form.student}
+  onChange={handleChange}
+  className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+  required
+  disabled={!form.aclass}
+>
+  <option value="">Select Student</option>
+  {students.map(st => (
+    <option key={st.id} value={st.id}>
+      {st.roll_number ? `${st.roll_number} - ${st.account.full_name}` : st.account.full_name}
+    </option>
+  ))}
+</select>
+
+</div>
+
 
           {/* Score inputs grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -194,7 +234,8 @@ export default function AddResult() {
             className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
             disabled={loading}
           >
-            {loading ? "Submitting..." : "Submit Result"}
+            {/* {loading ? "Submitting..." : "Submit Result"} */}
+            submit
           </button>
 
           {/* Feedback message */}
