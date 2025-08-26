@@ -129,9 +129,7 @@ const handleLogout = async () => {
   alt="School Logo"
   className="h-10 w-10 object-contain" 
 />
-  <span className="text-4xl font-bold text-white hover:text-yellow-300">
-    Narayanpur High School
-  </span>
+
 </Link>
 
 
