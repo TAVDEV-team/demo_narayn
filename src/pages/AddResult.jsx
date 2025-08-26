@@ -1,255 +1,212 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddResult() {
-  const { id, group } = useParams(); // id = student id
-  const navigate = useNavigate();
-
+  // Dropdown data
+  const [classes, setClasses] = useState([]);
   const [exams, setExams] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [students, setStudents] = useState([]);
 
-  const [formData, setFormData] = useState({
-    aclass: "",   // will store numeric class id
-    examType: "",
+  // Form state
+  const [form, setForm] = useState({
+    aclass: "",
+    exam: "",
     subject: "",
+    student: "",
     mcq: "",
     practical: "",
-    written: "",
+    written: ""
   });
 
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState(false);
+  // Loading & message states
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
 
-  // Fetch student details (to get class id)
+  // Fetch dropdown data
   useEffect(() => {
-    const fetchStudent = async () => {
+    const fetchDropdowns = async () => {
+      setLoading(true);
       try {
-        const res = await axios.get(
-          `https://narayanpur-high-school.onrender.com/api/nphs/student/${id}/`
-        );
-        console.log("Student fetched:", res.data);
-
-        // if aclass is object {id, name}, pick id
-        const classId =
-          typeof res.data.aclass === "object"
-            ? res.data.aclass.id
-            : res.data.aclass;
-
-        setFormData((prev) => ({
-          ...prev,
-          aclass: classId,
-        }));
-      } catch (err) {
-        console.error("Error fetching student:", err);
+        const [classesRes, examsRes, subjectsRes, studentsRes] = await Promise.all([
+          axios.get("https://narayanpur-high-school.onrender.com/api/nphs/classes/"),
+          axios.get("https://narayanpur-high-school.onrender.com/api/result/exam/"),
+          axios.get("https://narayanpur-high-school.onrender.com/api/nphs/subject/"),
+          axios.get("https://narayanpur-high-school.onrender.com/api/user/students/")
+        ]);
+        setClasses(classesRes.data);
+        setExams(examsRes.data);
+        setSubjects(subjectsRes.data);
+        setStudents(studentsRes.data);
+      } catch (error) {
+        setMessage({ type: "error", text: "⚠️ Failed to fetch dropdown data." });
+      } finally {
+        setLoading(false);
       }
     };
-    fetchStudent();
-  }, [id]);
-
-  // Fetch subjects
-  useEffect(() => {
-    const fetchSubjects = async () => {
-      try {
-        const res = await axios.get(
-          "https://narayanpur-high-school.onrender.com/api/nphs/subject/"
-        );
-        const normalized = res.data.map((s) => ({
-          id: s.id,
-          name: s.name,
-        }));
-        setSubjects(normalized);
-      } catch (err) {
-        console.error("Error fetching subjects:", err);
-        setSubjects([]);
-      }
-    };
-    fetchSubjects();
+    fetchDropdowns();
   }, []);
 
-  // Fetch exams
-  useEffect(() => {
-    const fetchExams = async () => {
-      try {
-        const res = await axios.get(
-          "https://narayanpur-high-school.onrender.com/api/result/exam/"
-        );
-        setExams(res.data);
-      } catch (err) {
-        console.error("Error fetching exams:", err);
-        setExams([]);
-      }
-    };
-    fetchExams();
-  }, []);
-
+  // Handle input change
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
+  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
-    setError(false);
+    setLoading(true);
+    setMessage({ type: "", text: "" });
 
     try {
-      const token = localStorage.getItem("token");
-
       const payload = {
-        aclass: parseInt(formData.aclass), // now guaranteed numeric
-        student: parseInt(id),
-        subject: parseInt(formData.subject),
-        exam: parseInt(formData.examType),
-        mcq: formData.mcq ? parseInt(formData.mcq) : null,
-        practical: formData.practical ? parseInt(formData.practical) : null,
-        written: formData.written ? parseInt(formData.written) : null,
+        ...form,
+        aclass: Number(form.aclass),
+        exam: Number(form.exam),
+        subject: Number(form.subject),
+        student: Number(form.student),
+        mcq: Number(form.mcq),
+        practical: Number(form.practical),
+        written: Number(form.written),
       };
-      console.log("Payload being sent:", payload);
-
-      await axios.post(
-        "https://narayanpur-high-school.onrender.com/api/result/",
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      setMessage("Result added successfully ✅");
-      setFormData({
-        aclass: formData.aclass,
-        examType: "",
-        subject: "",
-        mcq: "",
-        practical: "",
-        written: "",
-      });
-    } catch (err) {
-      console.error("Error adding result:", err.response?.data || err.message);
-      setMessage("Failed to add result ❌");
-      setError(true);
+      await axios.post("https://narayanpur-high-school.onrender.com/api/result/", payload);
+      setMessage({ type: "success", text: "✅ Result added successfully!" });
+      setForm({ aclass: "", exam: "", subject: "", student: "", mcq: "", practical: "", written: "" });
+    } catch (error) {
+      setMessage({ type: "error", text: "❌ Failed to add result. Please check inputs." });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-sky-50 flex items-center justify-center p-4 mt-10">
-      <div className="bg-white w-full max-w-lg p-8 rounded-2xl shadow-lg">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-sky-700">
-          Add Result {group && `- ${group}`}
-        </h1>
+    <div className="flex justify-center items-center py-10 bg-gray-100 min-h-screen">
+      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8">
+        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">➕ Add Student Result</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Exam Type */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Class dropdown */}
           <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              Exam Type
-            </label>
+            <label className="block text-gray-700 font-medium mb-1">Class</label>
             <select
-              name="examType"
-              value={formData.examType}
+              name="aclass"
+              value={form.aclass}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
               required
             >
-              <option value="">-- Select Exam Type --</option>
-              {exams.map((exam) => (
-                <option key={exam.id} value={exam.id}>
-                  {exam.exam_title}
-                </option>
-              ))}
+              <option value="">Select Class</option>
+              {classes.map(cls => <option key={cls.id} value={cls.id}>{cls.name}</option>)}
             </select>
           </div>
 
-          {/* Subject */}
+          {/* Exam dropdown */}
           <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              Subject
-            </label>
+            <label className="block text-gray-700 font-medium mb-1">Exam</label>
+            <select
+              name="exam"
+              value={form.exam}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+              required
+            >
+              <option value="">Select Exam</option>
+              {exams.map(ex => <option key={ex.id} value={ex.id}>{ex.exam_title}</option>)}
+            </select>
+          </div>
+
+          {/* Subject dropdown */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Subject</label>
             <select
               name="subject"
-              value={formData.subject}
+              value={form.subject}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
               required
             >
-              <option value="">-- Select Subject --</option>
-              {subjects.map((subj) => (
-                <option key={subj.id} value={subj.id}>
-                  {subj.name}
-                </option>
-              ))}
+              <option value="">Select Subject</option>
+              {subjects.map(sub => <option key={sub.id} value={sub.id}>{sub.name}</option>)}
             </select>
           </div>
 
-          {/* MCQ */}
+          {/* Student dropdown */}
           <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              MCQ Marks
-            </label>
-            <input
-              type="number"
-              name="mcq"
-              value={formData.mcq}
+            <label className="block text-gray-700 font-medium mb-1">Student</label>
+            <select
+              name="student"
+              value={form.student}
               onChange={handleChange}
-              placeholder="Enter MCQ Marks"
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
+              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+              required
+            >
+              <option value="">Select Student</option>
+              {students.map(st => <option key={st.id} value={st.id}>{st.name}</option>)}
+            </select>
           </div>
 
-          {/* Practical */}
-          <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              Practical Marks
-            </label>
-            <input
-              type="number"
-              name="practical"
-              value={formData.practical}
-              onChange={handleChange}
-              placeholder="Enter Practical Marks"
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
+          {/* Score inputs grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">MCQ Marks</label>
+              <input
+                type="number"
+                name="mcq"
+                value={form.mcq}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+                placeholder="Enter MCQ Marks"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Practical Marks</label>
+              <input
+                type="number"
+                name="practical"
+                value={form.practical}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+                placeholder="Enter Practical Marks"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Written Marks</label>
+              <input
+                type="number"
+                name="written"
+                value={form.written}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+                placeholder="Enter Written Marks"
+                required
+              />
+            </div>
           </div>
 
-          {/* Written */}
-          <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              Written Marks
-            </label>
-            <input
-              type="number"
-              name="written"
-              value={formData.written}
-              onChange={handleChange}
-              placeholder="Enter Written Marks"
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
-          </div>
+          {/* Submit button */}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+            disabled={loading}
+          >
+            {loading ? "Submitting..." : "Submit Result"}
+          </button>
 
-          {/* Message */}
-          {message && (
+          {/* Feedback message */}
+          {message.text && (
             <p
-              className={`text-center font-semibold ${
-                error ? "text-red-600" : "text-green-600"
+              className={`text-center mt-4 font-medium ${
+                message.type === "error" ? "text-red-600" : "text-green-600"
               }`}
             >
-              {message}
+              {message.text}
             </p>
           )}
-
-          {/* Buttons */}
-          <div className="flex flex-col sm:flex-row justify-between gap-3 mt-4">
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="w-full sm:w-auto px-6 py-3 bg-gray-300 rounded-lg font-semibold hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="w-full sm:w-auto px-6 py-3 bg-sky-600 text-white rounded-lg font-semibold hover:bg-sky-700"
-            >
-              Save Result
-            </button>
-          </div>
         </form>
       </div>
     </div>
