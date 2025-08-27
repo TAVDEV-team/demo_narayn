@@ -8,7 +8,7 @@ export default function Routine() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
 
-  const classes = [6, 7, 8, 9, 10];
+  // const classes = [6, 7, 8, 9, 10];
 
   // Fetch routine for a given class
   const fetchRoutine = async (classNum) => {
@@ -18,7 +18,7 @@ export default function Routine() {
       const res = await axios.get(
         `https://narayanpur-high-school.onrender.com/api/nphs/routine/${classNum}/`
       );
-      setRoutine(res.data); // assumes backend returns an array of routine entries
+      setRoutine(res.data); 
       setSelectedClass(classNum);
       setStatus("success");
     } catch (err) {
@@ -38,27 +38,35 @@ export default function Routine() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-4xl font-extrabold text-center text-sky-900 mb-12"
+          className="text-4xl font-extrabold text-center text-sky-900 mb-12 mt-10"
         >
-          📅 School Routine
+          School Routine
         </motion.h1>
 
         {/* Class Buttons */}
-        <div className="flex justify-center gap-4 mb-8 flex-wrap">
-          {classes.map((cls) => (
-            <button
-              key={cls}
-              onClick={() => fetchRoutine(cls)}
-              className={`px-6 py-3 rounded-xl font-semibold transition ${
-                selectedClass === cls
-                  ? "bg-sky-700 text-white"
-                  : "bg-sky-200 text-sky-900 hover:bg-sky-300"
-              }`}
-            >
-              Class {cls}
-            </button>
-          ))}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-blue-100 p-4 rounded-xl shadow py-10">
+          <h4 className="text-sm text-gray-600 text-center">class 6</h4>
+          
         </div>
+        <div className="bg-green-100 p-4 rounded-xl shadow py-10">
+          <h4 className="text-sm text-gray-600 text-center">class 7</h4>
+          
+        </div>
+        <div className="bg-red-100 p-4 rounded-xl shadow py-10">
+          <h4 className="text-sm text-gray-600 text-center">class 8</h4>
+          
+        </div>
+        <div className="bg-yellow-100 p-4 rounded-xl shadow py-10">
+          <h4 className="text-sm text-gray-600 text-center">class 9</h4>
+          
+        </div>
+
+        <div className="bg-orange-100 p-4 rounded-xl shadow-lg py-10">
+          <h4 className="text-sm text-gray-600 text-center">class 10</h4>
+          
+        </div>
+      </div>
 
         {/* Routine Display */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
