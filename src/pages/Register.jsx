@@ -103,14 +103,15 @@ useEffect(() => {
 
 
   return (
-    <>
-      <ToastContainer />
-      <div className="min-h-screen bg-sky-50 flex items-center justify-center px-6 mt-20">
-        <div className="bg-white w-full max-w-6xl rounded-xl shadow-xl p-10">
-          <h2 className="text-4xl font-bold text-blue-950 text-center mb-10">
-            Teacher Registration
-          </h2>
-           {loading && (
+  <>
+    <ToastContainer />
+    <div className="min-h-screen bg-sky-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-20 overflow-x-hidden">
+      <div className="bg-white w-full max-w-6xl rounded-xl shadow-xl p-4 sm:p-6 md:p-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-950 text-center mb-8 sm:mb-10">
+          Teacher Registration
+        </h2>
+
+        {loading && (
           <div className="flex items-center justify-center mb-4 text-blue-950 font-semibold">
             <svg
               className="animate-spin h-5 w-5 mr-2 text-blue-950"
@@ -139,314 +140,324 @@ useEffect(() => {
         {success && (
           <p className="text-green-600 font-semibold mb-4">{success}</p>
         )}
-
         {error && (
           <p className="text-red-600 font-semibold mb-4">{error}</p>
         )}
-          <form
-            onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6"
-          >
-            {/* All your input fields here, unchanged */}
-            {/* Username */}
-            <div className="flex flex-col">
-              <label htmlFor="username" className="text-sm font-semibold mb-2">
-                Username <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="username"
-                name="username"
-                value={form.username}
-                onChange={handleChange}
-                placeholder="Enter your username"
-                required
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
 
-            {/* First Name */}
-            <div className="flex flex-col">
-              <label htmlFor="First_name" className="text-sm font-semibold mb-2">
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="first_name"
-                name="first_name"
-                value={form.first_name}
-                onChange={handleChange}
-                placeholder="Enter your first name"
-                required
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 sm:gap-x-10 md:gap-x-12 gap-y-6"
+        >
+          {/* Username */}
+          <div className="flex flex-col">
+            <label htmlFor="username" className="text-sm font-semibold mb-2">
+              Username <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="username"
+              name="username"
+              value={form.username}
+              onChange={handleChange}
+              placeholder="Enter your username"
+              required
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-            {/* Last Name */}
-            <div className="flex flex-col">
-              <label htmlFor="Last_name" className="text-sm font-semibold mb-2">
-                Last Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="last_name"
-                name="last_name"
-                value={form.last_name}
-                onChange={handleChange}
-                placeholder="Enter your last name"
-                required
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
+          {/* First Name */}
+          <div className="flex flex-col">
+            <label htmlFor="first_name" className="text-sm font-semibold mb-2">
+              First Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="first_name"
+              name="first_name"
+              value={form.first_name}
+              onChange={handleChange}
+              placeholder="Enter your first name"
+              required
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-            {/* Email Address */}
-            <div className="flex flex-col">
-              <label htmlFor="Email_address" className="text-sm font-semibold mb-2">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                required
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
+          {/* Last Name */}
+          <div className="flex flex-col">
+            <label htmlFor="last_name" className="text-sm font-semibold mb-2">
+              Last Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="last_name"
+              name="last_name"
+              value={form.last_name}
+              onChange={handleChange}
+              placeholder="Enter your last name"
+              required
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-            {/* Password */}
-            <div className="flex flex-col">
-              <label htmlFor="Password" className="text-sm font-semibold mb-2">
-                Password <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                required
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
+          {/* Email */}
+          <div className="flex flex-col">
+            <label htmlFor="email" className="text-sm font-semibold mb-2">
+              Email Address <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              required
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-            {/* Confirm Password */}
-            <div className="flex flex-col">
-              <label htmlFor="confirm_password" className="text-sm font-semibold mb-2">
-                Confirm Password <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="password"
-                id="confirm_password"
-                name="confirm_password"
-                value={form.confirm_password}
-                onChange={handleChange}
-                placeholder="Confirm your password"
-                required
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
+          {/* Password */}
+          <div className="flex flex-col">
+            <label htmlFor="password" className="text-sm font-semibold mb-2">
+              Password <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              required
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-            {/* Profile Image */}
-            <div className="flex flex-col">
-              <label htmlFor="image" className="text-sm font-semibold mb-2">
-                 Image
-              </label>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                onChange={handleFileChange}
-                className="border border-gray-300 px-4 py-2 rounded-md w-full text-lg"
-              />
-            </div>
+          {/* Confirm Password */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="confirm_password"
+              className="text-sm font-semibold mb-2"
+            >
+              Confirm Password <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="password"
+              id="confirm_password"
+              name="confirm_password"
+              value={form.confirm_password}
+              onChange={handleChange}
+              placeholder="Confirm your password"
+              required
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-            {/* Date of Birth */}
-            <div className="flex flex-col">
-              <label htmlFor="date_of_birth" className="text-sm font-semibold mb-2">
-                Date of Birth
-              </label>
-              <input
-                type="date"
-                id="date_of_birth"
-                name="date_of_birth"
-                value={form.date_of_birth}
-                onChange={handleChange}
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
+          {/* Image */}
+          <div className="flex flex-col">
+            <label htmlFor="image" className="text-sm font-semibold mb-2">
+              Image
+            </label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              onChange={handleFileChange}
+              className="border border-gray-300 px-3 sm:px-4 py-2 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-            {/* Mobile */}
-            <div className="flex flex-col">
-              <label htmlFor="mobile" className="text-sm font-semibold mb-2">
-                Mobile
-              </label>
-              <input
-                id="mobile"
-                name="mobile"
-                value={form.mobile}
-                onChange={handleChange}
-                placeholder="Enter your mobile number"
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
+          {/* Date of Birth */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="date_of_birth"
+              className="text-sm font-semibold mb-2"
+            >
+              Date of Birth
+            </label>
+            <input
+              type="date"
+              id="date_of_birth"
+              name="date_of_birth"
+              value={form.date_of_birth}
+              onChange={handleChange}
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-            {/* Religion */}
-           <div className="flex flex-col">
-  <label htmlFor="religion" className="text-sm font-semibold mb-2">
-    Religion
-  </label>
-  <select
-  id="religion"
-  name="religion"
-  value={form.religion}
-  onChange={handleChange}
-  className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
->
-  <option value="">Select religion</option>
-  <option value="islam">islam</option>
-  <option value="hinduism">hinduism</option>
-</select>
+          {/* Mobile */}
+          <div className="flex flex-col">
+            <label htmlFor="mobile" className="text-sm font-semibold mb-2">
+              Mobile
+            </label>
+            <input
+              id="mobile"
+              name="mobile"
+              value={form.mobile}
+              onChange={handleChange}
+              placeholder="Enter your mobile number"
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
+          {/* Religion */}
+          <div className="flex flex-col">
+            <label htmlFor="religion" className="text-sm font-semibold mb-2">
+              Religion
+            </label>
+            <select
+              id="religion"
+              name="religion"
+              value={form.religion}
+              onChange={handleChange}
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            >
+              <option value="">Select religion</option>
+              <option value="islam">Islam</option>
+              <option value="hinduism">Hinduism</option>
+            </select>
+          </div>
 
-</div>
+          {/* Gender */}
+          <div className="flex flex-col">
+            <label htmlFor="gender" className="text-sm font-semibold mb-2">
+              Gender
+            </label>
+            <select
+              id="gender"
+              name="gender"
+              value={form.gender}
+              onChange={handleChange}
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            >
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
 
+          {/* Address */}
+          <div className="flex flex-col">
+            <label htmlFor="adress" className="text-sm font-semibold mb-2">
+              Address
+            </label>
+            <input
+              id="adress"
+              name="adress"
+              value={form.adress}
+              onChange={handleChange}
+              placeholder="Enter your address"
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-           <div className="flex flex-col">
-  <label htmlFor="gender" className="text-sm font-semibold mb-2">
-    Gender
-  </label>
- <select
-  id="gender"
-  name="gender"
-  value={form.gender}
-  onChange={handleChange}
-  className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
->
-  <option value="">Select gender</option>
-  <option value="male">male</option>
-  <option value="female">female</option>
-</select>
+          {/* Joining Date */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="joining_date"
+              className="text-sm font-semibold mb-2"
+            >
+              Joining Date
+            </label>
+            <input
+              type="date"
+              id="joining_date"
+              name="joining_date"
+              value={form.joining_date}
+              onChange={handleChange}
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
+          {/* Last Educational Institute */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="last_educational_institute"
+              className="text-sm font-semibold mb-2"
+            >
+              Last Educational Institution
+            </label>
+            <input
+              id="last_educational_institute"
+              name="last_educational_institute"
+              value={form.last_educational_institute}
+              onChange={handleChange}
+              placeholder="Enter your last educational institution"
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-</div>
+          {/* Base Subject */}
+          <div className="flex flex-col">
+            <label htmlFor="base_subject" className="text-sm font-semibold mb-2">
+              Base Subject
+            </label>
+            <input
+              id="base_subject"
+              name="base_subject"
+              value={form.base_subject}
+              onChange={handleChange}
+              placeholder="Enter your base subject"
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            />
+          </div>
 
-            {/* Address */}
-            <div className="flex flex-col">
-              <label htmlFor="adress" className="text-sm font-semibold mb-2">
-                Address
-              </label>
-              <input
-                id="adress"
-                name="adress"
-                value={form.adress}
-                onChange={handleChange}
-                placeholder="Enter your address"
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
+          {/* Is Class Teacher */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="is_class_teacher"
+              className="text-sm font-semibold mb-2"
+            >
+              Is Class Teacher
+            </label>
+            <select
+              id="is_class_teacher"
+              name="is_class_teacher"
+              value={form.is_class_teacher}
+              onChange={handleChange}
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            >
+              <option value="">Select</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
 
-            {/* Joining Date */}
-            <div className="flex flex-col">
-              <label htmlFor="joining_date" className="text-sm font-semibold mb-2">
-                Joining Date
-              </label>
-              <input
-                type="date"
-                id="joining_date"
-                name="joining_date"
-                value={form.joining_date}
-                onChange={handleChange}
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
+          {/* Class Teacher Of */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="class_teacher_of"
+              className="text-sm font-semibold mb-2"
+            >
+              Class Teacher Of
+            </label>
+            <select
+              id="class_teacher_of"
+              name="class_teacher_of"
+              value={form.class_teacher_of}
+              onChange={handleChange}
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            >
+              <option value="">Select a class</option>
+              {classes.map((cls) => (
+                <option key={cls.id} value={cls.id}>
+                  {cls.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            {/* Last Educational Institution */}
-            <div className="flex flex-col">
-              <label
-                htmlFor="last_educational_institution"
-                className="text-sm font-semibold mb-2"
-              >
-                Last Educational Institution
-              </label>
-              <input
-                id="last_educational_institute"
-                name="last_educational_institute"
-                value={form.last_educational_institute}
-                onChange={handleChange}
-                placeholder="Enter your last educational institution"
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
-
-            {/* Base Subject */}
-            <div className="flex flex-col">
-              <label htmlFor="Base_subject" className="text-sm font-semibold mb-2">
-                Base Subject
-              </label>
-              <input
-                id="base_subject"
-                name="base_subject"
-                value={form.base_subject}
-                onChange={handleChange}
-                placeholder="Enter your base subject"
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              />
-            </div>
-
-            {/* Is Class Teacher */}
-            <div className="flex flex-col">
-              <label htmlFor="Is_class_teacher" className="text-sm font-semibold mb-2">
-                Is Class Teacher
-              </label>
-              <select
-                id="is_class_teacher"
-                name="is_class_teacher"
-                value={form.is_class_teacher}
-                onChange={handleChange}
-                className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-              >
-                <option value="">Select</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-            </div>
-           
-
-            {/* Class Teacher Of */}
-           <div className="flex flex-col">
-  <label htmlFor="class_teacher_of" className="text-sm font-semibold mb-2">
-    Class Teacher Of
-  </label>
-  <select
-    id="class_teacher_of"
-    name="class_teacher_of"
-    value={form.class_teacher_of}
-    onChange={handleChange}
-    className="border border-gray-300 px-4 py-3 rounded-md w-full text-lg"
-  >
-    <option value="">Select a class</option>
-    {classes.map((cls) => (
-      <option key={cls.id} value={cls.id}>
-        {cls.name}
-      </option>
-    ))}
-  </select>
-</div>
-
-
-           <div className="mt-10 col-span-full">
+          {/* Submit Button */}
+          <div className="mt-8 sm:mt-10 col-span-full">
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-950 hover:bg-blue-900 text-white font-semibold py-4 rounded-lg shadow-md text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-blue-950 hover:bg-blue-900 text-white font-semibold py-3 sm:py-4 rounded-lg shadow-md text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Register
             </button>
           </div>
-          </form>
-        </div>
+        </form>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
+
 }

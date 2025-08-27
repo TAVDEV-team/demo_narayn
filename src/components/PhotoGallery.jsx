@@ -19,14 +19,16 @@ export default function PhotoGallery({ images = [] }) {
     };
 
     const animation = requestAnimationFrame(step);
-
     return () => cancelAnimationFrame(animation);
   }, []);
 
   return (
-    <section className="max-w-7xl mx-auto my-10 px-4 sm:px-10">
-      <div className="flex justify-between items-center mb-4 border-white ">
-        <h2 className="text-3xl font-bold text-gray-900 ">Photo Gallery</h2>
+    <section className="max-w-7xl mx-auto my-10 px-4 sm:px-6 lg:px-8">
+      {/* Heading */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          Photo Gallery
+        </h2>
         <Link
           to="/gallery"
           className="text-blue-950 font-semibold hover:underline"
@@ -35,16 +37,12 @@ export default function PhotoGallery({ images = [] }) {
         </Link>
       </div>
 
-      {/* Horizontal scroll container */}
-      <div
-        ref={scrollRef}
-        className="flex space-x-4 overflow-x-hidden py-2"
-      >
-        {/* Duplicate images for seamless continuous scroll */}
+      {/* Auto-scroll gallery */}
+      <div ref={scrollRef} className="flex space-x-4 overflow-x-hidden py-2">
         {[...images, ...images].map((img, idx) => (
           <div
             key={idx}
-            className="flex-shrink-0 w-72 h-48 md:w-80 md:h-52 rounded-lg overflow-hidden shadow-md cursor-pointer hover:scale-105 transform transition"
+            className="flex-shrink-0 w-60 h-40 sm:w-72 sm:h-48 md:w-80 md:h-56 rounded-lg overflow-hidden shadow-md hover:scale-105 transform transition"
           >
             <img
               src={img}

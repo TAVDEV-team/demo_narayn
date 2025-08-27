@@ -120,12 +120,12 @@ if (group && group !== "all") {
               <p className="text-gray-600 text-base mt-1">
                 <span className="font-semibold">Gender:</span> {student.account.display_gender}
               </p>
-             <button
+             {/* <button
   onClick={() => navigate(`/students/${student.account.id}/add-result`)}
   className="px-5 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-900"
 >
   Add result
-</button>
+</button> */}
 
             </div>
           </div>
