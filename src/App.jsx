@@ -28,6 +28,7 @@ import Routine from './pages/Routine';
 import GoverningBody from './pages/GoverningBody';
 import SyllabusPage from './pages/Syllabus';
 import SyllabusViewer from "./pages/SyllabusViewer";
+import RoutineForm from './pages/RoutineForm';
 
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
         <Route path="governing-body" element={<GoverningBody/>} />
         <Route path="syllabus" element={<SyllabusPage/>} />
         <Route path="/syllabus/:id" element={<SyllabusViewer />} />
+        <Route path="update-routine" element={<RoutineForm />} />
         </Route>
       </Routes>
     </Router>
