@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarDays } from "@fortawesome/free-solid-svg-icons"; 
 // const [sidebarOpen, setSidebarOpen] = useState(false);
 
 import {
@@ -85,6 +87,12 @@ export default function HeadMasterProfile() {
               className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition  border shadow-lg"
             >
               <FileClock className="w-5 h-5" /> Pending Notice
+            </button>
+             <button
+              onClick={() => navigate("/update-routine")}
+              className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition  border shadow-lg"
+            >
+              <FontAwesomeIcon icon={faCalendarDays} className="w-5 h-5" /> Routine
             </button>
           </nav>
         </div>
