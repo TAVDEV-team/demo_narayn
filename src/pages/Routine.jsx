@@ -164,9 +164,7 @@ export default function Routine() {
                           <td key={slot} className="px-4 py-3 text-center">
                             {item ? (
                               <>
-                                <div className="font-semibold">
-                            {subjects[item.subject] || `Subject ${item.subject}`}
-                              </div>
+                                
 
                                 <div className="font-semibold">
                                   {subjects[item.subject] || `Subject ${item.subject}`}
