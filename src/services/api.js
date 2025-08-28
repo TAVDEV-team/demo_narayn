@@ -14,11 +14,21 @@
 //   if (token) config.headers.Authorization = `Token ${token}`;
 //   return config;
 // });
+// export async function getAuthHeaders() {
+//   const token = localStorage.getItem('token');
+//   return {
+//     Authorization: `Token ${token}`,
+//   };
+// }
+
+// src/services/api.js
 export async function getAuthHeaders() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("access_token"); // must match key from login
   return {
-    Authorization: `Token ${token}`,
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`,  // never "Token"
   };
 }
+
 
 
