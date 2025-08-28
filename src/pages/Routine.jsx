@@ -3,23 +3,29 @@ import axios from "axios";
 import { motion } from "framer-motion";
 
 export default function Routine() {
-  const [selectedClass, setSelectedClass] = useState(null); // class selected
+  const [selectedClass, setSelectedClass] = useState(null);
   const [routine, setRoutine] = useState([]);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
-
-  // const classes = [6, 7, 8, 9, 10];
+  const [teachers, setTeachers] = useState({});
+   const [subjects, setSubjects] = useState({});
 
   // Fetch routine for a given class
-  const fetchRoutine = async (classNum) => {
+  const fetchRoutine = async (classId) => {
     setLoading(true);
     setStatus(null);
     try {
       const res = await axios.get(
-        `https://narayanpur-high-school.onrender.com/api/nphs/routine/${classNum}/`
+        "https://narayanpur-high-school.onrender.com/api/nphs/routine/"
       );
-      setRoutine(res.data); 
-      setSelectedClass(classNum);
+
+      // Filter routines of selected class
+      const classRoutine = res.data.filter(
+        (r) => Number(r.aclass) === Number(classId)
+      );
+
+      setRoutine(classRoutine);
+      setSelectedClass(classId);
       setStatus("success");
     } catch (err) {
       console.error("Error fetching routine:", err);
@@ -30,10 +36,66 @@ export default function Routine() {
     }
   };
 
+  useEffect(() => {
+  const fetchSubjects = async () => {
+    try {
+      const res = await axios.get("https://narayanpur-high-school.onrender.com/api/nphs/subject/");
+      const subjectMap = {};
+      res.data.forEach((s) => {
+        subjectMap[s.id] = s.name;
+      });
+      setSubjects(subjectMap);
+    } catch (err) {
+      console.error("Failed to fetch subjects", err);
+    }
+  };
+  fetchSubjects();
+}, []);
+
+
+  // Fetch teachers
+  useEffect(() => {
+  const fetchTeachers = async () => {
+    try {
+      const res = await axios.get(
+        "https://narayanpur-high-school.onrender.com/api/user/teachers/"
+      );
+      const teacherMap = {};
+      res.data.forEach((t) => {
+        if (t.id != null && t.account?.full_name) {
+          teacherMap[t.id] = t.account.full_name.trim();
+        }
+      });
+      setTeachers(teacherMap);
+    } catch (err) {
+      console.error("Failed to fetch teachers", err);
+    }
+  };
+  fetchTeachers();
+}, []);
+
+
+  const classCards = [
+    { id: 4, name: "Class 6", color: "bg-blue-100" },
+    { id: 5, name: "Class 7", color: "bg-green-100" },
+    { id: 6, name: "Class 8", color: "bg-red-100" },
+    { id: 7, name: "Class 9", color: "bg-yellow-100" },
+    { id: 8, name: "Class 10", color: "bg-orange-100" },
+  ];
+
+  const slotTimes = {
+    1: "10:15-11:00",
+    2: "11:00-11:40",
+    3: "11:40-12:20",
+    4: "12:20-13:00",
+    5: "14:00-14:40",
+    6: "14:40-15:20",
+    7: "15:20-16:00",
+  };
+
   return (
     <div className="min-h-screen bg-sky-50 py-12 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Page Heading */}
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -43,62 +105,133 @@ export default function Routine() {
           School Routine
         </motion.h1>
 
-        {/* Class Buttons */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-blue-100 p-4 rounded-xl shadow py-10">
-          <h4 className="text-sm text-gray-600 text-center">class 6</h4>
-          
+        {/* Class Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10">
+          {classCards.map((cls) => (
+            <motion.div
+              key={cls.id}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => fetchRoutine(cls.id)}
+              className={`${cls.color} p-6 rounded-xl shadow cursor-pointer text-center border-2 ${
+                selectedClass === cls.id ? "border-sky-700" : "border-transparent"
+              }`}
+            >
+              <h4 className="text-lg font-semibold text-sky-900">{cls.name}</h4>
+            </motion.div>
+          ))}
         </div>
-        <div className="bg-green-100 p-4 rounded-xl shadow py-10">
-          <h4 className="text-sm text-gray-600 text-center">class 7</h4>
-          
-        </div>
-        <div className="bg-red-100 p-4 rounded-xl shadow py-10">
-          <h4 className="text-sm text-gray-600 text-center">class 8</h4>
-          
-        </div>
-        <div className="bg-yellow-100 p-4 rounded-xl shadow py-10">
-          <h4 className="text-sm text-gray-600 text-center">class 9</h4>
-          
-        </div>
-
-        <div className="bg-orange-100 p-4 rounded-xl shadow-lg py-10">
-          <h4 className="text-sm text-gray-600 text-center">class 10</h4>
-          
-        </div>
-      </div>
 
         {/* Routine Display */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {loading && <p className="text-blue-600">⏳ Loading routine...</p>}
-          {status === "error" && (
-            <p className="text-red-600">❌ Failed to fetch routine.</p>
-          )}
-          {!loading && status === "success" && routine.length === 0 && (
-            <p className="text-gray-600">No routine available for Class {selectedClass}.</p>
-          )}
+        <div className="overflow-x-auto shadow-md rounded-2xl bg-white">
+          <table className="min-w-full table-auto text-sm sm:text-base">
+            <thead className="bg-blue-950 text-white">
+              <tr>
+                <th className="px-4 py-3">Day</th>
+                {[1, 2, 3, 4].map((slot) => (
+                  <th key={slot} className="px-4 py-3 text-center">
+                    {slotTimes[slot]}
+                  </th>
+                ))}
+                <th className="px-4 py-3 text-center">Tiffin Break (13:00-14:00)</th>
+                {[5, 6, 7].map((slot) => (
+                  <th key={slot} className="px-4 py-3 text-center">
+                    {slotTimes[slot]}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {!loading && status === "success" && routine.length > 0 &&
+                Object.keys(
+                  routine.reduce((acc, item) => {
+                    if (!acc[item.day_display]) acc[item.day_display] = {};
+                    acc[item.day_display][item.slot] = item;
+                    return acc;
+                  }, {})
+                ).map((day) => {
+                  const slotsByDay = routine.reduce((acc, item) => {
+                    if (item.day_display === day) acc[item.slot] = item;
+                    return acc;
+                  }, {});
+                  return (
+                    <tr key={day} className="border-b last:border-none hover:bg-gray-50">
+                      <td className="px-4 py-3 font-medium">{day}</td>
 
-          {!loading &&
-            routine.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="bg-white p-4 rounded-2xl shadow-md flex flex-col gap-2"
-              >
-                <h3 className="font-semibold text-sky-800 text-lg">{item.subject}</h3>
-                <p className="text-gray-700">
-                  Teacher: <span className="font-medium">{item.teacher}</span>
-                </p>
-                <p className="text-gray-700">
-                  Time: <span className="font-medium">{item.time}</span>
-                </p>
-                <p className="text-gray-700">
-                  Room: <span className="font-medium">{item.room}</span>
-                </p>
-              </motion.div>
-            ))}
+                      {[1, 2, 3, 4].map((slot) => {
+                        const item = slotsByDay[slot];
+                        return (
+                          <td key={slot} className="px-4 py-3 text-center">
+                            {item ? (
+                              <>
+                                <div className="font-semibold">
+                            {subjects[item.subject] || `Subject ${item.subject}`}
+                              </div>
+
+                                <div className="font-semibold">
+                                  {subjects[item.subject] || `Subject ${item.subject}`}
+                                </div>
+                                <div className="text-gray-600 text-xs">
+                                  {teachers[item.teacher] || "Unknown Teacher"}
+                                </div>
+
+                              </>
+                            ) : null}
+                          </td>
+                        );
+                      })}
+
+                      <td className="px-4 py-3 text-center bg-yellow-100 font-medium">
+                        Tiffin
+                      </td>
+
+                      {[5, 6, 7].map((slot) => {
+                        const item = slotsByDay[slot];
+                        return (
+                          <td key={slot} className="px-4 py-3 text-center">
+                            {item ? (
+                              <>
+                                <div className="font-semibold">{item.subject}</div>
+                               <div className="font-semibold">
+                                {subjects[item.subject] || `Subject ${item.subject}`}
+                              </div>
+                              <div className="text-gray-600 text-xs">
+                                {teachers[item.teacher] || "Unknown Teacher"}
+                              </div>
+
+                              </>
+                            ) : null}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+
+              {loading && (
+                <tr>
+                  <td colSpan="8" className="px-4 py-3 text-center text-blue-600">
+                    ⏳ Loading routine...
+                  </td>
+                </tr>
+              )}
+              {status === "error" && (
+                <tr>
+                  <td colSpan="8" className="px-4 py-3 text-center text-red-600">
+                    ❌ Failed to fetch routine.
+                  </td>
+                </tr>
+              )}
+              {!loading && status === "success" && routine.length === 0 && (
+                <tr>
+                  <td colSpan="8" className="px-4 py-3 text-center text-gray-600">
+                    No routine available for{" "}
+                    {classCards.find((c) => c.id === selectedClass)?.name || `Class ${selectedClass}`}.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
