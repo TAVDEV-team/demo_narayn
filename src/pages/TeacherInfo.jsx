@@ -72,7 +72,7 @@ export default function TeacherInformation() {
                 {/* Left side image */}
                 <div className="w-32 h-32 flex-shrink-0 mx-2">
                   <img
-                    src={teacher.account.image || "/default-avatar.png"}
+                    src={teacher.account.image || "/default.png"}
                     alt={teacher.account.full_name || teacher.account.user.username}
                     className="w-full  rounded-nonew-28 h-28 sm:w-32 sm:h-32 object-cover rounded-full border-4 border-indigo-200"
                   />
