@@ -243,7 +243,7 @@ export default function AddResult() {
           {/* Submit button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+            className="w-full bg-blue-950 text-white font-semibold py-2 rounded-lg hover:bg-blue-900 transition disabled:opacity-50"
             disabled={loading}
           >
             {loading ? "Submitting..." : "Submit Result"}

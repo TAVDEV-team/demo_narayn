@@ -9,45 +9,43 @@ const Login = () => {
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-const handleSubmit = async () => {
-  setLoading(true);
-  try {
-    const payload = { username, password };
-    const res = await axios.post(
-      "https://narayanpur-high-school.onrender.com/api/user/token/",
-      payload
-    );
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        "https://narayanpur-high-school.onrender.com/api/user/token/",
+        { username, password }
+      );
 
-    const token = res.data.access;
-    if (!token) throw new Error("Token missing in response");
+      // Save tokens
+      localStorage.setItem("token", res.data.access);
+      localStorage.setItem("refreshToken", res.data.refresh);
 
-    localStorage.setItem("token", token);
+      // Fetch all teachers
+      const teachersRes = await axios.get(
+        "https://narayanpur-high-school.onrender.com/api/user/teachers/",
+        { headers: { Authorization: `Bearer ${res.data.access}` } }
+      );
 
-    // Fetch teacher list using token
-    const teachersRes = await axios.get(
-      "https://narayanpur-high-school.onrender.com/api/user/teachers/",
-      { headers: { Authorization: `Bearer ${token}` } } // ✅ token is defined here
-    );
+      // Find the logged-in teacher
+      const teacher = teachersRes.data.find(
+        t => t.account.user.username === username
+      );
 
-    const teacher = teachersRes.data.find(
-      t => t.account.user.username === username
-    );
+      if (!teacher) throw new Error("Teacher profile not found");
 
-    if (!teacher) throw new Error("Teacher profile not found");
+      localStorage.setItem("teacherId", teacher.id);
 
-    localStorage.setItem("teacherId", teacher.id);
+      setMessage({ type: "success", text: "✅ Login successful!" });
+      setTimeout(() => navigate('/teacher-portal'), 800);
 
-    setMessage({ type: "success", text: "✅ Login successful!" });
-    setTimeout(() => navigate('/teacher-portal'), 1200);
-
-  } catch (err) {
-    const errorMsg = err.response?.data?.detail || err.message || "Login failed";
-    setMessage({ type: "error", text: `❌ ${errorMsg}` });
-  } finally {
-    setLoading(false);
-  }
-};
-
+    } catch (err) {
+      const errorMsg = err.response?.data?.detail || err.message || "Login failed";
+      setMessage({ type: "error", text: `❌ ${errorMsg}` });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-100 to-blue-200 flex items-center justify-center px-4">
@@ -55,7 +53,7 @@ const handleSubmit = async () => {
         <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">Login</h2>
 
         {message && (
-          <div className={`mb-4 p-3 rounded-lg text-sm font-medium transition ${
+          <div className={`mb-4 p-3 rounded-lg text-sm font-medium ${
             message.type === "success"
               ? "bg-green-100 text-green-700 border border-green-300"
               : "bg-red-100 text-red-700 border border-red-300"
