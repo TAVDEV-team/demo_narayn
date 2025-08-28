@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faUserPlus, 
-  faWallet, 
-  faFileCircleCheck, 
-  faCalendarDays, 
-  faUser, 
-  faBell, 
-  faFileCirclePlus 
-} from "@fortawesome/free-solid-svg-icons";
+import { UserPlus, Wallet, FileClock } from "lucide-react";
 // import { faUser, faWallet, faFileClock } from '@fortawesome/free-solid-svg-icons';
 
 const TeacherDashboard = () => {
@@ -77,62 +68,62 @@ const TeacherDashboard = () => {
     <section className="bg-sky-100 min-h-screen flex mt-10">
       {/* Sidebar can go here */}
        <aside className="hidden md:flex w-64 bg-indigo-900 text-white shadow-lg flex-col">
-  <div className="px-6 py-8">
-    <h2 className="text-2xl font-bold tracking-wide mb-8">Principle Menu</h2>
-    <nav className="space-y-4">
+      <div className="px-6 py-8">
+        <h2 className="text-2xl font-bold tracking-wide mb-8">Principle Menu</h2>
+        <nav className="space-y-4">
 
-      <button
-        onClick={() => navigate("/register")}
-        className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
-      >
-        <FontAwesomeIcon icon={faUserPlus} className="w-5 h-5" /> Teacher Register
-      </button>
+          <button
+            onClick={() => navigate("/register")}
+            className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
+          >
+            <UserPlus className="w-5 h-5" /> Teacher Register
+          </button>
 
-      <button
-        onClick={() => navigate("/fund")}
-        className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
-      >
-        <FontAwesomeIcon icon={faWallet} className="w-5 h-5" /> Fund
-      </button>
+          <button
+            onClick={() => navigate("/fund")}
+            className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
+          >
+            <Wallet className="w-5 h-5" /> Fund
+          </button>
 
-      <button
-        onClick={() => navigate("/notice-pending")}
-        className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
-      >
-        <FontAwesomeIcon icon={faFileCircleCheck} className="w-5 h-5" /> Pending Notice
-      </button>
+          <button
+            onClick={() => navigate("/notice-pending")}
+            className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
+          >
+            <FileClock className="w-5 h-5" /> Pending Notice
+          </button>
 
-      <button
-        onClick={() => navigate("/update-routine")}
-        className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
-      >
-        <FontAwesomeIcon icon={faCalendarDays} className="w-5 h-5" /> Routine
-      </button>
+          <button
+            onClick={() => navigate("/update-routine")}
+            className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
+          >
+            <FileClock className="w-5 h-5" /> Routine
+          </button>
 
-      <button
-        onClick={() => navigate("/student")}
-        className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
-      >
-        <FontAwesomeIcon icon={faUser} className="w-5 h-5" /> Add Student
-      </button>
+          <button
+            onClick={() => navigate("/student")}
+            className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
+          >
+            <UserPlus className="w-5 h-5" /> Add Student
+          </button>
 
-      <button
-        onClick={() => navigate("/notices-create")}
-        className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
-      >
-        <FontAwesomeIcon icon={faFileCirclePlus} className="w-5 h-5" /> Add Notice
-      </button>
+          <button
+            onClick={() => navigate("/notices-create")}
+            className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
+          >
+            <FileClock className="w-5 h-5" /> Add Notice
+          </button>
 
-      <button
-        onClick={() => navigate("/add-result")}
-        className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
-      >
-        <FontAwesomeIcon icon={faFileCirclePlus} className="w-5 h-5" /> Add Result
-      </button>
+          <button
+            onClick={() => navigate("/add-result")}
+            className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
+          >
+            <FileClock className="w-5 h-5" /> Add Result
+          </button>
 
-    </nav>
-  </div>
-</aside>
+        </nav>
+      </div>
+    </aside>
 
       {/* Main dashboard */}
       <div className="flex-1 max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-sm ">
