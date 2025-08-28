@@ -120,6 +120,12 @@ const TeacherDashboard = () => {
           >
             <FileClock className="w-5 h-5" /> Add Result
           </button>
+           <button
+            onClick={() => navigate("/add-staffs")}
+            className="flex items-center gap-3 w-full py-2 px-3 rounded-lg hover:bg-white hover:text-blue-950 hover:border-red-500 transition border shadow-lg"
+          >
+            <UserPlus className="w-5 h-5" /> Add Staffs
+          </button>
 
         </nav>
       </div>
