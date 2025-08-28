@@ -7,19 +7,42 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
-  const [loading, setLoading] = useState(false); // ✅ NEW
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = () => {
-    setLoading(true); // ✅ start loading
+    setLoading(true);
     const payload = { username, password };
 
     axios.post("https://narayanpur-high-school.onrender.com/api/user/token/", payload)
-      .then((res) => {
+      .then(async (res) => {
         const token = res.data.access;
+
         if (token) {
           localStorage.setItem("token", token);
-          setMessage({ type: "success", text: "✅ Login successful!" });
-          setTimeout(() => navigate('/teacher-portal'), 1200);
+
+          try {
+            // 🔹 এখানে teacher লিস্ট আনছি
+            const teachersRes = await axios.get(
+              "https://narayanpur-high-school.onrender.com/api/user/teachers/",
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            // 🔹 ধরলাম API array return করছে
+            const teacher = teachersRes.data[0]; // প্রথম teacher
+            if (teacher?.id) {
+              localStorage.setItem("teacherId", teacher.id);
+
+              setMessage({ type: "success", text: "✅ Login successful!" });
+              setTimeout(() => navigate('/teacher-portal'), 1200);
+            } else {
+              setMessage({ type: "error", text: "⚠️ Teacher ID not found!" });
+            }
+
+          } catch (err) {
+            console.error("Profile fetch failed:", err);
+            setMessage({ type: "error", text: "❌ Failed to fetch teacher profile." });
+          }
+
         } else {
           setMessage({ type: "error", text: "⚠️ Token missing in response" });
         }
@@ -29,7 +52,7 @@ const Login = () => {
         setMessage({ type: "error", text: `❌ ${errorMsg}` });
       })
       .finally(() => {
-        setLoading(false); // ✅ stop loading
+        setLoading(false);
       });
   };
 
