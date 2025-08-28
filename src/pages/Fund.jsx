@@ -38,18 +38,26 @@ async function handleResponse(res) {
 
 async function fetchBalance(signal) {
   const headers = await getAuthHeaders();
+  console.log("Balance headers being sent:", headers);  
   const res = await fetch(`${BASE}/funds/balance/`, { method: 'GET', signal, headers });
   const data = await handleResponse(res);
-  if (Array.isArray(data)) return data[0]?.balance ?? 0;
-  return data.balance ?? 0;
+  console.log("Balance API response:", data);
+  if (Array.isArray(data) && data.length > 0) {
+    const num = parseFloat(data[0].balance);
+    return isNaN(num) ? 0 : num;
+  }
+  return 0;
 }
 
 async function fetchHistory(signal) {
   const headers = await getAuthHeaders();
+  console.log("History headers being sent:", headers);   
   const res = await fetch(`${BASE}/funds/transactions/`, { method: 'GET', signal, headers });
   const data = await handleResponse(res);
+  console.log("History API response:", data);
   return Array.isArray(data) ? data : data.results || [];
 }
+
 
 async function postAddFunds({ amount, reason, type, payment_method, date }, signal) {
   const headers = { 'Content-Type': 'application/json', ...(await getAuthHeaders()) };
