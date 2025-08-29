@@ -7,6 +7,7 @@ import { ArrowDownCircle, ArrowUpCircle, Printer, Wallet } from "lucide-react";
 const BASE = 'https://narayanpur-high-school.onrender.com/api';
 const CURRENCY_SYMBOL = '৳';
 
+
 function formatCurrency(amount) {
   if (typeof amount !== 'number' || isNaN(amount)) return '-';
   return `${CURRENCY_SYMBOL}${amount.toFixed(2)}`;
