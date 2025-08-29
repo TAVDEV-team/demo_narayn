@@ -78,7 +78,7 @@ const Navbar = () => {
   // Menu items for logged-in users
   const authMenuItems = [
     { label: "Result", to: "/results" },
-    { label: "Profile", to: "/teacher-portal" },
+    { label: "Profile", to: "/profile" },
     { label: "Gallery", to: "/gallery" },
     { label: "Contact", to: "/contact" },
   ];
@@ -131,13 +131,7 @@ const Navbar = () => {
             </li>
           ))}
 
-          {isLoggedIn && (
-            <li>
-              <button onClick={handleLogout} disabled={isLoggingOut} className="hover:text-yellow-300">
-                {isLoggingOut ? "Logging out..." : "Logout"}
-              </button>
-            </li>
-          )}
+
         </ul>
 
         {/* Hamburger */}

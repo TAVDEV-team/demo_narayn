@@ -1,19 +1,22 @@
+/* TeacherDashboard.jsx */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   MapPin, Landmark, Mail, Phone, Calendar, GraduationCap,
-  BookOpen, UserPlus, Wallet, FileClock, Menu, X,
+  BookOpen, UserPlus, Wallet, FileClock, X, LogOut
 } from "lucide-react";
-import { div } from "framer-motion/client";
-
 
 const TeacherDashboard = () => {
   const [teacher, setTeacher] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("token");
 
+
+  // 🔹 Fetch teacher profile
   useEffect(() => {
     const fetchTeacher = async () => {
       let token = localStorage.getItem("token");
@@ -56,20 +59,31 @@ const TeacherDashboard = () => {
         setLoading(false);
       }
     };
-
     fetchTeacher();
   }, [navigate]);
 
+  // 🔹 Handle logout
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      const token = localStorage.getItem("token");
+      await fetch(
+        "https://narayanpur-high-school.onrender.com/api/user/logout/",
+        { method: "POST", headers: { Authorization: `Token ${token}` } }
+      );
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      localStorage.clear();
+      setIsLoggingOut(false);
+      navigate("/login");
+    }
+  };
+
   if (loading)
-    return (
-      <p className="text-center text-2xl mt-32 animate-pulse">⏳ Loading...</p>
-    );
+    return <p className="text-center text-2xl mt-32 animate-pulse">⏳ Loading...</p>;
   if (!teacher)
-    return (
-      <p className="text-center text-red-600 mt-20">
-        ❌ Teacher profile not found
-      </p>
-    );
+    return <p className="text-center text-red-600 mt-20">❌ Teacher profile not found</p>;
 
   return (
 <section className="bg-sky-100 min-h-screen flex mt-10">
@@ -128,6 +142,12 @@ const TeacherDashboard = () => {
         label="Add Result"
         onClick={() => navigate("/add-result")}
       />
+<SidebarButton
+  label={isLoggingOut ? "Logging out..." : "Logout"}
+  icon={<LogOut className="w-5 h-5" />}
+  onClick={handleLogout}
+/>
+
     </nav>
   </div>
 </aside>
@@ -228,6 +248,12 @@ const TeacherDashboard = () => {
                 navigate("/add-staffs");
               }}
             />
+                <SidebarButton
+                  label={isLoggingOut ? "Logging out..." : "Logout"}
+                  icon={<LogOut />}
+                  onClick={handleLogout}
+                />
+
           </nav>
         </aside>
       </div>
