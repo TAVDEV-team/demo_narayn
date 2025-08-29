@@ -17,7 +17,7 @@ import AddStudent from './pages/AddStudent';
 import GradeHandler from './pages/GradeHandler';
 import HeadMasterProfile from './pages/HeadMasterProfile';
 import Gallery from './pages/Gallery';
-import TeacherDashboard from './pages/TeacherDashboard';
+import Profile from './pages/Profile';
 import AddResult from "./pages/AddResult";
 import TeacherInformation from './pages/TeacherInfo';
 import StaffsInformation from './pages/StaffsInformation';
@@ -61,7 +61,7 @@ function App() {
           {/* Students inside a specific group (only used for 9-10) */}
           <Route path="/class/:grade/:group" element={<ClassStudents />} />
 
-          <Route path="/teacher-portal" element={<TeacherDashboard />} />
+          <Route path="/profile" element={<Profile/>} />
           <Route path="/add-result" element={<AddResult />} />
            <Route path="/teacher" element={<TeacherInformation />} />
            <Route path="/staffs" element={<StaffsInformation />} />

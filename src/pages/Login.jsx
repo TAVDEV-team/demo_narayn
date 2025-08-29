@@ -37,7 +37,7 @@ const Login = () => {
       localStorage.setItem("teacherId", teacher.id);
 
       setMessage({ type: "success", text: "✅ Login successful!" });
-      setTimeout(() => navigate('/teacher-portal'), 800);
+      setTimeout(() => navigate('/profile'), 800);
 
     } catch (err) {
       const errorMsg = err.response?.data?.detail || err.message || "Login failed";
