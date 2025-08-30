@@ -31,16 +31,15 @@ export default function Message() {
         </svg>
 
         <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif leading-relaxed">
-          “Your headmaster message goes here, exactly like a Harvard style
-          quote inside these stylish quotation marks.”
+          “At Narayanpur High School, we believe education is not only about academic excellence but also about nurturing character, discipline, and lifelong values.  ”
         </p>
 
         <p className="mt-6 font-semibold text-base sm:text-lg md:text-xl">
-          Headmaster Name
+          Shapon Kumer Chakroborty
         </p>
-        <p className="text-gray-600 text-sm sm:text-base">School Name</p>
+        <p className="text-gray-600 text-sm sm:text-base">Headmaster, Narayanpur High School</p>
 
-        <button className="mt-4 inline-flex items-center text-gray-700 hover:text-gray-900 font-medium text-sm sm:text-base">
+        {/* <button className="mt-4 inline-flex items-center text-gray-700 hover:text-gray-900 font-medium text-sm sm:text-base">
           Read more about his work
           <svg
             className="ml-2 w-4 h-4"
@@ -55,7 +54,7 @@ export default function Message() {
               d="M9 5l7 7-7 7"
             />
           </svg>
-        </button>
+        </button> */}
       </div>
     </div>
   );
