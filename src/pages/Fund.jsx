@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getAuthHeaders } from '../services/api';
 import { ArrowDownCircle, ArrowUpCircle, Printer, Wallet } from "lucide-react";
-
+import SavePDF from "../components/buttons/save_pdf"; 
 // --- Constants & Utils ---
 const BASE = 'https://narayanpur-high-school.onrender.com/api';
 const CURRENCY_SYMBOL = '৳';
@@ -349,7 +349,7 @@ export default function Fund() {
           <h3 className="text-4xl font-semibold text-blue-950">Transaction History</h3>
           <div className="flex gap-2">
             <button onClick={()=>setShowDateFilter(true)} className="flex items-center gap-2 bg-blue-950 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition">Filter by Date</button>
-            <button onClick={()=>window.print()} className="flex items-center gap-2 bg-blue-950 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition"><Printer size={18}/>Save PDF</button>
+            <SavePDF/>
           </div>
         </div>
         <div className="overflow-x-auto rounded-lg border border-gray-200">
