@@ -108,8 +108,8 @@ export default function ClassResult() {
         />
         <SummaryCard
           icon={<Percent className="w-6 h-6 text-yellow-600" />}
-          label="Overall %"
-          value={`${summary.overall_percentage}%`}
+          label="Overall"
+          value={`${summary.overall_percentage} %`}
           bg="bg-yellow-50"
         />
       </div>
