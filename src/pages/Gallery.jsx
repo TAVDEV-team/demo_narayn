@@ -1,8 +1,95 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { Plus, ImagePlus, FolderPlus, Trash2, MoreVertical, X } from "lucide-react";
+import {
+  Plus,
+  ImagePlus,
+  FolderPlus,
+  Trash2,
+  MoreVertical,
+  X,
+} from "lucide-react";
 
+// Category Form Modal
+function CategoryForm({ setShowCategoryForm, newCategory, setNewCategory, fetchCategories }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl border border-gray-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b">
+          <h3 className="text-xl font-semibold text-blue-900 flex items-center gap-2">
+            <FolderPlus className="w-5 h-5" /> Add Category
+          </h3>
+          <button
+            onClick={() => setShowCategoryForm(false)}
+            className="p-2 rounded-full hover:bg-gray-100"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            try {
+              await axios.post(
+                "https://narayanpur-high-school.onrender.com/api/gallery/categories/",
+                newCategory
+              );
+              setShowCategoryForm(false);
+              setNewCategory({ name: "", description: "" });
+              fetchCategories();
+            } catch (err) {
+              console.error("Error creating category:", err);
+            }
+          }}
+          className="px-6 py-5 space-y-4"
+        >
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Category Name</label>
+            <input
+              type="text"
+              value={newCategory.name}
+              onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g. Sports, Events, Classrooms"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Description</label>
+            <textarea
+              value={newCategory.description}
+              onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+              placeholder="Short description for this category"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setShowCategoryForm(false)}
+              className="px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
+            >
+              <FolderPlus className="w-4 h-4" /> Add Category
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// Main Gallery
 export default function Gallery() {
   const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -69,21 +156,6 @@ export default function Gallery() {
       setStatus("error");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleCategorySubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(
-        "https://narayanpur-high-school.onrender.com/api/gallery/categories/",
-        newCategory
-      );
-      setNewCategory({ name: "", description: "" });
-      fetchCategories();
-      setShowCategoryForm(false);
-    } catch (err) {
-      console.error("Error adding category:", err);
     }
   };
 
@@ -201,126 +273,17 @@ export default function Gallery() {
           </div>
         )}
 
-        {/* Add Category form */}
+        {/* Category Modal */}
         {showCategoryForm && (
-          <div className="flex justify-center items-center mb-10">
-            <div className="bg-white rounded-2xl shadow-lg p-8 space-y-4 w-full max-w-md border border-gray-100">
-              <h2 className="text-2xl font-semibold mb-4 text-emerald-800 text-center flex items-center justify-center gap-2">
-                <Folder className="w-6 h-6" /> Add New Category
-              </h2>
-              <form onSubmit={handleCategorySubmit} className="space-y-4">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Category Name"
-                  value={newCategory.name}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, name: e.target.value })
-                  }
-                  className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
-                  required
-                />
-
-                <textarea
-                  name="description"
-                  placeholder="Category Description"
-                  value={newCategory.description}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, description: e.target.value })
-                  }
-                  className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
-                  required
-                />
-
-                <button
-                  type="submit"
-                  className="w-full bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition font-medium"
-                >
-                  Add Category
-                </button>
-              </form>
-            </div>
-          </div>
+          <CategoryForm
+            setShowCategoryForm={setShowCategoryForm}
+            newCategory={newCategory}
+            setNewCategory={setNewCategory}
+            fetchCategories={fetchCategories}
+          />
         )}
 
-        {/* Add Category Modal */}
-        {showCategoryForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="w-full max-w-md rounded-2xl bg-white shadow-xl border border-gray-100">
-              <div className="flex items-center justify-between px-6 py-4 border-b">
-                <h3 className="text-xl font-semibold text-blue-900 flex items-center gap-2">
-                  <FolderPlus className="w-5 h-5" /> Add Category
-                </h3>
-                <button
-                  onClick={() => setShowCategoryForm(false)}
-                  className="p-2 rounded-full hover:bg-gray-100"
-                  aria-label="Close"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  try {
-                    await axios.post(
-                      "https://narayanpur-high-school.onrender.com/api/gallery/categories/",
-                      newCategory
-                    );
-                    setShowCategoryForm(false);
-                    setNewCategory({ name: "", description: "" });
-                    fetchCategories();
-                  } catch (err) {
-                    console.error("Error creating category:", err);
-                  }
-                }}
-                className="px-6 py-5 space-y-4"
-              >
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Category Name</label>
-                  <input
-                    type="text"
-                    value={newCategory.name}
-                    onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                    className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g. Sports, Events, Classrooms"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Description</label>
-                  <textarea
-                    value={newCategory.description}
-                    onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
-                    className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
-                    placeholder="Short description for this category"
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowCategoryForm(false)}
-                    className="px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
-                  >
-                    <FolderPlus className="w-4 h-4" /> Add Category
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Render categories with photos */}
+        {/* Render categories */}
         {categories.map((cat) => (
           <div key={cat.id} className="mb-16">
             <h2 className="text-2xl font-bold text-blue-900 mb-3 flex items-center gap-2">
@@ -373,3 +336,4 @@ export default function Gallery() {
     </div>
   );
 }
+  
