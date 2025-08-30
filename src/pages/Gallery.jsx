@@ -1,28 +1,111 @@
-
-// src/pages/Gallery.jsx
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import {
+  Plus,
+  ImagePlus,
+  FolderPlus,
+  Trash2,
+  MoreVertical,
+  X,
+} from "lucide-react";
 
+// Category Form Modal
+function CategoryForm({ setShowCategoryForm, newCategory, setNewCategory, fetchCategories }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl border border-gray-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b">
+          <h3 className="text-xl font-semibold text-blue-900 flex items-center gap-2">
+            <FolderPlus className="w-5 h-5" /> Add Category
+          </h3>
+          <button
+            onClick={() => setShowCategoryForm(false)}
+            className="p-2 rounded-full hover:bg-gray-100"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            try {
+              await axios.post(
+                "https://narayanpur-high-school.onrender.com/api/gallery/categories/",
+                newCategory
+              );
+              setShowCategoryForm(false);
+              setNewCategory({ name: "", description: "" });
+              fetchCategories();
+            } catch (err) {
+              console.error("Error creating category:", err);
+            }
+          }}
+          className="px-6 py-5 space-y-4"
+        >
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Category Name</label>
+            <input
+              type="text"
+              value={newCategory.name}
+              onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g. Sports, Events, Classrooms"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Description</label>
+            <textarea
+              value={newCategory.description}
+              onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+              placeholder="Short description for this category"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setShowCategoryForm(false)}
+              className="px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
+            >
+              <FolderPlus className="w-4 h-4" /> Add Category
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// Main Gallery
 export default function Gallery() {
-  const [photos, setPhotos] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     image: null,
-    category: "", // added category here
+    category: "",
   });
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(null); 
-  const [categories, setCategories] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(null);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: "", description: "" });
 
-  // Fetch photos and categories
   useEffect(() => {
-    fetchPhotos();
     fetchCategories();
   }, []);
 
@@ -34,17 +117,6 @@ export default function Gallery() {
       setCategories(res.data);
     } catch (err) {
       console.error("Error fetching categories:", err);
-    }
-  };
-
-  const fetchPhotos = async () => {
-    try {
-      const res = await axios.get(
-        "https://narayanpur-high-school.onrender.com/api/gallery/photos/"
-      );
-      setPhotos(res.data);
-    } catch (err) {
-      console.error("Error fetching photos:", err);
     }
   };
 
@@ -67,21 +139,17 @@ export default function Gallery() {
       data.append("title", formData.title);
       data.append("description", formData.description);
       data.append("image", formData.image);
-      data.append("category", 1);
-      // data.append("category", parseInt(formData.category, 10));
-
+      data.append("category", parseInt(formData.category, 10));
       data.append("date_uploaded", new Date().toISOString());
 
       await axios.post(
         "https://narayanpur-high-school.onrender.com/api/gallery/photos/",
-        data,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        data
       );
 
       setStatus("success");
-      setFormData({ title: "", description: "", image: null, category: 1 });
-      console.log(data)
-      fetchPhotos();
+      setFormData({ title: "", description: "", image: null, category: "" });
+      fetchCategories();
       setShowForm(false);
     } catch (error) {
       console.error("Upload error:", error.response?.data || error.message);
@@ -91,72 +159,62 @@ export default function Gallery() {
     }
   };
 
-
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this photo?")) return;
     try {
       await axios.delete(
         `https://narayanpur-high-school.onrender.com/api/gallery/photos/${id}/`
       );
-      fetchPhotos();
+      fetchCategories();
     } catch (err) {
       console.error("Error deleting photo:", err);
     }
   };
 
-  // Group photos by category
-  const groupedPhotos = photos.reduce((groups, photo) => {
-    const cat = photo.category?.name || "Uncategorized";
-    if (!groups[cat]) groups[cat] = [];
-    groups[cat].push(photo);
-    return groups;
-  }, {});
-
   return (
-    <div className="min-h-screen bg-sky-50 py-12 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white py-12 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto mt-8">
+        {/* Header */}
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-4xl font-extrabold text-center text-white bg-blue-950 rounded-full  mb-12  "
+          className="text-4xl font-extrabold text-center text-blue-950 mb-12 tracking-tight"
         >
-          
-          
-           {!showForm && (
-          <div className=" gap-4 mt-8 mb-8">
-           
-               <h1 className="text-center ">Our School gallery</h1>
+          📸 Our School Gallery
+        </motion.h1>
+
+        {/* Add buttons */}
+        {!showForm && !showCategoryForm && (
+          <div className="flex justify-center gap-6 mb-10">
             <button
               onClick={() => setShowForm(true)}
-              className="bg-sky-50 text-blue-950  text-lg px-4 gap-20  rounded-lg hover:bg-sky-200  transition m-5"
+              className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-xl shadow hover:bg-blue-700 transition"
             >
-              Add Photo
+              <ImagePlus className="w-5 h-5" /> Add Photo
             </button>
             <button
               onClick={() => setShowCategoryForm(true)}
-              className="bg-sky-50 text-blue-950 text-lg px-4  rounded-lg hover:bg-sky-200 transition m-5"
+              className="flex items-center gap-2 bg-emerald-600 text-white px-5 py-2 rounded-xl shadow hover:bg-emerald-700 transition"
             >
-              Add Category
+              <FolderPlus className="w-5 h-5" /> Add Category
             </button>
           </div>
         )}
-        </motion.h1>
 
-       
-        {/* Upload Form */}
+        {/* Upload Photo form */}
         {showForm && (
-          <div className="flex justify-center items-center">
-            <div className="bg-white rounded-2xl shadow-md p-8 space-y-4 w-full max-w-md">
-              <h2 className="text-2xl font-semibold mb-4 text-sky-800 text-center">
-                Upload a Photo
+          <div className="flex justify-center items-center mb-10">
+            <div className="bg-white rounded-2xl shadow-lg p-8 space-y-4 w-full max-w-md border border-gray-100">
+              <h2 className="text-2xl font-semibold mb-4 text-blue-800 text-center flex items-center justify-center gap-2">
+                <Plus className="w-6 h-6" /> Upload a Photo
               </h2>
-              <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full border rounded-lg p-2"
+                  className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
                   required
                 >
                   <option value="">Select Category</option>
@@ -170,19 +228,19 @@ export default function Gallery() {
                 <input
                   type="text"
                   name="title"
-                  placeholder="Title (e.g. Sports Day)"
+                  placeholder="Title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full border rounded-lg p-2"
+                  className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
                   required
                 />
 
                 <textarea
                   name="description"
-                  placeholder="Photo Description"
+                  placeholder="Description"
                   value={formData.description}
                   onChange={handleChange}
-                  className="w-full border rounded-lg p-2"
+                  className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
                   required
                 />
 
@@ -191,18 +249,22 @@ export default function Gallery() {
                   name="image"
                   accept="image/*"
                   onChange={handleChange}
-                  className="w-full"
+                  className="w-full border rounded-lg p-3"
                   required
                 />
 
                 {loading && <p className="text-blue-600">⏳ Uploading...</p>}
-                {status === "success" && <p className="text-green-600">✅ Upload successful!</p>}
-                {status === "error" && <p className="text-red-600">❌ Upload failed. Try again.</p>}
+                {status === "success" && (
+                  <p className="text-green-600">✅ Upload successful!</p>
+                )}
+                {status === "error" && (
+                  <p className="text-red-600">❌ Upload failed.</p>
+                )}
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition w-full"
+                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium"
                 >
                   {loading ? "Uploading..." : "Upload Photo"}
                 </button>
@@ -211,70 +273,29 @@ export default function Gallery() {
           </div>
         )}
 
-        {/* Category form */}
+        {/* Category Modal */}
         {showCategoryForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-            <div className="bg-white rounded-2xl shadow-md p-8 space-y-4 w-full max-w-md">
-              <h2 className="text-2xl font-semibold mb-4 text-sky-800 text-center">
-                Add Category
-              </h2>
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  try {
-                    await axios.post(
-                      "https://narayanpur-high-school.onrender.com/api/gallery/categories/",
-                      newCategory
-                    );
-                    setShowCategoryForm(false);
-                    setNewCategory({ name: "", description: "" });
-                    fetchCategories();
-                  } catch (err) {
-                    console.error("Error creating category:", err);
-                  }
-                }}
-                className="flex flex-col space-y-4"
-              >
-                <input
-                  type="text"
-                  placeholder="Category Name"
-                  value={newCategory.name}
-                  onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                  className="w-full border rounded-lg p-2"
-                  required
-                />
-                <textarea
-                  placeholder="Category Description"
-                  value={newCategory.description}
-                  onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
-                  className="w-full border rounded-lg p-2"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition w-full"
-                >
-                  Add Category
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowCategoryForm(false)}
-                  className="bg-gray-300 text-black px-6 py-2 rounded-lg hover:bg-gray-400 transition w-full"
-                >
-                  Cancel
-                </button>
-              </form>
-            </div>
-          </div>
+          <CategoryForm
+            setShowCategoryForm={setShowCategoryForm}
+            newCategory={newCategory}
+            setNewCategory={setNewCategory}
+            fetchCategories={fetchCategories}
+          />
         )}
 
+        {/* Render categories */}
+        {categories.map((cat) => (
+          <div key={cat.id} className="mb-16">
+            <h2 className="text-2xl font-bold text-blue-900 mb-3 flex items-center gap-2">
+              📂 {cat.name}
+            </h2>
+            <p className="text-gray-600 mb-6">{cat.description}</p>
 
-        {!showForm &&
-          Object.keys(groupedPhotos).map((categoryName, idx) => (
-            <div key={idx} className="mb-12">
-              <h2 className="text-2xl font-bold text-sky-800 mb-6">{categoryName}</h2>
+            {cat.photos.length === 0 ? (
+              <p className="text-gray-400 italic">No photos in this category yet.</p>
+            ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {groupedPhotos[categoryName].map((photo, index) => (
+                {cat.photos.map((photo, index) => (
                   <motion.div
                     key={photo.id}
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -289,31 +310,30 @@ export default function Gallery() {
                     />
                     <div className="absolute top-2 right-2 flex flex-col items-end">
                       <button
-                        onClick={() => setMenuOpen(menuOpen === photo.id ? null : photo.id)}
-                        className="bg-black bg-opacity-40 text-white px-2 py-1 rounded-full hover:bg-opacity-70 transition"
+                        onClick={() =>
+                          setMenuOpen(menuOpen === photo.id ? null : photo.id)
+                        }
+                        className="bg-black bg-opacity-40 text-white p-2 rounded-full hover:bg-opacity-70 transition"
                       >
-                        ⋮
+                        <MoreVertical className="w-5 h-5" />
                       </button>
                       {menuOpen === photo.id && (
                         <button
                           onClick={() => handleDelete(photo.id)}
-                          className="mt-2 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 transition"
+                          className="mt-2 flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 transition"
                         >
-                          🗑 Delete
+                          <Trash2 className="w-4 h-4" /> Delete
                         </button>
                       )}
                     </div>
                   </motion.div>
                 ))}
-
               </div>
-            </div>
-          ))}
-
-        {/* Add Photo / Add Category Buttons */}
-       
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
 }
-
+  
