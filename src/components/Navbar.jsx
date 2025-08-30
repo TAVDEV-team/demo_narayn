@@ -120,7 +120,7 @@ const Navbar = () => {
 
           <NavItem label="Administration" links={[
             { label: "Governing Body", to: "/governing-body" },
-            { label: "HeadMaster", to: "/headmaster" },
+            // { label: "HeadMaster", to: "/headmaster" },
             { label: "Teacher Info", to: "/teacher" },
             { label: "Staff Info", to: "/staffs" }
           ]} openMenu={openMenu} setOpenMenu={setOpenMenu} id="admin" />
