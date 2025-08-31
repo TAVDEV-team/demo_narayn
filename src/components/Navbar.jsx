@@ -120,7 +120,7 @@ const Navbar = () => {
 
           <NavItem label="Administration" links={[
             { label: "Governing Body", to: "/governing-body" },
-            { label: "HeadMaster", to: "/headmaster" },
+            // { label: "HeadMaster", to: "/headmaster" },
             { label: "Teacher Info", to: "/teacher" },
             { label: "Staff Info", to: "/staffs" }
           ]} openMenu={openMenu} setOpenMenu={setOpenMenu} id="admin" />
@@ -165,11 +165,8 @@ const Navbar = () => {
             {menuItems.map((item, idx) => (
               <MobileLink key={idx} to={item.to} label={item.label} closeMenu={() => setMobileOpen(false)} />
             ))}
-
-            {isLoggedIn && (
-              <button onClick={handleLogout} className="block w-full text-left py-2">Logout</button>
-            )}
           </div>
+          
         </div>
       )}
     </nav>

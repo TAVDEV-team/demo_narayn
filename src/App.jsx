@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
+import Home from './pages/Home/Home';
 import Layout from './components/Layout';
 import Contact from './pages/Contact';
 import Fund from './pages/Fund';
@@ -15,7 +15,7 @@ import ClassStudents from "./pages/ClassStudents";
 import ClassGroups from "./pages/ClassGroups";
 import AddStudent from './pages/AddStudent';
 import GradeHandler from './pages/GradeHandler';
-import HeadMasterProfile from './pages/HeadMasterProfile';
+// import HeadMasterProfile from './pages/HeadMasterProfile';
 import Gallery from './pages/Gallery';
 import Profile from './pages/Profile';
 import AddResult from "./pages/AddResult";
@@ -52,7 +52,7 @@ function App() {
           <Route path="notices/:id" element={<NoticeDetail />} />
           <Route path="/portal" element={<StudentPortal />} />
           <Route path="student" element={<AddStudent />} />
-          <Route path="headmaster" element={<HeadMasterProfile/>} />
+          {/* <Route path="headmaster" element={<HeadMasterProfile/>} /> */}
            <Route path="gallery" element={<Gallery/>} />
 
           {/* ✅ Use GradeHandler to manage 6-8 vs 9-10 */}

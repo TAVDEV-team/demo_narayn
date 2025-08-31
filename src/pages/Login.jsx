@@ -16,25 +16,28 @@ const Login = () => {
         "https://narayanpur-high-school.onrender.com/api/user/token/",
         { username, password }
       );
-
+      console.log(username,password)
       // Save tokens
       localStorage.setItem("token", res.data.access);
       localStorage.setItem("refreshToken", res.data.refresh);
 
       // Fetch all teachers
-      const teachersRes = await axios.get(
-        "https://narayanpur-high-school.onrender.com/api/user/teachers/",
+      const accountRes = await axios.get(
+        "https://narayanpur-high-school.onrender.com/api/user/account/",
         { headers: { Authorization: `Bearer ${res.data.access}` } }
       );
 
-      // Find the logged-in teacher
-      const teacher = teachersRes.data.find(
-        t => t.account.user.username === username
-      );
+      // // Find the logged-in teacher
+      // const teacher = teachersRes.data.find(
+      //   t => t.account.user.username === username
+      // );
+      const account = accountRes.data.find(
+        t => t.user.username === username
+      )
 
-      if (!teacher) throw new Error("Teacher profile not found");
+      if (!account) throw new Error("account not found");
 
-      localStorage.setItem("teacherId", teacher.id);
+      localStorage.setItem("accountId", account.id);
 
       setMessage({ type: "success", text: "✅ Login successful!" });
       setTimeout(() => navigate('/profile'), 800);
