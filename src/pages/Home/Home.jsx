@@ -1,9 +1,9 @@
 import React from "react";
-import Hero from "../components/Hero";
-import Message from "../components/Message";
-import History from "../components/History";
-import PhotoGallery from "../components/PhotoGallery";
-import WelcomeMessage from "../components/WelcomeMessage";
+import Hero from "./Hero";
+import Message from "../../components/Message";
+import History from "../../components/History";
+import PhotoGallery from "../../components/PhotoGallery";
+import WelcomeMessage from "../../components/WelcomeMessage";
 
 const galleryImages = [
   "/buildin2.jpg",
