@@ -37,8 +37,8 @@ export default function Syllabus() {
     );
 
   return (
-    <section className="bg-sky-50">
-    <div className="container mx-auto px-4 sm:px-6 lg:px-10 py-10 mt-10 min-h-screen">
+    <section className="bg-sky-50 p-10">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-10 py-18 mt-10 min-h-screen hidden sm:block">
       {/* Heading */}
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white bg-blue-950 mb-12 py-2 px-6 sm:px-10 w-fit mx-auto rounded-full">
         Syllabus
@@ -131,6 +131,72 @@ export default function Syllabus() {
         </table>
       </div>
     </div>
+    {/* Card view (only on mobile) */}
+<div className="sm:hidden space-y-4 pt-18 mt-10">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white bg-blue-950 mb-12 py-2 px-6 sm:px-10 w-fit mx-auto rounded-full">
+        Syllabus
+      </h1>
+  {syllabusList.map((item, index) => (
+    <motion.div
+      key={item.id}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className="bg-white p-4 rounded-xl shadow-md"
+    >
+      <h2 className="font-bold text-lg text-gray-900">{item.title}</h2>
+      <p className="text-gray-600">Class: {item.class_title || "-"}</p>
+      <p className="text-gray-600">
+        Uploaded: {new Date(item.uploaded_at).toLocaleDateString()}
+      </p>
+      <div className="flex gap-3 mt-3">
+        {item.file ? (
+          <>
+            <a
+              href={item.file}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 text-center px-3 py-2 bg-teal-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              View
+            </a>
+            <button
+              onClick={async () => {
+                try {
+                  const response = await axios.get(
+                    `https://narayanpur-high-school.onrender.com/api/nphs/syllabus/${item.id}/download/`,
+                    { responseType: "blob" }
+                  );
+                  const url = window.URL.createObjectURL(
+                    new Blob([response.data])
+                  );
+                  const link = document.createElement("a");
+                  link.href = url;
+                  const filename =
+                    item.file.split("/").pop() || "syllabus.pdf";
+                  link.setAttribute("download", filename);
+                  document.body.appendChild(link);
+                  link.click();
+                  link.remove();
+                } catch (err) {
+                  console.error("Download failed:", err);
+                  alert("Failed to download file.");
+                }
+              }}
+              className="flex-1 text-center px-3 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-900 transition-colors"
+            >
+              Download
+            </button>
+          </>
+        ) : (
+          <span className="w-full text-center px-3 py-2 bg-gray-300 text-gray-700 rounded-lg">
+            Not Available
+          </span>
+        )}
+      </div>
+    </motion.div>
+  ))}
+</div>
     </section>
   );
 }

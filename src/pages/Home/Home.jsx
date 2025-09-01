@@ -1,66 +1,19 @@
-// import React from "react";
-// import Hero from "../components/Hero";
-// import Message from "../components/Message";
-// import History from "../components/History";
-// import PhotoGallery from "../components/PhotoGallery";
-// import WelcomeMessage from "../components/WelcomeMessage";
-
-// const galleryImages = [
-//   "/buildin2.jpg",
-//   "/buiding3.jpg",
-//   "/function.jpg",
-//   "/school1.jpg",
-//   "/buikding1.jpg",
-//   "/school.jpg",
-//   "/school2.jpg",
-//   "/school.jpg",
-// ];
-
-// export default function Home() {
-//   return (
-//     <div className="w-full overflow-x-hidden">
-//       <Hero />
-//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-//         <WelcomeMessage />
-//         <Message />
-//         {/* <History /> */}
-//         <PhotoGallery images={galleryImages} />
-//       </div>
-//     </div>
-//   );
-// }
 
 
 import { BookOpen, Calendar, Users, Images, PhoneCall } from "lucide-react";
 import React from "react";
-import Hero from "../components/Hero";
-import Message from "../components/Message";
-import PhotoGallery from "../components/PhotoGallery";
-import WelcomeMessage from "../components/WelcomeMessage";
-import LatestNotices from "../components/LatestNotices";
-import ClickToPlayVideo from "../components/ClickToPlayVideo";
 
+import LatestNotices from "../../components/LatestNotices";
+import ClickToPlayVideo from "../../components/ClickToPlayVideo";
+import Hero from "./Hero";
+import Message from "../../components/Message";
+import PhotoGallery from "../../components/PhotoGallery";
+import WelcomeMessage from "../../components/WelcomeMessage";
 
-const galleryImages = [
-  "/buildin2.jpg",
-  "/buiding3.jpg",
-  "/function.jpg",
-  "/school1.jpg",
-  "/buikding1.jpg",
-  "/school.jpg",
-  "/school2.jpg",
-  "/school.jpg",
-];
 
 export default function Home() {
   const features = [
-    // {
-    //   title: "Admission Info",
-    //   desc: "Find details about admission process, requirements, and important dates.",
-    //   icon: <BookOpen className="w-10 h-10 text-blue-600" />,
-    //   link: "/admission",
-    //   color: "bg-blue-100",
-    // },
+    
     {
       title: "Class Routine",
       desc: "Check daily and weekly class routines for all grades and subjects.",
@@ -75,13 +28,7 @@ export default function Home() {
       link: "/teacher",
       color: "bg-yellow-100",
     },
-    // {
-    //   title: "Gallery",
-    //   desc: "View memorable moments from our school events, sports, and cultural activities.",
-    //   icon: <Images className="w-10 h-10 text-pink-600" />,
-    //   link: "/gallery",
-    //   color: "bg-pink-100",
-    // },
+
     {
       title: "Contact Us",
       desc: "Reach out for inquiries, feedback, or support via phone or email.",
