@@ -79,7 +79,7 @@ export default function Home() {
          <Message />
         <WelcomeMessage />
         </div>
-      <PhotoGallery images={galleryImages} />
+      <PhotoGallery />
       <ClickToPlayVideo />
 
     </div>
