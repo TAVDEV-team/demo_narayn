@@ -1,61 +1,83 @@
-import React, { useRef } from "react";
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-export default function Message() {
-  const imageRef = useRef(null);
+export default function MessageCarousel() {
+  const messages = [
+    {
+      image: "/sir.jpg",
+      quote:
+        "“At Narayanpur High School, we believe education is not only about academic excellence but also about nurturing character, discipline, and lifelong values.”",
+      name: "Shapon Kumer Chakroborty",
+      title: "Headmaster, Narayanpur High School",
+    },
+    {
+      image: "/default.png",
+      quote:
+        "“Our vision is to empower every student with knowledge, skills, and values that help them thrive in life.”",
+      name: "Abdullah Al Mamun",
+      title: "Senior Teacher, Narayanpur High School",
+    },
+  ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-20 py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center bg-gray-50">
-      {/* Headmaster Image */}
-      <div className="w-full flex justify-center md:justify-start" ref={imageRef}>
-        <img
-          src="/sir.jpg" // replace with your uploaded headmaster image
-          alt="Headmaster"
-          className="w-64 sm:w-80 md:w-96 h-auto rounded-md shadow-lg object-cover"
-        />
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-20 py-16">
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
+        spaceBetween={40}
+        slidesPerView={1}
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        loop={true}
+      >
+        {messages.map((msg, index) => (
+          <SwiperSlide key={index}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center bg-white rounded-2xl shadow-2xl p-8 md:p-12 hover:scale-105 transform transition duration-500">
+              {/* Image */}
+              <div className="flex justify-center md:justify-start">
+                <img
+                  src={msg.image}
+                  alt={msg.name}
+                  className="w-64 sm:w-80 md:w-96 h-auto rounded-xl shadow-lg object-cover transition-transform duration-500 hover:scale-105"
+                />
+              </div>
 
-      {/* Quote Section */}
-      <div className="relative text-gray-900 px-2 sm:px-0">
-        <svg
-          className="absolute -top-6 left-0 w-10 h-10 sm:w-12 sm:h-12 text-gray-300"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5v14l7-7-7-7z"
-          />
-        </svg>
+              {/* Text */}
+              <div className="relative text-gray-900 px-2 sm:px-0">
+                {/* Decorative quote */}
+                <svg
+                  className="absolute -top-6 left-0 w-10 h-10 sm:w-12 sm:h-12 text-blue-200 opacity-30"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5v14l7-7-7-7z"
+                  />
+                </svg>
 
-        <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif leading-relaxed">
-          “At Narayanpur High School, we believe education is not only about academic excellence but also about nurturing character, discipline, and lifelong values.  ”
-        </p>
+                <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif leading-relaxed">
+                  {msg.quote}
+                </p>
 
-        <p className="mt-6 font-semibold text-base sm:text-lg md:text-xl">
-          Shapon Kumer Chakroborty
-        </p>
-        <p className="text-gray-600 text-sm sm:text-base">Headmaster, Narayanpur High School</p>
-
-        {/* <button className="mt-4 inline-flex items-center text-gray-700 hover:text-gray-900 font-medium text-sm sm:text-base">
-          Read more about his work
-          <svg
-            className="ml-2 w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button> */}
-      </div>
+                <p className="mt-6 font-semibold text-lg sm:text-xl md:text-2xl">
+                  {msg.name}
+                </p>
+                <p className="text-gray-500 text-sm sm:text-base md:text-lg">
+                  {msg.title}
+                </p>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 }

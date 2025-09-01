@@ -1,9 +1,29 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-export default function PhotoGallery({ images = [] }) {
+export default function PhotoGallery() {
   const scrollRef = useRef(null);
+  const [images, setImages] = useState([]);
 
+  // Fetch images from API
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const res = await axios.get(
+          "https://narayanpur-high-school.onrender.com/api/gallery/photos/"
+        );
+        // Assuming API returns an array of image objects with `url` field
+        setImages(res.data.map((img) => img.url));
+      } catch (err) {
+        console.error("Failed to fetch gallery images:", err);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
+  // Auto-scroll
   useEffect(() => {
     const scrollContainer = scrollRef.current;
     let scrollAmount = 0;
@@ -20,7 +40,7 @@ export default function PhotoGallery({ images = [] }) {
 
     const animation = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animation);
-  }, []);
+  }, [images]);
 
   return (
     <section className="max-w-7xl mx-auto my-10 px-4 sm:px-6 lg:px-8">
@@ -42,7 +62,7 @@ export default function PhotoGallery({ images = [] }) {
         {[...images, ...images].map((img, idx) => (
           <div
             key={idx}
-            className="flex-shrink-0 w-60 h-40 sm:w-72 sm:h-48 md:w-80 md:h-56 rounded-lg overflow-hidden shadow-md hover:scale-105 transform transition"
+            className="flex-shrink-0 w-60 h-40 sm:w-72 sm:h-48 md:w-80 md:h-56 rounded-lg overflow-hidden shadow-md hover:scale-105 transform transition border-4 border-gray-200"
           >
             <img
               src={img}
