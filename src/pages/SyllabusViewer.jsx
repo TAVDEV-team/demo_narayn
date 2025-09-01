@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import API from "../api/api"
 
 export default function SyllabusViewer() {
   const { id } = useParams();
   const [syllabus, setSyllabus] = useState(null);
 
   useEffect(() => {
-    axios.get(`https://narayanpur-high-school.onrender.com/api/nphs/syllabus/${id}/`)
+    API.get(`/nphs/syllabus/${id}/`)
       .then((res) => setSyllabus(res.data))
       .catch((err) => console.error(err));
   }, [id]);

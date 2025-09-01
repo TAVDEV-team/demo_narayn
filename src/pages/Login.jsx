@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 import API from "../api/api"
@@ -17,7 +16,6 @@ const Login = () => {
         "/user/token/",
         { username, password }
       );
-      console.log(username,password)
       // Save tokens
       localStorage.setItem("token", res.data.access);
       localStorage.setItem("refreshToken", res.data.refresh);

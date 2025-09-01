@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API from "../api/api"
+
 
 export default function RoutineForm() {
   const [classes, setClasses] = useState([]);
@@ -17,13 +19,13 @@ export default function RoutineForm() {
 
   // Fetch classes and teachers
   useEffect(() => {
-    axios
-      .get("https://narayanpur-high-school.onrender.com/api/nphs/classes/")
+    API
+      .get("/nphs/classes/")
       .then((res) => setClasses(res.data))
       .catch(() => {});
 
-    axios
-      .get("https://narayanpur-high-school.onrender.com/api/user/teachers/")
+    API
+      .get("/user/teachers/")
       .then((res) => setTeachers(res.data))
       .catch(() => {});
   }, []);
@@ -31,9 +33,9 @@ export default function RoutineForm() {
   // Fetch subjects when class selected
   useEffect(() => {
     if (form.aclass) {
-      axios
+      API
         .get(
-          `https://narayanpur-high-school.onrender.com/api/nphs/classes/${form.aclass}/`
+          `/nphs/classes/${form.aclass}/`
         )
         .then((res) => setSubjects(res.data.all_subjects || []))
         .catch(() => {});
@@ -51,8 +53,8 @@ export default function RoutineForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        "https://narayanpur-high-school.onrender.com/api/nphs/routine/",
+      const res = await API.post(
+        "/nphs/routine/",
         form
       );
 

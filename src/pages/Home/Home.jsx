@@ -1,12 +1,11 @@
 
 
 import { BookOpen, Calendar, Users, Images, PhoneCall } from "lucide-react";
-import React from "react";
 
 import LatestNotices from "../../components/LatestNotices";
 import ClickToPlayVideo from "../../components/ClickToPlayVideo";
 import Hero from "./Hero";
-import Message from "../../components/Message";
+import Message from "./Message";
 import PhotoGallery from "../../components/PhotoGallery";
 import WelcomeMessage from "../../components/WelcomeMessage";
 

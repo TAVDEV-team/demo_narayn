@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API from "../api/api"
+
 
 export default function StaffsInformation() {
   const [staffs, setStaffs] = useState([]);
@@ -8,8 +10,8 @@ export default function StaffsInformation() {
   useEffect(() => {
     const fetchStaffs = async () => {
       try {
-        const res = await axios.get(
-          "https://narayanpur-high-school.onrender.com/api/user/office-helpers/"
+        const res = await API.get(
+          "/user/office-helpers/"
         );
         setStaffs(res.data);
       } catch (err) {

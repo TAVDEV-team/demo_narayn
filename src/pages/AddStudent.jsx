@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 
 export default function AddStudent() {
   const [formData, setFormData] = useState({
@@ -79,8 +79,8 @@ export default function AddStudent() {
       const token = localStorage.getItem("token");
       const data = buildFormData(formData);
 
-      await axios.post(
-        "https://narayanpur-high-school.onrender.com/api/user/students/",
+      await API.post(
+        "/user/students/",
         data,
         {
           headers: {

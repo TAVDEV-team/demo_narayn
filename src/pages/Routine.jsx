@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { motion } from "framer-motion";
+import API from "../api/api"
 
 export default function Routine() {
   const [selectedClass, setSelectedClass] = useState(null);
@@ -15,8 +15,8 @@ export default function Routine() {
     setLoading(true);
     setStatus(null);
     try {
-      const res = await axios.get(
-        "https://narayanpur-high-school.onrender.com/api/nphs/routine/"
+      const res = await API.get(
+        "/nphs/routine/"
       );
 
       // Filter routines of selected class
@@ -39,7 +39,7 @@ export default function Routine() {
   useEffect(() => {
   const fetchSubjects = async () => {
     try {
-      const res = await axios.get("https://narayanpur-high-school.onrender.com/api/nphs/subject/");
+      const res = await API.get("/nphs/subject/");
       const subjectMap = {};
       res.data.forEach((s) => {
         subjectMap[s.id] = s.name;
@@ -57,8 +57,8 @@ export default function Routine() {
   useEffect(() => {
   const fetchTeachers = async () => {
     try {
-      const res = await axios.get(
-        "https://narayanpur-high-school.onrender.com/api/user/teachers/"
+      const res = await API.get(
+        "/user/teachers/"
       );
       const teacherMap = {};
       res.data.forEach((t) => {
