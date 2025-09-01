@@ -2,39 +2,55 @@ import React from "react";
 
 export default function WelcomeMessage() {
   return (
-    <section className="bg-gray-50 py-12 sm:py-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* One single card containing text + image */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-10 md:p-12 relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          {/* Decorative left border */}
-          <div className="hidden sm:block absolute left-0 top-0 h-full w-1 bg-yellow-500 rounded-l-2xl "></div>
-
-          {/* Left: Text */}
+    <section className="bg-sky-100 py-12 sm:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+        
+        {/* Row 1: Image Left, Text Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left: Image */}
           <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Welcome to Narayanpur High School
+            <img
+              src="/buildin2.jpg"
+              alt="Narayanpur High School"
+              className="w-full h-[320px] sm:h-[380px] md:h-[300px] rounded-xl object-cover shadow-md"
+            />
+          </div>
+
+          {/* Right: Text */}
+          <div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-950 leading-tight mb-8">
+              Welcome to <span className="text-gray-700">Narayanpur High School</span>
             </h2>
 
-            <p className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-700">
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed text-gray-600">
               Narayanpur High School is one of the most prestigious and important
               educational institutions in Chauddagram, Cumilla. It was established
               in 1980 with only five classes and has since grown into a respected
               institution with modern facilities and a reputation for discipline,
-              education, and character. Today, it accommodates thousands of
-              students across Bangla and English versions, housed in multiple
-              multi-storied buildings. Narayanpur High School was founded in 1980
-              with the vision of providing quality education. Over the years, it
-              has expanded from a small setup to a fully established institution,
-              now educating over 500 students.
+              education, and character.
+            </p>
+          </div>
+        </div>
+
+        {/* Row 2: Text Left, Image Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left: Text */}
+          <div>
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed text-gray-600">
+              Today, it accommodates thousands of students across Bangla and English
+              versions, housed in multiple multi-storied buildings. The school was
+              founded with the vision of providing quality education and has grown
+              from a small setup into a fully established institution, now educating
+              over <span className="font-semibold text-blue-950">500 students</span>.
             </p>
           </div>
 
           {/* Right: Image */}
           <div>
             <img
-              src="/school.jpg"
-              alt="Narayanpur High School"
-              className="w-full h-full rounded-xl object-cover"
+              src="/building3.jpg"
+              alt="Classroom"
+              className="w-full h-[200px] sm:h-[380px] md:h-[300px] rounded-xl object-cover shadow-md"
             />
           </div>
         </div>
