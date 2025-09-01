@@ -165,11 +165,8 @@ const Navbar = () => {
             {menuItems.map((item, idx) => (
               <MobileLink key={idx} to={item.to} label={item.label} closeMenu={() => setMobileOpen(false)} />
             ))}
-
-            {isLoggedIn && (
-              <button onClick={handleLogout} className="block w-full text-left py-2">Logout</button>
-            )}
           </div>
+          
         </div>
       )}
     </nav>
