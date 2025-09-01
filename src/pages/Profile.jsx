@@ -10,16 +10,16 @@ import { div } from "framer-motion/client";
 import API from "../api/api"
 
 const endpoints = {
-  Teacher: "https://narayanpur-high-school.onrender.com/api/user/teachers/",
-  Student: "https://narayanpur-high-school.onrender.com/api/user/students/",
-  Governing: "https://narayanpur-high-school.onrender.com/api/user/governing/",
-  Office_Helper: "https://narayanpur-high-school.onrender.com/api/user/office-helpers/",
+  Teacher: "/user/teachers/",
+  Student: "/user/students/",
+  Governing: "/user/governing/",
+  Office_Helper: "/user/office-helpers/",
 };
 
 export async function fetchProfessionalAccount(account_id) {
   for (const [role, url] of Object.entries(endpoints)) {
     try {
-      const res = await axios.get(url);
+      const res = await API.get(url);
       const targetId = Number(account_id);
       const account = res.data.find(t => t.account.id === targetId);
 
