@@ -16,7 +16,6 @@ const Login = () => {
         "/user/token/",
         { username, password }
       );
-      console.log(username,password)
       // Save tokens
       localStorage.setItem("token", res.data.access);
       localStorage.setItem("refreshToken", res.data.refresh);
