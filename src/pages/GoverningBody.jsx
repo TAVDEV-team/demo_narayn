@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 import { motion } from "framer-motion";
 import { FaSpinner, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 
@@ -9,8 +9,8 @@ export default function GoverningBody() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    axios
-      .get("https://narayanpur-high-school.onrender.com/api/user/governing/")
+    API
+      .get("/user/governing/")
       .then((res) => {
         setMembers(res.data);
         setLoading(false);

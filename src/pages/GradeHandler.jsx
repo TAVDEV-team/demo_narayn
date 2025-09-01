@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import ClassGroups from "./ClassGroups";
 import ClassStudents from "./ClassStudents";

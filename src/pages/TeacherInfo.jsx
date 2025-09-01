@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API from "../api/api"
 
 export default function TeacherInformation() {
   const [teachers, setTeachers] = useState([]);
@@ -8,8 +9,8 @@ export default function TeacherInformation() {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
-        const res = await axios.get(
-          "https://narayanpur-high-school.onrender.com/api/user/teachers/"
+        const res = await API.get(
+          "/user/teachers/"
         );
         setTeachers(res.data);
       } catch (err) {

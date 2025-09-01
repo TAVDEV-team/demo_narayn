@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
@@ -8,8 +8,8 @@ export default function ApprovedNotices() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("https://narayanpur-high-school.onrender.com/api/nphs/notices/approved/")
+    API
+      .get("/nphs/notices/approved/")
       .then((res) => setNotices(res.data))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));

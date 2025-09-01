@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 import { Loader2 } from "lucide-react";
 
 export default function CreateNotice({ onCreate }) { // ✅ accept callback
@@ -27,8 +27,8 @@ export default function CreateNotice({ onCreate }) { // ✅ accept callback
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(
-        "https://narayanpur-high-school.onrender.com/api/nphs/notices/",
+      await API.post(
+        "/nphs/notices/",
         form
       );
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import axios from "axios";
+
 import { Loader2 } from "lucide-react";
 
 export default function NoticeDetail() {
@@ -12,8 +12,8 @@ export default function NoticeDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`https://narayanpur-high-school.onrender.com/api/nphs/notices/${id}/`)
+    API
+      .get(`/nphs/notices/${id}/`)
       .then((res) => setNotice(res.data))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
