@@ -6,6 +6,9 @@ import {
   BookOpen, UserPlus, Wallet, FileClock, X, LogOut
 } from "lucide-react";
 import { div } from "framer-motion/client";
+
+import API from "../api/api"
+
 const endpoints = {
   Teacher: "https://narayanpur-high-school.onrender.com/api/user/teachers/",
   Student: "https://narayanpur-high-school.onrender.com/api/user/students/",
@@ -32,6 +35,9 @@ export async function fetchProfessionalAccount(account_id) {
   console.warn("⚠️ No matching account found.");
   return null;
 }
+
+
+
 {/* ---------------- DASHBOARD COMPONENT ---------------- */ }
 const AccountDashboard = () => {
   const [account, setAccount] = useState(null);
@@ -43,55 +49,37 @@ const AccountDashboard = () => {
   const isLoggedIn = !!localStorage.getItem("token");
 
   // 🔹 Fetch teacher profile
-  useEffect(() => {
-    const fetchAccount = async () => {
-      let token = localStorage.getItem("token");
-      const refreshToken = localStorage.getItem("refreshToken");
-      const accountId = localStorage.getItem("accountId");
+useEffect(() => {
+  const fetchAccount = async () => {
+    const accountId = localStorage.getItem("accountId");
+    if (!accountId) {
+      navigate("/login");
+      return;
+    }
 
-      if (!token || !accountId) {
-        navigate("/login");
-        return;
-      }
+    try {
+      const { account, role } = await fetchProfessionalAccount(accountId);
+      setAccount(account);
+      setRole(role);
+    } catch (err) {
+      setAccount(null);
+      setRole(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      try {
-        const { account, role } = await fetchProfessionalAccount(accountId);
-        setAccount(account);
-        setRole(role);
-      } catch (err) {
-        if (err.response?.status === 401 && refreshToken) {
-          try {
-            const refreshRes = await axios.post(
-              "https://narayanpur-high-school.onrender.com/api/user/token/refresh/",
-              { refresh: refreshToken }
-            );
-            token = refreshRes.data.access;
-            localStorage.setItem("token", token);
+  fetchAccount();
+}, [navigate]);
 
-            const { account, role } = await fetchProfessionalAccount(accountId);
-            setAccount(account);
-            setRole(role);
-          } catch {
-            navigate("/login");
-          }
-        } else {
-          setAccount(null);
-          setRole(null);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAccount();
-  }, [navigate]);
-
+  
   // 🔹 Handle logout
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
       const token = localStorage.getItem("token");
-      await fetch(
-        "https://narayanpur-high-school.onrender.com/api/user/logout/",
+      await APIfetch(
+        "/user/logout/",
         { method: "POST", headers: { Authorization: `Token ${token}` } }
       );
     } catch (error) {
