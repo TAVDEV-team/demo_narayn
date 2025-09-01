@@ -58,16 +58,16 @@ export default function RegisterForm() {
           password: form.password,
           confirm_password: form.confirm_password,
         },
-        image: form.image, // works if backend accepts file in multipart
+        image: form.image, 
         date_of_birth: form.date_of_birth,
         mobile: form.mobile,
         religion: form.religion,
-        gender: form.gender || "Male", // add dropdown in form
-        address: form.adress, // fix spelling
+        gender: form.gender || "Male", 
+        address: form.adress, 
         joining_date: form.joining_date,
         last_educational_institute: form.last_educational_institute,
       },
-      base_subject: Number(form.base_subject), // should be ID
+      base_subject: Number(form.base_subject), 
       is_class_teacher: form.is_class_teacher === "yes",
       class_teacher_of: Number(form.class_teacher_of) || 0,
     };
@@ -95,8 +95,19 @@ const [classes, setClasses] = useState([]);
 useEffect(() => {
   API.get("/nphs/classes/") 
     .then((res) => {
-      console.log(res.data); // check the shape here
+      console.log(res.data);
       setClasses(res.data);
+    })
+    .catch((err) => console.error(err));
+}, []);
+
+const [subject, setSubject] = useState([]);
+
+useEffect(() => {
+  API.get("/nphs/subject/") 
+    .then((res) => {
+      console.log(res.data); 
+      setSubject(res.data);
     })
     .catch((err) => console.error(err));
 }, []);
@@ -389,14 +400,29 @@ useEffect(() => {
             <label htmlFor="base_subject" className="text-sm font-semibold mb-2">
               Base Subject
             </label>
-            <input
+            {/* <input
               id="base_subject"
               name="base_subject"
               value={form.base_subject}
               onChange={handleChange}
               placeholder="Enter your base subject"
               className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
+            /> */}
+            <select
+              id="base_subject"
+              name="base_subject"
+              value={form.base_subject}
+              onChange={handleChange}
+              placeholder="Enter your base subject"
+              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+            >
+              <option value="">Select Subject</option>
+              {subject.map((sub) => (
+                <option key={sub.id} value={sub.id}>
+                  {sub.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Is Class Teacher */}
