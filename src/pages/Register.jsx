@@ -1,6 +1,6 @@
 // import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useState, useEffect } from "react";
@@ -74,8 +74,8 @@ export default function RegisterForm() {
 
     console.log("Payload:", payload);
 
-    const res = await axios.post(
-      "https://narayanpur-high-school.onrender.com/api/user/teachers/",
+    const res = await API.post(
+      "/user/teachers/",
       payload,
       { headers: { "Content-Type": "application/json" } }
     );
@@ -93,7 +93,7 @@ export default function RegisterForm() {
 const [classes, setClasses] = useState([]);
 
 useEffect(() => {
-  axios.get("https://narayanpur-high-school.onrender.com/api/nphs/classes/") 
+  API.get("/nphs/classes/") 
     .then((res) => {
       console.log(res.data); // check the shape here
       setClasses(res.data);

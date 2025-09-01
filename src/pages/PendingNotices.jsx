@@ -17,7 +17,6 @@ export default function PendingNotices() {
   // 🔹 Fetch pending notices
   const fetchPendingNotices = async () => {
     setLoading(true);
-    console.log("'#########'")
     try {
       const res = await API.get("/nphs/notices/pending/");
       setNotices(res.data || []);

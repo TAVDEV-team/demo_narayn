@@ -1,7 +1,6 @@
 
 
 import { BookOpen, Calendar, Users, Images, PhoneCall } from "lucide-react";
-import React from "react";
 
 import LatestNotices from "../../components/LatestNotices";
 import ClickToPlayVideo from "../../components/ClickToPlayVideo";

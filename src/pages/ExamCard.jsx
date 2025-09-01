@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import API from "../api/api";
 import { ClipboardList, FileText, Award } from "lucide-react";
 
-const examapi = "https://narayanpur-high-school.onrender.com/api/result/exam/";
+const examapi = "/result/exam/";
 
 export default function ExamCard() {
   const [exams, setExams] = useState([]);
@@ -20,7 +20,7 @@ export default function ExamCard() {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const res = await axios.get(examapi);
+        const res = await API.get(examapi);
         setExams(res.data);
         console.log(res.data)
       } catch (err) {

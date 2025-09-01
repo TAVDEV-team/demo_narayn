@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { section } from "framer-motion/client";
+import API from "../api/api"
 
 export default function Syllabus() {
   const [syllabusList, setSyllabusList] = useState([]);
@@ -9,8 +10,8 @@ export default function Syllabus() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("https://narayanpur-high-school.onrender.com/api/nphs/syllabus/")
+    API
+      .get("/nphs/syllabus/")
       .then((res) => {
         setSyllabusList(res.data);
         setLoading(false);
@@ -94,8 +95,8 @@ export default function Syllabus() {
                       <button
                         onClick={async () => {
                           try {
-                            const response = await axios.get(
-                              `https://narayanpur-high-school.onrender.com/api/nphs/syllabus/${item.id}/download/`,
+                            const response = await API.get(
+                              `/nphs/syllabus/${item.id}/download/`,
                               { responseType: "blob" }
                             );
                             const url = window.URL.createObjectURL(
@@ -163,8 +164,8 @@ export default function Syllabus() {
             <button
               onClick={async () => {
                 try {
-                  const response = await axios.get(
-                    `https://narayanpur-high-school.onrender.com/api/nphs/syllabus/${item.id}/download/`,
+                  const response = await API.get(
+                    `/nphs/syllabus/${item.id}/download/`,
                     { responseType: "blob" }
                   );
                   const url = window.URL.createObjectURL(

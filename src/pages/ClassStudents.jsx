@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import API from "../api/api";
 import { FaPhoneAlt, FaEnvelope, FaIdBadge } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -15,8 +15,8 @@ export default function ClassStudents() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const res = await axios.get(
-          "https://narayanpur-high-school.onrender.com/api/user/students/"
+        const res = await API.get(
+          "/user/students/"
         );
 
         let filtered;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaHome, FaPhone, FaEnvelope, FaFacebook, FaGooglePlusG, FaLinkedin } from "react-icons/fa";
-import axios from "axios";
+import API from "../api/api";
 import { motion } from "framer-motion";
 
 export default function ContactPage() {
@@ -13,8 +13,8 @@ export default function ContactPage() {
     async function fetchData() {
       try {
         const [contactRes, aboutRes] = await Promise.all([
-          axios.get("https://narayanpur-high-school.onrender.com/api/nphs/schools/1"),
-          axios.get("https://narayanpur-high-school.onrender.com/api/nphs/about/"),
+          API.get("/nphs/schools/1"),
+          API.get("/nphs/about/"),
         ]);
 
         setContact(contactRes.data);
