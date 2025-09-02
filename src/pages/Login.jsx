@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API from "../api/api"
+import Loading from '../components/Loading';
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,25 +14,20 @@ const Login = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(
-        "https://narayanpur-high-school.onrender.com/api/user/token/",
+      const res = await API.post(
+        "/user/token/",
         { username, password }
       );
-      console.log(username,password)
       // Save tokens
       localStorage.setItem("token", res.data.access);
       localStorage.setItem("refreshToken", res.data.refresh);
 
       // Fetch all teachers
-      const accountRes = await axios.get(
-        "https://narayanpur-high-school.onrender.com/api/user/account/",
+      const accountRes = await API.get(
+        "/user/account/",
         { headers: { Authorization: `Bearer ${res.data.access}` } }
       );
 
-      // // Find the logged-in teacher
-      // const teacher = teachersRes.data.find(
-      //   t => t.account.user.username === username
-      // );
       const account = accountRes.data.find(
         t => t.user.username === username
       )
@@ -97,7 +94,7 @@ const Login = () => {
                 : "bg-blue-600 hover:bg-blue-700 text-white"
             }`}
           >
-            {loading ? "⏳ Logging in..." : "Login"}
+            {loading ? <Loading/> : "Login"}
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-
+import API from "../api/api";
+import Loading from "../components/Loading";
 export default function AddResult() {
   // Dropdown data
   const [classes, setClasses] = useState([]);
@@ -29,8 +29,8 @@ export default function AddResult() {
       setLoading(true);
       try {
         const [classesRes, examsRes] = await Promise.all([
-          axios.get("https://narayanpur-high-school.onrender.com/api/nphs/classes/"),
-          axios.get("https://narayanpur-high-school.onrender.com/api/result/exam/"),
+          API.get("/nphs/classes/"),
+          API.get("/result/exam/"),
         ]);
         setClasses(classesRes.data);
         setExams(examsRes.data);
@@ -49,8 +49,8 @@ export default function AddResult() {
     const fetchClassDetails = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          `https://narayanpur-high-school.onrender.com/api/nphs/classes/${form.aclass}/`
+        const res = await API.get(
+          `/nphs/classes/${form.aclass}/`
         );
         setStudents(res.data.students || []);
         setSubjects(res.data.all_subjects || []); // ✅ subjects come from here
@@ -90,7 +90,7 @@ export default function AddResult() {
       };
       console.log("Payload:", JSON.stringify(payload, null, 2));
 
-      await axios.post("https://narayanpur-high-school.onrender.com/api/result/", payload);
+      await API.post("/result/", payload);
       setMessage({ type: "success", text: "✅ Result added successfully!" });
       setForm({ aclass: "", exam: "", subject: "", student: "", mcq: "", practical: "", written: "" });
       setStudents([]);
@@ -246,7 +246,7 @@ export default function AddResult() {
             className="w-full bg-blue-950 text-white font-semibold py-2 rounded-lg hover:bg-blue-900 transition disabled:opacity-50"
             disabled={loading}
           >
-            {loading ? "Submitting..." : "Submit Result"}
+            {loading ? <Loading message="Submitting"/> : "Submit Result"}
           </button>
 
           {/* Feedback message */}

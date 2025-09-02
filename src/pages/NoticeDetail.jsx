@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import axios from "axios";
+
 import { Loader2 } from "lucide-react";
+import Loading from "../components/Loading";
 
 export default function NoticeDetail() {
   const { id } = useParams();
@@ -12,20 +13,16 @@ export default function NoticeDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`https://narayanpur-high-school.onrender.com/api/nphs/notices/${id}/`)
+    API
+      .get(`/nphs/notices/${id}/`)
       .then((res) => setNotice(res.data))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, [id]);
 
   if (loading)
-    return (
-      <div className="bg-sky-50 flex flex-col justify-center items-center min-h-screen text-blue-950">
-        <Loader2 className="animate-spin w-8 h-8 mb-2" />
-        <p className="text-lg font-semibold">loading...</p>
-      </div>
-    );
+    <Loading/>
+    ;
 
   if (!notice) return <p className="p-6 text-center">Notice not found.</p>;
 

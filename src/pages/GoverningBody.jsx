@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 import { motion } from "framer-motion";
 import { FaSpinner, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
-
+import Loading from "../components/Loading";
 export default function GoverningBody() {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    axios
-      .get("https://narayanpur-high-school.onrender.com/api/user/governing/")
+    API
+      .get("/user/governing/")
       .then((res) => {
         setMembers(res.data);
         setLoading(false);
@@ -34,10 +34,7 @@ export default function GoverningBody() {
       </motion.h1>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center mt-20">
-          <FaSpinner className="animate-spin text-blue-600 text-5xl mb-4" />
-          <p className="text-blue-700 font-medium text-lg">Loading members...</p>
-        </div>
+        <Loading/>
       ) : error ? (
         <div className="flex flex-col items-center justify-center mt-20">
           <p className="text-red-600 font-medium text-lg">

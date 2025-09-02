@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SavePDF from "../components/buttons/save_pdf"; 
-import axios from "axios";
+import API from "../api/api";
 import {
   Users,
   CheckCircle2,
@@ -11,6 +11,7 @@ import {
   Hash,
   Loader2,
 } from "lucide-react";
+import Loading from "../components/Loading";
 
 export default function ClassResult() {
   const { examId, classId } = useParams();
@@ -35,9 +36,9 @@ export default function ClassResult() {
   };
 
   useEffect(() => {
-    axios
+    API
       .get(
-        `https://narayanpur-high-school.onrender.com/api/result/class_result/${examId}/${classId}/`
+        `/result/class_result/${examId}/${classId}/`
       )
       .then((res) => {
         setResults(res.data.student_results || []);
@@ -61,10 +62,7 @@ export default function ClassResult() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-gray-600">
-        <Loader2 className="animate-spin w-6 h-6 mr-2" />
-        Loading results...
-      </div>
+      <Loading message="Loading Result"/>
     );
   }
 
@@ -154,7 +152,7 @@ export default function ClassResult() {
                 </td>
                 <td className="border px-4 py-2 text-center">
                   <a
-                    href={`https://narayanpur-high-school.onrender.com/api/result/card_pdf/${examId}/${classId}/${res.id}/`}
+                    href={`/result/card_pdf/${examId}/${classId}/${res.id}/`}
                     className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg shadow-md"
                   >
                     <FileDown className="w-4 h-4" />

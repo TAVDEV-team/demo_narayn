@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import API from "../api/api";
 import {
   Plus,
   ImagePlus,
@@ -32,8 +32,8 @@ function CategoryForm({ setShowCategoryForm, newCategory, setNewCategory, fetchC
           onSubmit={async (e) => {
             e.preventDefault();
             try {
-              await axios.post(
-                "https://narayanpur-high-school.onrender.com/api/gallery/categories/",
+              await API.post(
+                "/gallery/categories/",
                 newCategory
               );
               setShowCategoryForm(false);
@@ -111,8 +111,8 @@ export default function Gallery() {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(
-        "https://narayanpur-high-school.onrender.com/api/gallery/categories/"
+      const res = await API.get(
+        "/gallery/categories/"
       );
       setCategories(res.data);
     } catch (err) {
@@ -142,8 +142,8 @@ export default function Gallery() {
       data.append("category", parseInt(formData.category, 10));
       data.append("date_uploaded", new Date().toISOString());
 
-      await axios.post(
-        "https://narayanpur-high-school.onrender.com/api/gallery/photos/",
+      await API.post(
+        "/gallery/photos/",
         data
       );
 
@@ -162,8 +162,8 @@ export default function Gallery() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this photo?")) return;
     try {
-      await axios.delete(
-        `https://narayanpur-high-school.onrender.com/api/gallery/photos/${id}/`
+      await API.delete(
+        `/gallery/photos/${id}/`
       );
       fetchCategories();
     } catch (err) {
@@ -253,7 +253,7 @@ export default function Gallery() {
                   required
                 />
 
-                {loading && <p className="text-blue-600">⏳ Uploading...</p>}
+                {loading && <Loading message="Uploading"/>}
                 {status === "success" && (
                   <p className="text-green-600">✅ Upload successful!</p>
                 )}

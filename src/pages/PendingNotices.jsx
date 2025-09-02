@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import API from "../api/api";
-
+import Loading from "../components/Loading";
 export default function PendingNotices() {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,6 @@ export default function PendingNotices() {
   // 🔹 Fetch pending notices
   const fetchPendingNotices = async () => {
     setLoading(true);
-    console.log("'#########'")
     try {
       const res = await API.get("/nphs/notices/pending/");
       setNotices(res.data || []);
@@ -66,10 +65,7 @@ export default function PendingNotices() {
 
       {/* Notices Section */}
       {loading ? (
-        <div className="flex justify-center items-center space-x-2 text-blue-950 py-10">
-          <Loader2 className="animate-spin w-9 h-9" />
-          <span className="font-semibold text-xl">Loading...</span>
-        </div>
+        <Loading/>
       ) : notices.length > 0 ? (
         <div className="space-y-6">
           {notices.map((notice) => (

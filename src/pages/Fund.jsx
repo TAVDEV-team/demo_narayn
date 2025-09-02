@@ -4,7 +4,8 @@ import { getAuthHeaders } from '../services/api';
 import { ArrowDownCircle, ArrowUpCircle, Printer, Wallet } from "lucide-react";
 import SavePDF from "../components/buttons/save_pdf"; 
 // --- Constants & Utils ---
-const BASE = 'https://narayanpur-high-school.onrender.com/api';
+import API from "../api/api"
+import Loading from '../components/Loading';
 const CURRENCY_SYMBOL = '৳';
 
 
@@ -40,7 +41,8 @@ async function handleResponse(res) {
 async function fetchBalance(signal) {
   const headers = await getAuthHeaders();
   console.log("Balance headers being sent:", headers);  
-  const res = await fetch(`${BASE}/funds/balance/`, { method: 'GET', signal, headers });
+  const res = await API.get("/funds/balance/", { method: 'GET', signal, headers });
+
   const data = await handleResponse(res);
   console.log("Balance API response:", data);
   if (Array.isArray(data) && data.length > 0) {
@@ -53,7 +55,7 @@ async function fetchBalance(signal) {
 async function fetchHistory(signal) {
   const headers = await getAuthHeaders();
   console.log("History headers being sent:", headers);   
-  const res = await fetch(`${BASE}/funds/transactions/`, { method: 'GET', signal, headers });
+  const res = await API.get("/funds/transactions/", { signal, headers });
   const data = await handleResponse(res);
   console.log("History API response:", data);
   return Array.isArray(data) ? data : data.results || [];
@@ -63,7 +65,7 @@ async function fetchHistory(signal) {
 async function postAddFunds({ amount, reason, type, payment_method, date }, signal) {
   const headers = { 'Content-Type': 'application/json', ...(await getAuthHeaders()) };
   const body = JSON.stringify({ type, amount, reason, payment_method, date });
-  const res = await fetch(`${BASE}/funds/transactions/`, { method: 'POST', signal, headers, body });
+  const res = await API.post(`/funds/transactions/`, { signal, headers, body });
   return await handleResponse(res);
 }
 
@@ -364,9 +366,8 @@ export default function Fund() {
             </thead>
             <tbody>
               {loadingHistory && (
-                <tr>
-                  <td colSpan="4" className="py-6 text-center text-gray-400">Loading history...</td>
-                </tr>
+
+                <Loading message="history"/>
               )}
 
               {!loadingHistory && (filteredTransactions || mergedTransactions).length === 0 && (

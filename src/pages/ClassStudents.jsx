@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import API from "../api/api";
 import { FaPhoneAlt, FaEnvelope, FaIdBadge } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
+import Loading from "../components/Loading";
 
 export default function ClassStudents() {
   const { grade, group } = useParams();
@@ -15,8 +15,8 @@ export default function ClassStudents() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const res = await axios.get(
-          "https://narayanpur-high-school.onrender.com/api/user/students/"
+        const res = await API.get(
+          "/user/students/"
         );
 
         let filtered;
@@ -47,34 +47,7 @@ if (group && group !== "all") {
   }, [grade, group]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center bg-sky-50 items-center">
-       <p className="flex items-center gap-2 text-2xl font-bold text-sky-700">
-  <svg
-    className="animate-spin h-5 w-5 text-sky-700"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-  >
-    <circle
-      className="opacity-25"
-      cx="12"
-      cy="12"
-      r="10"
-      stroke="currentColor"
-      strokeWidth="4"
-    ></circle>
-    <path
-      className="opacity-75"
-      fill="currentColor"
-      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-    ></path>
-  </svg>
-  Loading students...
-</p>
-
-      </div>
-    );
+    return <Loading message="Students"/>;
   }
 
   return (
@@ -120,12 +93,7 @@ if (group && group !== "all") {
               <p className="text-gray-600 text-base mt-1">
                 <span className="font-semibold">Gender:</span> {student.account.display_gender}
               </p>
-             {/* <button
-  onClick={() => navigate(`/students/${student.account.id}/add-result`)}
-  className="px-5 py-2 bg-blue-950 text-white rounded-lg hover:bg-blue-900"
->
-  Add result
-</button> */}
+             
 
             </div>
           </div>

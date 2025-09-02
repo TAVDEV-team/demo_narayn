@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import API from "../api/api"
+import Loading from "../components/Loading";
 
 export default function SyllabusViewer() {
   const { id } = useParams();
   const [syllabus, setSyllabus] = useState(null);
 
   useEffect(() => {
-    axios.get(`https://narayanpur-high-school.onrender.com/api/nphs/syllabus/${id}/`)
+    API.get(`/nphs/syllabus/${id}/`)
       .then((res) => setSyllabus(res.data))
       .catch((err) => console.error(err));
   }, [id]);
 
-  if (!syllabus) return <p className="text-center mt-10">Loading...</p>;
+  if (!syllabus) return <Loading
+    message="Loading syllabus"/>;
 
   return (
     <div className="w-screen h-screen bg-white">
