@@ -1,10 +1,9 @@
-import PersonalInfoText from "./PersolanInfoText";
-import ProfessionalInfo from "./ProfessionalInfor";
+import PersonalInfoText from "./PersonalInfoText";
+import ProfessionalInfo from "./ProfessionalInfo";
 
 
 import {
-  MapPin, Landmark, Mail, Phone, Calendar, GraduationCap,
-  BookOpen, UserPlus, Wallet, FileClock, X, LogOut
+Mail, Phone
 } from "lucide-react";
 
 

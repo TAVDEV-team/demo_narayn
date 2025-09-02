@@ -133,7 +133,7 @@ export default function Syllabus() {
       </div>
     </div>
     {/* Card view (only on mobile) */}
-<div className="sm:hidden space-y-4 pt-18 mt-10">
+    <div className="sm:hidden space-y-4 pt-18 mt-10">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white bg-blue-950 mb-12 py-2 px-6 sm:px-10 w-fit mx-auto rounded-full">
         Syllabus
       </h1>
