@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import API from "../api/api"
+import Loading from "../components/Loading";
 
 export default function Routine() {
   const [selectedClass, setSelectedClass] = useState(null);
@@ -207,11 +208,7 @@ export default function Routine() {
                 })}
 
               {loading && (
-                <tr>
-                  <td colSpan="8" className="px-4 py-3 text-center text-blue-600">
-                    ⏳ Loading routine...
-                  </td>
-                </tr>
+                <Loading message="Loading Routine"/>
               )}
               {status === "error" && (
                 <tr>

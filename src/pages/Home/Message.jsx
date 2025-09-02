@@ -38,8 +38,8 @@ export default function MessageCarousel() {
               {/* Image */}
               <div className="flex justify-center md:justify-start">
                 <img
-                  src={msg.message_of.account.image ||  "/default.png"}
-                  alt={msg.message_of.account.full_name}
+                  src={  "/default.png"}
+                  alt={msg.message_of.full_name}
                   className="w-64 sm:w-80 md:w-96 h-auto rounded-xl shadow-lg object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
@@ -61,11 +61,14 @@ export default function MessageCarousel() {
                 </svg>
 
                 <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif leading-relaxed">
-                  {msg.message}
+                  "{msg.message}"
                 </p>
                 <p className="mt-6 font-semibold text-lg sm:text-xl md:text-2xl">
-                  {msg.message_of.account.full_name}
+                  {msg.message_of.full_name}
                 </p>
+                {/* <p className="mt-6 sm:text-xl md:text-2xl">
+                  Teacher
+                </p> */}
               </div>
             </div>
           </SwiperSlide>

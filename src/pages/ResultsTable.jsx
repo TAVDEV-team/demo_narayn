@@ -11,6 +11,7 @@ import {
   Hash,
   Loader2,
 } from "lucide-react";
+import Loading from "../components/Loading";
 
 export default function ClassResult() {
   const { examId, classId } = useParams();
@@ -61,10 +62,7 @@ export default function ClassResult() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-gray-600">
-        <Loader2 className="animate-spin w-6 h-6 mr-2" />
-        Loading results...
-      </div>
+      <Loading message="Loading Result"/>
     );
   }
 

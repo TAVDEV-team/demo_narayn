@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../api/api";
 import { ClipboardList, FileText, Award } from "lucide-react";
+import Loading from "../components/Loading";
 
 const examapi = "/result/exam/";
 
@@ -34,7 +35,8 @@ export default function ExamCard() {
   }, []);
 
   if (loading) {
-    return <p className="text-center py-10">Loading exams...</p>;
+    return <Loading message="exams"/>;
+    
   }
 
   if (error) {

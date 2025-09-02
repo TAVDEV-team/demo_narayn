@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../api/api";
-
+import Loading from "../components/Loading";
 export default function AddResult() {
   // Dropdown data
   const [classes, setClasses] = useState([]);
@@ -246,7 +246,7 @@ export default function AddResult() {
             className="w-full bg-blue-950 text-white font-semibold py-2 rounded-lg hover:bg-blue-900 transition disabled:opacity-50"
             disabled={loading}
           >
-            {loading ? "Submitting..." : "Submit Result"}
+            {loading ? <Loading message="Submitting"/> : "Submit Result"}
           </button>
 
           {/* Feedback message */}

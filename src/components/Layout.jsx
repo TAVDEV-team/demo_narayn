@@ -10,7 +10,7 @@ export default function Layout() {
 
       {/* Main content grows to push footer down */}
       <main className="flex-grow">
-        <Outlet />
+        <Outlet/>
       </main>
 
       {/* Footer stays pinned bottom */}

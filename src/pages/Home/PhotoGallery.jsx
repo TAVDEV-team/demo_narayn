@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { Import } from "lucide-react";
+import API from "../../api/api";
 
 export default function PhotoGallery() {
   const scrollRef = useRef(null);
@@ -10,8 +11,8 @@ export default function PhotoGallery() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const res = await axios.get(
-          "https://narayanpur-high-school.onrender.com/api/gallery/photos/"
+        const res = await API.get(
+          "/gallery/photos/"
         );
         // Assuming API returns an array of image objects with `url` field
         setImages(res.data.map((img) => img.url));
