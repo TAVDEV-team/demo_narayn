@@ -208,7 +208,7 @@ export default function Routine() {
                 })}
 
               {loading && (
-                <Loading message="Loadign Routine"/>
+                <Loading message="Loading Routine"/>
               )}
               {status === "error" && (
                 <tr>

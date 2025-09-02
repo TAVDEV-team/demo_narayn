@@ -236,7 +236,7 @@ export default function AddStudent() {
         disabled={loading}
       >
         {loading ? (
-        <Loadign />
+        <Loading />
         ) : (
           "Add Student"
         )}

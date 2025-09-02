@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import API from "../api/api";
-import Loading from "../components/Loading";
+import API from "../../api/api";
+import Loading from "../../components/Loading";
 export default function PendingNotices() {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);

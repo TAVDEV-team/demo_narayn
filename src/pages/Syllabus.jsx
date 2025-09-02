@@ -27,7 +27,7 @@ export default function Syllabus() {
   if (loading)
     return (
       <Loading
-      message="Loadign syllabus"/>
+      message="Loading syllabus"/>
     );
 
   if (error)

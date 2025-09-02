@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import API from "../api/api";
+import API from "../../api/api";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import Loading from "../components/Loading";
+import Loading from "../../components/Loading";
 export default function ApprovedNotices() {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +33,7 @@ export default function ApprovedNotices() {
       {/* Notices Section */}
       <div className="space-y-3">
         {loading ? (
-          <Loadign message="Notices"/>
+          <Loading message="Notices"/>
         ) : notices.length > 0 ? (
           notices.map((notice) => (
             <div
