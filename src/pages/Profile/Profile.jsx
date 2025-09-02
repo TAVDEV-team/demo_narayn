@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
 X
 } from "lucide-react";
-
+import API  from "../../api/api";
 import { FetchProfessionalAccount } from "./FetchAccount";
 import PersonalInfo from "./Informations/PersonalInformations";
 import DashboardItems from "./Dashboards/DashboardItems";
@@ -53,9 +53,9 @@ useEffect(() => {
     setIsLoggingOut(true);
     try {
       const token = localStorage.getItem("token");
-      await APIfetch(
+      await API.post(
         "/user/logout/",
-        { method: "POST", headers: { Authorization: `Token ${token}` } }
+        {headers: { Authorization: `Token ${token}` } }
       );
     } catch (error) {
       console.error("Logout failed:", error);

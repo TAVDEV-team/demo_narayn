@@ -22,7 +22,7 @@ export default function DashboardItems({ account, role, navigate, handleLogout, 
       {/* Always visible */}
       <SidebarButton
         label={isLoggingOut ? "Logging out..." : "Logout"}
-        icon={<LogOut className="w-5 h-5" />}
+        icon={<LogOut className="w-5 h-5"/>}
         onClick={handleLogout}
       />
     </div>

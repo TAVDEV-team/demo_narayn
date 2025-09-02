@@ -1,9 +1,9 @@
 
-import { FileClock,UserPlus,Wallet} from "lucide-react";
+import { FileClock,UserPlus,Wallet,BookOpen} from "lucide-react";
 import SidebarButton from "../Buttons/SidebarButtons"
 
 
-export default function HeadmasterDashboard ( navigate ){
+export default function HeadmasterDashboard ({ navigate }){
   return( <div>
     <SidebarButton
       icon={<UserPlus className="w-5 h-5" />}
