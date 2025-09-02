@@ -12,8 +12,8 @@ export default function HeadmasterDashboard ({ navigate }){
     />
     <SidebarButton
       icon={<UserPlus className="w-5 h-5" />}
-      label="Teacher Register"
-      onClick={() => navigate("/register")}
+      label="Teacher addteacher"
+      onClick={() => navigate("/addteacher")}
     />
     <SidebarButton
       icon={<Wallet className="w-5 h-5" />}

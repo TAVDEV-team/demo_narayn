@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import API from "../api/api";
-import Loading from "../components/Loading";
+import API from "../../api/api";
+import Loading from "../../components/Loading";
 
 export default function AddStudent() {
   const [formData, setFormData] = useState({

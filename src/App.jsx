@@ -3,7 +3,7 @@ import Home from './pages/Home/Home';
 import Layout from './components/Layout';
 import Contact from './pages/Contact';
 import Fund from './pages/Fund';
-import Register from './pages/Register';
+import AddTeacherForm from './pages/Forms/AddTeacher';
 import AdmissionDocuments from "./pages/AdmissionDocuments";
 import ApprovedNotices from "./pages/Notices/ApprovedNotices";
 import CreateNotice from "./pages/Notices/CreateNotice";
@@ -13,23 +13,23 @@ import Login from './pages/Login';
 import StudentPortal from "./pages/StudentPortal";
 import ClassStudents from "./pages/ClassStudents";
 import ClassGroups from "./pages/ClassGroups";
-import AddStudent from './pages/AddStudent';
+import AddStudent from './pages/Forms/AddStudent';
 import GradeHandler from './pages/GradeHandler';
 // import HeadMasterProfile from './pages/HeadMasterProfile';
 import Gallery from './pages/Gallery';
 import Profile from './pages/Profile/Profile';
-import AddResult from "./Results/AddResult";
+import AddResult from "./pages/Results/AddResult"
 import TeacherInformation from './pages/TeacherInfo';
 import StaffsInformation from './pages/StaffsInformation';
 import ExamCard from './pages/ExamCard';
-import ResultsClasses from "./Results/ResultsClasses";
+import ResultsClasses from "./pages/Results/ResultsClasses";
 import ResultsTable from "./pages/ResultsTable";
 import Routine from './pages/Routine';
 import GoverningBody from './pages/GoverningBody';
 import SyllabusPage from './pages/Syllabus';
 import SyllabusViewer from "./pages/SyllabusViewer";
 import RoutineForm from './pages/RoutineForm';
-import AddStaffs from './pages/AddStaffs';
+import AddStaffs from './pages/Forms/AddStaffs';
 
 
 function App() {
@@ -40,7 +40,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="contact" element={<Contact />} />
           <Route path="fund" element={<Fund />} />
-          <Route path="register" element={<Register />} />
+          <Route path="addteacher" element={<AddTeacherForm />} />
           <Route path="login" element={<Login />} />
 
           <Route path="notice-board" element={<Navigate to="/" replace />} />

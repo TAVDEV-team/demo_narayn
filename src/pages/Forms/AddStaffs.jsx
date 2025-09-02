@@ -1,10 +1,10 @@
 // import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../api/api";
+import API from "../../api/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useState, useEffect } from "react";
-import Loading from "../components/Loading";
+import Loading from "../../components/Loading";
 
 export default function AddStaffs() {
   const navigate = useNavigate();
@@ -75,7 +75,7 @@ export default function AddStaffs() {
       payload,
       { headers: { "Content-Type": "application/json" } }
     );
-
+    console.log(payload)
     if (res.status === 201 || res.status === 200) {
       toast.success("Registration successful!");
       navigate("/");
@@ -85,18 +85,6 @@ export default function AddStaffs() {
     toast.error(error.response?.data?.detail || "Registration failed");
   }
 };
-
-// const [classes, setClasses] = useState([]);
-
-// useEffect(() => {
-//   API.get("/nphs/classes/") 
-//     .then((res) => {
-//       console.log(res.data); 
-//       setClasses(res.data);
-//     })
-//     .catch((err) => console.error(err));
-// }, []);
-
 
   return (
   <>
@@ -285,7 +273,9 @@ export default function AddStaffs() {
             >
               <option value="">Select religion</option>
               <option value="islam">Islam</option>
-              <option value="hinduism">Hinduism</option>
+              <option value="hindu">Hinduism</option>
+              <option value="cristian">Cristian</option>
+              <option value="buddhist">Buddhist</option>
             </select>
           </div>
 

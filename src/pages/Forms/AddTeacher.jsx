@@ -1,13 +1,13 @@
 // import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../api/api";
+import API from "../../api/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useState, useEffect } from "react";
-import Loading from "../components/Loading";
+import Loading from "../../components/Loading";
 
 
-export default function RegisterForm() {
+export default function AddTeacherForm() {
   const navigate = useNavigate();
    const [loading, setLoading] = useState(false); // loading state
   const [success, setSuccess] = useState("");   // success message
@@ -458,7 +458,7 @@ useEffect(() => {
               disabled={loading}
               className="w-full bg-blue-950 hover:bg-blue-900 text-white font-semibold py-3 sm:py-4 rounded-lg shadow-md text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Register
+              addteacher
             </button>
           </div>
         </form>
