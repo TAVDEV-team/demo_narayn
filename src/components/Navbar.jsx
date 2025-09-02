@@ -6,12 +6,14 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const mobileRef = useRef(null);
+  const toggleRef = useRef(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [logoutMessage, setLogoutMessage] = useState("");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState(null);
+  
 
-  useEffect(() => {
+   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
@@ -23,16 +25,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  useEffect(() => {
-    const onClickOutside = (e) => {
-      if (mobileOpen && mobileRef.current && !mobileRef.current.contains(e.target)) {
-        setMobileOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [mobileOpen]);
-
+  // Close on Escape
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -44,6 +37,19 @@ const Navbar = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Click-outside: use 'click' and ignore clicks that originate on the toggle button
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (!mobileOpen) return;
+      if (mobileRef.current && mobileRef.current.contains(e.target)) return; // clicked inside menu
+      if (toggleRef.current && toggleRef.current.contains(e.target)) return; // clicked the toggle itself - let toggle handler do the job
+      setMobileOpen(false);
+    };
+    document.addEventListener("click", onClickOutside);
+    return () => document.removeEventListener("click", onClickOutside);
+  }, [mobileOpen]);
+
+  // Resize: close when switching to desktop
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 768) setMobileOpen(false);
@@ -51,6 +57,8 @@ const Navbar = () => {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -77,6 +85,7 @@ const Navbar = () => {
 
   // Menu items for logged-in users
   const authMenuItems = [
+    { label: "Students", to: "/portal" }, 
     { label: "Result", to: "/results" },
     { label: "Profile", to: "/profile" },
     { label: "Gallery", to: "/gallery" },
@@ -85,6 +94,7 @@ const Navbar = () => {
 
   // Menu items for guests
   const guestMenuItems = [
+    { label: "Students", to: "/portal" }, 
     { label: "Login", to: "/login" },
     { label: "Gallery", to: "/gallery" },
     { label: "Contact", to: "/contact" },
@@ -100,9 +110,9 @@ const Navbar = () => {
     { label: "Routine", to: "/routine" },
     { label: "Syllabus", to: "/syllabus" }
   ]},
-  { label: "Portals", links: [
-    { label: "Students", to: "/portal" }
-  ]},
+  // { label: "Portals", links: [
+  //   { label: "Students", to: "/portal" }
+  // ]},
   { label: "Administration", links: [
     { label: "Governing Body", to: "/governing-body" },
     { label: "Teacher Info", to: "/teacher" },
@@ -133,9 +143,9 @@ const Navbar = () => {
             { label: "Syllabus", to: "/syllabus" }
           ]} openMenu={openMenu} setOpenMenu={setOpenMenu} id="academic" />
 
-          <NavItem label="Portals" links={[
+          {/* <NavItem label="Portals" links={[
             { label: "Students", to: "/portal" }
-          ]} openMenu={openMenu} setOpenMenu={setOpenMenu} id="portals" />
+          ]} openMenu={openMenu} setOpenMenu={setOpenMenu} id="portals" /> */}
 
           <NavItem label="Administration" links={[
             { label: "Governing Body", to: "/governing-body" },
@@ -145,7 +155,7 @@ const Navbar = () => {
           ]} openMenu={openMenu} setOpenMenu={setOpenMenu} id="admin" />
 
           {menuItems.map((item, idx) => (
-            <li key={idx}>
+            <li key={idx} className="whitespace-nowrap flex-wrap">
               <Link to={item.to} className="hover:text-yellow-300">{item.label}</Link>
             </li>
           ))}
@@ -153,37 +163,66 @@ const Navbar = () => {
 
         </ul>
 
-       {/* Hamburger */}
-<button
-  aria-label="Toggle mobile menu"
-  onClick={() => setMobileOpen(!mobileOpen)}
-  className="md:hidden flex flex-col justify-center items-center gap-1 h-8 w-8 focus:outline-none z-50"
->
-  <span className={`block h-0.5 w-6 bg-white transition-transform duration-300 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`}></span>
-  <span className={`block h-0.5 w-6 bg-white transition-opacity duration-300 ${mobileOpen ? "opacity-0" : ""}`}></span>
-  <span className={`block h-0.5 w-6 bg-white transition-transform duration-300 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`}></span>
-</button>
+{/* Hamburger toggle */}
+        <button
+          ref={toggleRef}
+          aria-label="Toggle mobile menu"
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen(prev => !prev)} // functional update — safer
+          className="md:hidden flex flex-col justify-center items-center gap-1 h-8 w-8 focus:outline-none z-50"
+        >
+          <span className={`block h-0.5 w-6 bg-white transition-transform duration-300 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`}></span>
+          <span className={`block h-0.5 w-6 bg-white transition-opacity duration-300 ${mobileOpen ? "opacity-0" : ""}`}></span>
+          <span className={`block h-0.5 w-6 bg-white transition-transform duration-300 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`}></span>
+        </button>
 
       </div>
 
-      {/* Mobile Menu */}
-    {mobileOpen && (
-  <div ref={mobileRef} className="md:hidden w-full bg-blue-900 text-white shadow-inner transition-all">
+    
+   
+ {/* Mobile menu — absolute below the nav bar so the nav (and its button) stay above it.
+           z-40 ensures nav (z-50) stays on top of the menu. */}
+      
+{mobileOpen && (
+  <div
+    ref={mobileRef}
+    className="md:hidden absolute top-full left-0 right-0 z-40 bg-blue-900 text-white shadow-inner transition-all"
+  >
     <div className="px-6 py-4 space-y-2">
-      <MobileLink to="/" label="Home" closeMenu={() => setMobileOpen(false)} />
+      <Link
+        to="/"
+        className="block py-2 hover:text-yellow-300"
+        onClick={() => setMobileOpen(false)}
+      >
+        Home
+      </Link>
+
       {menuStructure.map((section, idx) => (
         <MobileSection key={idx} label={section.label}>
-          {section.links.map((link, linkIdx) => (
-            <MobileLink key={linkIdx} to={link.to} label={link.label} closeMenu={() => setMobileOpen(false)} />
+          {section.links.map((l, i) => (
+            <MobileLink
+              key={i}
+              to={l.to}
+              label={l.label}
+              closeMenu={() => setMobileOpen(false)}
+            />
           ))}
         </MobileSection>
       ))}
+
       {menuItems.map((item, idx) => (
-        <MobileLink key={idx} to={item.to} label={item.label} closeMenu={() => setMobileOpen(false)} />
+        <MobileLink
+          key={idx}
+          to={item.to}
+          label={item.label}
+          closeMenu={() => setMobileOpen(false)}
+        />
       ))}
     </div>
   </div>
 )}
+
+
 
     </nav>
   );
@@ -199,7 +238,7 @@ const NavItem = ({ label, links, openMenu, setOpenMenu, id }) => (
       {label}
     </button>
     {openMenu === id && (
-      <ul className="absolute top-full left-0 bg-white text-black w-48 shadow-lg mt-1 rounded-md overflow-hidden z-10">
+      <ul className="absolute top-full  left-0 bg-white text-black w-48 shadow-lg mt-1 rounded-md overflow-hidden z-10">
         {links.map((link, idx) => (
           <li key={idx} className="px-4 py-2 hover:bg-blue-100 border-b">
             <Link to={link.to}>{link.label}</Link>
@@ -233,3 +272,6 @@ const MobileLink = ({ to, label, closeMenu }) => (
 );
 
 export default Navbar;
+
+
+
