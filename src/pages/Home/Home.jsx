@@ -3,7 +3,7 @@ import LatestNotices from "../../components/LatestNotices";
 import ClickToPlayVideo from "./ClickToPlayVideo";
 import Hero from "./Hero";
 import Message from "./Message";
-import PhotoGallery from "../../components/PhotoGallery";
+import PhotoGallery from "./PhotoGallery";
 import WelcomeMessage from "./WelcomeMessage";
 import ExploreCards from "./explore_cards";
 

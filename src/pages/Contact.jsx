@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaHome, FaPhone, FaEnvelope, FaFacebook, FaGooglePlusG, FaLinkedin } from "react-icons/fa";
 import API from "../api/api";
 import { motion } from "framer-motion";
-
+import Loading from "../components/Loading";
 export default function ContactPage() {
   const [contact, setContact] = useState({});
   const [about, setAbout] = useState({});
@@ -32,9 +32,7 @@ export default function ContactPage() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-500 text-lg">Loading Contact...</p>
-      </div>
+      <Loading message="Loading contact"/>
     );
 
   if (error)

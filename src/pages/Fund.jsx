@@ -5,6 +5,7 @@ import { ArrowDownCircle, ArrowUpCircle, Printer, Wallet } from "lucide-react";
 import SavePDF from "../components/buttons/save_pdf"; 
 // --- Constants & Utils ---
 import API from "../api/api"
+import Loading from '../components/Loading';
 const CURRENCY_SYMBOL = '৳';
 
 
@@ -365,9 +366,8 @@ export default function Fund() {
             </thead>
             <tbody>
               {loadingHistory && (
-                <tr>
-                  <td colSpan="4" className="py-6 text-center text-gray-400">Loading history...</td>
-                </tr>
+
+                <Loading message="history"/>
               )}
 
               {!loadingHistory && (filteredTransactions || mergedTransactions).length === 0 && (

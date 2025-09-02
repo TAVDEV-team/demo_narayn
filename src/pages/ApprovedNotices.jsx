@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import API from "../api/api";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-
+import Loading from "../components/Loading";
 export default function ApprovedNotices() {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,12 +33,7 @@ export default function ApprovedNotices() {
       {/* Notices Section */}
       <div className="space-y-3">
         {loading ? (
-          <div className="flex justify-center items-center space-x-2 text-blue-950">
-            <Loader2 className="animate-spin w-6 h-6 sm:w-7 sm:h-7" />
-            <span className="font-semibold text-sm sm:text-base md:text-lg">
-              loading...
-            </span>
-          </div>
+          <Loadign message="Notices"/>
         ) : notices.length > 0 ? (
           notices.map((notice) => (
             <div

@@ -253,7 +253,7 @@ export default function Gallery() {
                   required
                 />
 
-                {loading && <p className="text-blue-600">⏳ Uploading...</p>}
+                {loading && <Loading message="Uploading"/>}
                 {status === "success" && (
                   <p className="text-green-600">✅ Upload successful!</p>
                 )}

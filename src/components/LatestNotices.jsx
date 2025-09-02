@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Loader2, Bell } from "lucide-react";
+import Loading from "./loading";
 
 export default function LatestNotices() {
   const [notices, setNotices] = useState([]);
@@ -23,10 +24,9 @@ export default function LatestNotices() {
         </h2>
 
         {loading ? (
-          <div className="flex justify-center items-center space-x-2 text-gray-800">
-            <Loader2 className="animate-spin w-6 h-6 sm:w-7 sm:h-7" />
-            <span className="font-semibold text-base">Loading...</span>
-          </div>
+          <Loading
+          message="Loading"
+          />
         ) : notices.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {notices.map((notice) => (

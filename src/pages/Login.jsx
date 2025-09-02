@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import API from "../api/api"
+import Loading from '../components/Loading';
+
+
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -92,7 +94,7 @@ const Login = () => {
                 : "bg-blue-600 hover:bg-blue-700 text-white"
             }`}
           >
-            {loading ? "⏳ Logging in..." : "Login"}
+            {loading ? <Loading/> : "Login"}
           </button>
         </div>
       </div>

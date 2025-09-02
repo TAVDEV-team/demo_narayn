@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { section } from "framer-motion/client";
 import API from "../api/api"
+import Loading from "../components/loading";
 
 export default function Syllabus() {
   const [syllabusList, setSyllabusList] = useState([]);
@@ -25,9 +26,8 @@ export default function Syllabus() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-500 text-lg">Loading syllabus...</p>
-      </div>
+      <Loading
+      message="Loadign syllabus"/>
     );
 
   if (error)

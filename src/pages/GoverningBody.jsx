@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import API from "../api/api";
 import { motion } from "framer-motion";
 import { FaSpinner, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
-
+import Loading from "../components/Loading";
 export default function GoverningBody() {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,10 +34,7 @@ export default function GoverningBody() {
       </motion.h1>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center mt-20">
-          <FaSpinner className="animate-spin text-blue-600 text-5xl mb-4" />
-          <p className="text-blue-700 font-medium text-lg">Loading members...</p>
-        </div>
+        <Loading/>
       ) : error ? (
         <div className="flex flex-col items-center justify-center mt-20">
           <p className="text-red-600 font-medium text-lg">

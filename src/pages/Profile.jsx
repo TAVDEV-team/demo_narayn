@@ -93,9 +93,7 @@ useEffect(() => {
 
   if (loading)
     return (
-      <p className="text-center text-2xl mt-32 animate-pulse">
-        ⏳ Loading...
-      </p>
+      <Loading/>
     );
   if (!account)
     return (
