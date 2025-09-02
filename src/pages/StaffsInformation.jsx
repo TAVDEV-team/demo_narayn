@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import API from "../api/api"
-import Loading from "../components/loading";
+import Loading from "../components/Loading";
 
 export default function StaffsInformation() {
   const [staffs, setStaffs] = useState([]);

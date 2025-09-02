@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Loader2, Bell } from "lucide-react";
-import Loading from "./loading";
+import Loading from "./Loading";
 
 export default function LatestNotices() {
   const [notices, setNotices] = useState([]);

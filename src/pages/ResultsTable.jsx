@@ -11,7 +11,7 @@ import {
   Hash,
   Loader2,
 } from "lucide-react";
-import Loading from "../components/loading";
+import Loading from "../components/Loading";
 
 export default function ClassResult() {
   const { examId, classId } = useParams();

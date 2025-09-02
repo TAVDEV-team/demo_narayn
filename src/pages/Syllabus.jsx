@@ -3,7 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { section } from "framer-motion/client";
 import API from "../api/api"
-import Loading from "../components/loading";
+import Loading from "../components/Loading";
 
 export default function Syllabus() {
   const [syllabusList, setSyllabusList] = useState([]);

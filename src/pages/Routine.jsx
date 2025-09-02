@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import API from "../api/api"
-import Loading from "../components/loading";
+import Loading from "../components/Loading";
 
 export default function Routine() {
   const [selectedClass, setSelectedClass] = useState(null);
