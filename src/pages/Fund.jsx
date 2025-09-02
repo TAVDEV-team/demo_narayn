@@ -1,6 +1,6 @@
 // src/pages/Fund.jsx
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { getAuthHeaders } from '../services/api';
+// import { getAuthHeaders } from '../services/api';
 import { ArrowDownCircle, ArrowUpCircle, Printer, Wallet } from "lucide-react";
 import SavePDF from "../components/buttons/save_pdf"; 
 // --- Constants & Utils ---

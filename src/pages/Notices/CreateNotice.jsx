@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import API from "../api/api";
+import API from "../../api/api";
 import { Loader2 } from "lucide-react";
-import Loading from "../components/Loading";
+import Loading from "../../components/Loading";
 export default function CreateNotice({ onCreate }) { // ✅ accept callback
   const [form, setForm] = useState({
     title: "",
