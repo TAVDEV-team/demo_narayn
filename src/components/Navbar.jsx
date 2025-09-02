@@ -92,6 +92,25 @@ const Navbar = () => {
 
   const menuItems = isLoggedIn ? authMenuItems : guestMenuItems;
 
+
+  const menuStructure = [
+  { label: "Academic", links: [
+    { label: "Documents", to: "/documents" },
+    { label: "Notices", to: "/notice-approved" },
+    { label: "Routine", to: "/routine" },
+    { label: "Syllabus", to: "/syllabus" }
+  ]},
+  { label: "Portals", links: [
+    { label: "Students", to: "/portal" }
+  ]},
+  { label: "Administration", links: [
+    { label: "Governing Body", to: "/governing-body" },
+    { label: "Teacher Info", to: "/teacher" },
+    { label: "Staff Info", to: "/staffs" }
+  ]}
+];
+
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 flex flex-col md:flex-row items-center md:justify-between bg-blue-950">
       <div className="w-full flex justify-between items-center px-4 py-3 md:py-4 md:px-6">
@@ -134,41 +153,38 @@ const Navbar = () => {
 
         </ul>
 
-        {/* Hamburger */}
-        <button
-          aria-label="Toggle mobile menu"
-          onClick={() => setMobileOpen((o) => !o)}
-          className="md:hidden flex flex-col justify-center items-center gap-1 h-8 w-8 focus:outline-none"
-        >
-          <span className={`block h-0.5 w-6 bg-white transition-transform ${mobileOpen ? "rotate-45 translate-y-2" : ""}`}></span>
-          <span className={`block h-0.5 w-6 bg-white transition-opacity ${mobileOpen ? "opacity-0" : ""}`}></span>
-          <span className={`block h-0.5 w-6 bg-white transition-transform ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`}></span>
-        </button>
+       {/* Hamburger */}
+<button
+  aria-label="Toggle mobile menu"
+  onClick={() => setMobileOpen(!mobileOpen)}
+  className="md:hidden flex flex-col justify-center items-center gap-1 h-8 w-8 focus:outline-none z-50"
+>
+  <span className={`block h-0.5 w-6 bg-white transition-transform duration-300 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`}></span>
+  <span className={`block h-0.5 w-6 bg-white transition-opacity duration-300 ${mobileOpen ? "opacity-0" : ""}`}></span>
+  <span className={`block h-0.5 w-6 bg-white transition-transform duration-300 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`}></span>
+</button>
+
       </div>
 
       {/* Mobile Menu */}
-      {mobileOpen && (
-        <div ref={mobileRef} className="md:hidden w-full bg-blue-900 text-white shadow-inner transition-all">
-          <div className="px-6 py-4 space-y-2">
-            <MobileLink to="/" label="Home" closeMenu={() => setMobileOpen(false)} />
-            <MobileSection label="Academic">
-              <MobileLink to="/routine" label="Class Routine" closeMenu={() => setMobileOpen(false)} />
-              <MobileLink to="/syllabus" label="Syllabus" closeMenu={() => setMobileOpen(false)} />
-              <MobileLink to="/curriculum" label="Notice" closeMenu={() => setMobileOpen(false)} />
-            </MobileSection>
-            <MobileSection label="Administration">
-              <MobileLink to="/governing-body" label="Governing Body" closeMenu={() => setMobileOpen(false)} />
-              <MobileLink to="/teachers" label="Message of HeadMaster" closeMenu={() => setMobileOpen(false)} />
-              <MobileLink to="/staffs" label="Employee Info" closeMenu={() => setMobileOpen(false)} />
-            </MobileSection>
+    {mobileOpen && (
+  <div ref={mobileRef} className="md:hidden w-full bg-blue-900 text-white shadow-inner transition-all">
+    <div className="px-6 py-4 space-y-2">
+      <MobileLink to="/" label="Home" closeMenu={() => setMobileOpen(false)} />
+      {menuStructure.map((section, idx) => (
+        <MobileSection key={idx} label={section.label}>
+          {section.links.map((link, linkIdx) => (
+            <MobileLink key={linkIdx} to={link.to} label={link.label} closeMenu={() => setMobileOpen(false)} />
+          ))}
+        </MobileSection>
+      ))}
+      {menuItems.map((item, idx) => (
+        <MobileLink key={idx} to={item.to} label={item.label} closeMenu={() => setMobileOpen(false)} />
+      ))}
+    </div>
+  </div>
+)}
 
-            {menuItems.map((item, idx) => (
-              <MobileLink key={idx} to={item.to} label={item.label} closeMenu={() => setMobileOpen(false)} />
-            ))}
-          </div>
-          
-        </div>
-      )}
     </nav>
   );
 };
