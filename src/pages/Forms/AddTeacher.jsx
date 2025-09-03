@@ -63,15 +63,18 @@ export default function AddTeacherForm() {
         date_of_birth: form.date_of_birth,
         mobile: form.mobile,
         religion: form.religion,
-        gender: form.gender || "Male", 
+        gender: form.gender || "male", 
         address: form.adress, 
         joining_date: form.joining_date,
         last_educational_institute: form.last_educational_institute,
       },
       base_subject: Number(form.base_subject), 
       is_class_teacher: form.is_class_teacher === "yes",
-      class_teacher_of: Number(form.class_teacher_of) || 0,
+      class_teacher_of: Number(form.class_teacher_of),
     };
+    if (!payload.is_class_teacher) {
+      delete payload.class_teacher_of;
+    }
 
     console.log("Payload:", payload);
 
@@ -303,7 +306,9 @@ useEffect(() => {
             >
               <option value="">Select religion</option>
               <option value="islam">Islam</option>
-              <option value="hinduism">Hinduism</option>
+              <option value="hindu">Hinduism</option>
+              <option value="cristian">Cristian</option>
+              <option value="buddhist">Buddhist</option>
             </select>
           </div>
 
@@ -340,6 +345,7 @@ useEffect(() => {
             />
           </div>
 
+          {/* Joining Date */}
           {/* Joining Date */}
           <div className="flex flex-col">
             <label
@@ -428,7 +434,7 @@ useEffect(() => {
           </div>
 
           {/* Class Teacher Of */}
-          <div className="flex flex-col">
+          {(form.is_class_teacher==="yes") && <div className="flex flex-col">
             <label
               htmlFor="class_teacher_of"
               className="text-sm font-semibold mb-2"
@@ -450,7 +456,7 @@ useEffect(() => {
               ))}
             </select>
           </div>
-
+                  }
           {/* Submit Button */}
           <div className="mt-8 sm:mt-10 col-span-full">
             <button
