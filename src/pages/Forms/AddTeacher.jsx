@@ -5,6 +5,7 @@ import API from "../../api/api";
 import useAccountForm from "./BaseAccount/useAccountForm";
 import AccountForm from "./BaseAccount/AccountForm";
 import TextInput from "./BaseAccount/TextInput";
+import Dropdown from "./BaseAccount/DropDown";
 
 export default function AddTeacherForm() {
   const { form, handleChange, handleFileChange, handleSubmit } = useAccountForm(
@@ -43,57 +44,35 @@ export default function AddTeacherForm() {
             />
 
             {/* ✅ Teacher-only fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="flex flex-col">
-                <label className="text-sm font-semibold mb-2">Base Subject</label>
-                <select
-                  name="base_subject"
-                  value={form.base_subject}
-                  onChange={handleChange}
-                  className="border border-gray-300 px-3 py-2 rounded-md"
-                >
-                  <option value="">Select Subject</option>
-                  {subjects.map((sub) => (
-                    <option key={sub.id} value={sub.id}>
-                      {sub.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          <Dropdown
+            label="Base Subject"
+            name="base_subject"
+            value={form.base_subject}
+            onChange={handleChange}
+            options={subjects.map((s) => ({ value: s.id, label: s.name }))}
+          />
 
-              <div className="flex flex-col">
-                <label className="text-sm font-semibold mb-2">Is Class Teacher?</label>
-                <select
-                  name="is_class_teacher"
-                  value={form.is_class_teacher}
-                  onChange={handleChange}
-                  className="border border-gray-300 px-3 py-2 rounded-md"
-                >
-                  <option value="">Select</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </div>
+          <Dropdown
+            label="Is Class Teacher?"
+            name="is_class_teacher"
+            value={form.is_class_teacher}
+            onChange={handleChange}
+            options={[
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" },
+            ]}
+          />
 
-              {form.is_class_teacher === "yes" && (
-                <div className="flex flex-col">
-                  <label className="text-sm font-semibold mb-2">Class Teacher Of</label>
-                  <select
-                    name="class_teacher_of"
-                    value={form.class_teacher_of}
-                    onChange={handleChange}
-                    className="border border-gray-300 px-3 py-2 rounded-md"
-                  >
-                    <option value="">Select a class</option>
-                    {classes.map((cls) => (
-                      <option key={cls.id} value={cls.id}>
-                        {cls.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            </div>
+          {form.is_class_teacher === "yes" && (
+            <Dropdown
+              label="Class Teacher Of"
+              name="class_teacher_of"
+              value={form.class_teacher_of}
+              onChange={handleChange}
+              options={classes.map((c) => ({ value: c.id, label: c.name }))}
+            />
+          )}
+
 
             {/* Submit */}
             <div className="pt-6">
