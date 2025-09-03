@@ -1,476 +1,113 @@
-// import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API from "../../api/api";
-import { toast, ToastContainer } from "react-toastify";
+import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import React, { useState, useEffect } from "react";
-import Loading from "../../components/Loading";
-
+import API from "../../api/api";
+import useAccountForm from "./BaseAccount/useAccountForm";
+import AccountForm from "./BaseAccount/AccountForm";
+import TextInput from "./BaseAccount/TextInput";
 
 export default function AddTeacherForm() {
-  const navigate = useNavigate();
-   const [loading, setLoading] = useState(false); // loading state
-  const [success, setSuccess] = useState("");   // success message
-  const [error, setError] = useState(""); 
+  const { form, handleChange, handleFileChange, handleSubmit } = useAccountForm(
+    {
+      last_educational_institute: "",
+      base_subject: "",
+      is_class_teacher: "",
+      class_teacher_of: "",
+    },
+    "/user/teachers/"
+  );
 
-  const [form, setForm] = useState({
-    username: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-    image: null,
-    date_of_birth: "",
-    mobile: "",
-    religion: "",
-    adress: "",
-    joining_date: "",
-    last_educational_institute: "",
-    base_subject: "",
-    is_class_teacher: "",
-    class_teacher_of: "",
-  });
+  const [classes, setClasses] = useState([]);
+  const [subjects, setSubjects] = useState([]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleFileChange = (e) => {
-    setForm({ ...form, image: e.target.files[0] });
-  };
-
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  if (form.password !== form.confirm_password) {
-    toast.error("Passwords do not match");
-    return;
-  }
-
-  try {
-    const payload = {
-      account: {
-        user: {
-          username: form.username,
-          first_name: form.first_name,
-          last_name: form.last_name,
-          email: form.email,
-          password: form.password,
-          confirm_password: form.confirm_password,
-        },
-        image: form.image, 
-        date_of_birth: form.date_of_birth,
-        mobile: form.mobile,
-        religion: form.religion,
-        gender: form.gender || "male", 
-        address: form.adress, 
-        joining_date: form.joining_date,
-        last_educational_institute: form.last_educational_institute,
-      },
-      base_subject: Number(form.base_subject), 
-      is_class_teacher: form.is_class_teacher === "yes",
-      class_teacher_of: Number(form.class_teacher_of),
-    };
-    if (!payload.is_class_teacher) {
-      delete payload.class_teacher_of;
-    }
-
-    console.log("Payload:", payload);
-
-    const res = await API.post(
-      "/user/teachers/",
-      payload,
-      { headers: { "Content-Type": "application/json" } }
-    );
-
-    if (res.status === 201 || res.status === 200) {
-      toast.success("Registration successful!");
-      navigate("/");
-    }
-  } catch (error) {
-    console.error("Error:", error.response?.data || error.message);
-    toast.error(error.response?.data?.detail || "Registration failed");
-  }
-};
-
-const [classes, setClasses] = useState([]);
-
-useEffect(() => {
-  API.get("/nphs/classes/") 
-    .then((res) => {
-      console.log(res.data);
-      setClasses(res.data);
-    })
-    .catch((err) => console.error(err));
-}, []);
-
-const [subject, setSubject] = useState([]);
-
-useEffect(() => {
-  API.get("/nphs/subject/") 
-    .then((res) => {
-      console.log(res.data); 
-      setSubject(res.data);
-    })
-    .catch((err) => console.error(err));
-}, []);
-
+  useEffect(() => {
+    API.get("/nphs/classes/").then((res) => setClasses(res.data));
+    API.get("/nphs/subject/").then((res) => setSubjects(res.data));
+  }, []);
 
   return (
-  <>
-    <ToastContainer />
-    <div className="min-h-screen bg-sky-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-20 overflow-x-hidden">
-      <div className="bg-white w-full max-w-6xl rounded-xl shadow-xl p-4 sm:p-6 md:p-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-950 text-center mb-8 sm:mb-10">
-          Teacher Registration
-        </h2>
+    <>
+      <ToastContainer />
+      <div className="min-h-screen bg-sky-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-20">
+        <div className="bg-white w-full max-w-6xl rounded-xl shadow-xl p-6 md:p-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-blue-950 text-center mb-10">
+            Teacher Registration
+          </h2>
 
-        {loading && (
-          <Loading
-            message = "Submitting"
-          />
-        )}
-
-        {success && (
-          <p className="text-green-600 font-semibold mb-4">{success}</p>
-        )}
-        {error && (
-          <p className="text-red-600 font-semibold mb-4">{error}</p>
-        )}
-
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 sm:gap-x-10 md:gap-x-12 gap-y-6"
-        >
-          {/* Username */}
-          <div className="flex flex-col">
-            <label htmlFor="username" className="text-sm font-semibold mb-2">
-              Username <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="username"
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              placeholder="Enter your username"
-              required
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* ✅ Shared account fields in grid */}
+            <AccountForm
+              formData={form}
+              handleChange={handleChange}
+              handleFileChange={handleFileChange}
             />
-          </div>
 
-          {/* First Name */}
-          <div className="flex flex-col">
-            <label htmlFor="first_name" className="text-sm font-semibold mb-2">
-              First Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="first_name"
-              name="first_name"
-              value={form.first_name}
-              onChange={handleChange}
-              placeholder="Enter your first name"
-              required
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
+            {/* ✅ Teacher-only fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="flex flex-col">
+                <label className="text-sm font-semibold mb-2">Base Subject</label>
+                <select
+                  name="base_subject"
+                  value={form.base_subject}
+                  onChange={handleChange}
+                  className="border border-gray-300 px-3 py-2 rounded-md"
+                >
+                  <option value="">Select Subject</option>
+                  {subjects.map((sub) => (
+                    <option key={sub.id} value={sub.id}>
+                      {sub.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          {/* Last Name */}
-          <div className="flex flex-col">
-            <label htmlFor="last_name" className="text-sm font-semibold mb-2">
-              Last Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="last_name"
-              name="last_name"
-              value={form.last_name}
-              onChange={handleChange}
-              placeholder="Enter your last name"
-              required
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
+              <div className="flex flex-col">
+                <label className="text-sm font-semibold mb-2">Is Class Teacher?</label>
+                <select
+                  name="is_class_teacher"
+                  value={form.is_class_teacher}
+                  onChange={handleChange}
+                  className="border border-gray-300 px-3 py-2 rounded-md"
+                >
+                  <option value="">Select</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
 
-          {/* Email */}
-          <div className="flex flex-col">
-            <label htmlFor="email" className="text-sm font-semibold mb-2">
-              Email Address <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              required
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
+              {form.is_class_teacher === "yes" && (
+                <div className="flex flex-col">
+                  <label className="text-sm font-semibold mb-2">Class Teacher Of</label>
+                  <select
+                    name="class_teacher_of"
+                    value={form.class_teacher_of}
+                    onChange={handleChange}
+                    className="border border-gray-300 px-3 py-2 rounded-md"
+                  >
+                    <option value="">Select a class</option>
+                    {classes.map((cls) => (
+                      <option key={cls.id} value={cls.id}>
+                        {cls.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
 
-          {/* Password */}
-          <div className="flex flex-col">
-            <label htmlFor="password" className="text-sm font-semibold mb-2">
-              Password <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              required
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
+            {/* Submit */}
+            <div className="pt-6">
+              <button
+                type="submit"
+                className="w-full bg-blue-950 hover:bg-blue-900 text-white font-semibold py-4 rounded-lg shadow-md"
+              >
+                Register Teacher
+              </button>
+            </div>
+          </form>
 
-          {/* Confirm Password */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="confirm_password"
-              className="text-sm font-semibold mb-2"
-            >
-              Confirm Password <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="password"
-              id="confirm_password"
-              name="confirm_password"
-              value={form.confirm_password}
-              onChange={handleChange}
-              placeholder="Confirm your password"
-              required
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
-
-          {/* Image */}
-          <div className="flex flex-col">
-            <label htmlFor="image" className="text-sm font-semibold mb-2">
-              Image
-            </label>
-            <input
-              type="file"
-              id="image"
-              name="image"
-              onChange={handleFileChange}
-              className="border border-gray-300 px-3 sm:px-4 py-2 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
-
-          {/* Date of Birth */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="date_of_birth"
-              className="text-sm font-semibold mb-2"
-            >
-              Date of Birth
-            </label>
-            <input
-              type="date"
-              id="date_of_birth"
-              name="date_of_birth"
-              value={form.date_of_birth}
-              onChange={handleChange}
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
-
-          {/* Mobile */}
-          <div className="flex flex-col">
-            <label htmlFor="mobile" className="text-sm font-semibold mb-2">
-              Mobile
-            </label>
-            <input
-              id="mobile"
-              name="mobile"
-              value={form.mobile}
-              onChange={handleChange}
-              placeholder="Enter your mobile number"
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
-
-          {/* Religion */}
-          <div className="flex flex-col">
-            <label htmlFor="religion" className="text-sm font-semibold mb-2">
-              Religion
-            </label>
-            <select
-              id="religion"
-              name="religion"
-              value={form.religion}
-              onChange={handleChange}
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            >
-              <option value="">Select religion</option>
-              <option value="islam">Islam</option>
-              <option value="hindu">Hinduism</option>
-              <option value="cristian">Cristian</option>
-              <option value="buddhist">Buddhist</option>
-            </select>
-          </div>
-
-          {/* Gender */}
-          <div className="flex flex-col">
-            <label htmlFor="gender" className="text-sm font-semibold mb-2">
-              Gender
-            </label>
-            <select
-              id="gender"
-              name="gender"
-              value={form.gender}
-              onChange={handleChange}
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            >
-              <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-
-          {/* Address */}
-          <div className="flex flex-col">
-            <label htmlFor="adress" className="text-sm font-semibold mb-2">
-              Address
-            </label>
-            <input
-              id="adress"
-              name="adress"
-              value={form.adress}
-              onChange={handleChange}
-              placeholder="Enter your address"
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
-
-          {/* Joining Date */}
-          {/* Joining Date */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="joining_date"
-              className="text-sm font-semibold mb-2"
-            >
-              Joining Date
-            </label>
-            <input
-              type="date"
-              id="joining_date"
-              name="joining_date"
-              value={form.joining_date}
-              onChange={handleChange}
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
-
-          {/* Last Educational Institute */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="last_educational_institute"
-              className="text-sm font-semibold mb-2"
-            >
-              Last Educational Institution
-            </label>
-            <input
-              id="last_educational_institute"
-              name="last_educational_institute"
-              value={form.last_educational_institute}
-              onChange={handleChange}
-              placeholder="Enter your last educational institution"
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            />
-          </div>
-
-          {/* Base Subject */}
-          <div className="flex flex-col">
-            <label htmlFor="base_subject" className="text-sm font-semibold mb-2">
-              Base Subject
-            </label>
-            {/* <input
-              id="base_subject"
-              name="base_subject"
-              value={form.base_subject}
-              onChange={handleChange}
-              placeholder="Enter your base subject"
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            /> */}
-            <select
-              id="base_subject"
-              name="base_subject"
-              value={form.base_subject}
-              onChange={handleChange}
-              placeholder="Enter your base subject"
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            >
-              <option value="">Select Subject</option>
-              {subject.map((sub) => (
-                <option key={sub.id} value={sub.id}>
-                  {sub.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Is Class Teacher */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="is_class_teacher"
-              className="text-sm font-semibold mb-2"
-            >
-              Is Class Teacher
-            </label>
-            <select
-              id="is_class_teacher"
-              name="is_class_teacher"
-              value={form.is_class_teacher}
-              onChange={handleChange}
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            >
-              <option value="">Select</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-
-          {/* Class Teacher Of */}
-          {(form.is_class_teacher==="yes") && <div className="flex flex-col">
-            <label
-              htmlFor="class_teacher_of"
-              className="text-sm font-semibold mb-2"
-            >
-              Class Teacher Of
-            </label>
-            <select
-              id="class_teacher_of"
-              name="class_teacher_of"
-              value={form.class_teacher_of}
-              onChange={handleChange}
-              className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 rounded-md w-full text-base sm:text-lg"
-            >
-              <option value="">Select a class</option>
-              {classes.map((cls) => (
-                <option key={cls.id} value={cls.id}>
-                  {cls.name}
-                </option>
-              ))}
-            </select>
-          </div>
-                  }
-          {/* Submit Button */}
-          <div className="mt-8 sm:mt-10 col-span-full">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-950 hover:bg-blue-900 text-white font-semibold py-3 sm:py-4 rounded-lg shadow-md text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              addteacher
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
-    </div>
-  </>
-);
-
+    </>
+  );
 }

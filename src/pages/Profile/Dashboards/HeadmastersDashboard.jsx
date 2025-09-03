@@ -12,7 +12,7 @@ export default function HeadmasterDashboard ({ navigate }){
     />
     <SidebarButton
       icon={<UserPlus className="w-5 h-5" />}
-      label="Teacher addteacher"
+      label="Add Teacher"
       onClick={() => navigate("/addteacher")}
     />
     <SidebarButton
