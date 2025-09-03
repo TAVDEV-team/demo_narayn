@@ -9,6 +9,9 @@ export default function AddResult() {
   const [exams, setExams] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [students, setStudents] = useState([]);
+ const [existingResultId, setExistingResultId] = useState(null);
+
+
 
   // Form state
   const [form, setForm] = useState({
@@ -33,9 +36,11 @@ export default function AddResult() {
         const [classesRes, examsRes] = await Promise.all([
           API.get("/nphs/classes/"),
           API.get("/result/exam/"),
+          // API.get("/nphs/subject/")
         ]);
         setClasses(classesRes.data);
         setExams(examsRes.data);
+        // setSubjects(sub.data);
       } catch (error) {
         setMessage({ type: "error", text: "⚠️ Failed to fetch dropdown data." });
       } finally {
@@ -54,6 +59,7 @@ export default function AddResult() {
         const res = await API.get(
           `/nphs/classes/${form.aclass}/`
         );
+        console.log(res.data)
         setStudents(res.data.students || []);
         setSubjects(res.data.all_subjects || []); // ✅ subjects come from here
       } catch (error) {
@@ -67,6 +73,38 @@ export default function AddResult() {
     fetchClassDetails();
   }, [form.aclass]);
 
+ useEffect(() => {
+  if (!form.exam || !form.subject || !form.student) return;
+
+  const checkResult = async () => {
+    try {
+      const res = await API.get(
+        `/result/?exam=${form.exam}&subject=${form.subject}&student=${form.student}`
+      );
+
+      if (res.data.length > 0) {
+        const result = res.data[0]; // existing result
+        setExistingResultId(result.id);
+        setForm({
+          ...form,
+          mcq: result.mcq,
+          written: result.written,
+          practical: result.practical,
+        });
+      } else {
+        setExistingResultId(null); // no previous result
+        setForm({ ...form, mcq: "", written: "", practical: "" });
+      }
+    } catch (err) {
+      console.error("Failed to check result:", err);
+    }
+  };
+
+  checkResult();
+}, [form.exam, form.subject, form.student]);
+
+
+
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,42 +112,53 @@ export default function AddResult() {
   };
 
   // Submit form
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage({ type: "", text: "" });
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setMessage({ type: "", text: "" });
 
-    try {
-      const payload = {
-        ...form,
-        aclass: Number(form.aclass),
-        exam: Number(form.exam),
-        subject: Number(form.subject),
-        student: Number(form.student),
-        mcq: Number(form.mcq),
-        practical: Number(form.practical),
-        written: Number(form.written),
-      };
-      console.log("Payload:", JSON.stringify(payload, null, 2));
+  try {
+    const payload = {
+      aclass: Number(form.aclass),
+      exam: Number(form.exam),
+      subject: Number(form.subject),
+      student: Number(form.student),
+      mcq: Number(form.mcq),
+      practical: Number(form.practical),
+      written: Number(form.written),
+    };
 
-      await API.post("/result/", payload);
+    if (existingResultId) {
+      // Update existing result
+      const res = await API.patch(`/result/${existingResultId}/`, payload);
+      setMessage({ type: "success", text: "✅ Result updated successfully!" });
+      // Update form to reflect latest values
+      setForm((prev) => ({
+        ...prev,
+        mcq: res.data.mcq,
+        practical: res.data.practical,
+        written: res.data.written,
+      }));
+    } else {
+      // Create new result
+      const res = await API.post("/result/", payload);
       setMessage({ type: "success", text: "✅ Result added successfully!" });
+      // Clear form for next entry
       setForm({ aclass: "", exam: "", subject: "", student: "", mcq: "", practical: "", written: "" });
       setStudents([]);
       setSubjects([]);
-    } catch (error) {
-      if (error.response) {
-        console.log("Backend error:", error.response.data);
-        setMessage({ type: "error", text: JSON.stringify(error.response.data) });
-      } else if (error.request) {
-        setMessage({ type: "error", text: "⚠️ No response from server." });
-      } else {
-        setMessage({ type: "error", text: error.message });
-      }
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    if (error.response) {
+      setMessage({ type: "error", text: JSON.stringify(error.response.data) });
+    } else {
+      setMessage({ type: "error", text: error.message });
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     
@@ -242,14 +291,24 @@ export default function AddResult() {
             </div>
           </div>
 
-          {/* Submit button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-950 text-white font-semibold py-2 rounded-lg hover:bg-blue-900 transition disabled:opacity-50"
-            disabled={loading}
-          >
-            {loading ? <Loading message="Submitting"/> : "Submit Result"}
-          </button>
+       
+          {/* Submit / Update button */}
+<button
+  type="submit"
+  disabled={loading || !form.aclass || !form.exam || !form.subject || !form.student}
+  className={`w-full py-2 rounded-lg font-semibold text-white transition ${
+    loading
+      ? "bg-gray-400 cursor-not-allowed"
+      : existingResultId
+      ? "bg-yellow-600 hover:bg-yellow-700"
+      : "bg-blue-950 hover:bg-blue-900"
+  }`}
+>
+  {loading ? <Loading message="Submitting..." /> : existingResultId ? "Update Result" : "Submit Result"}
+</button>
+
+
+
 
           {/* Feedback message */}
           {message.text && (
