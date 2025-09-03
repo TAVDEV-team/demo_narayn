@@ -127,6 +127,7 @@ export default function Routine() {
           School Routine
         </motion.h1>
 
+          <div className="flex justify-end mb-4">
             <button
           onClick={() => {
             if (!isEditing) {
@@ -138,10 +139,12 @@ export default function Routine() {
               saveRoutine();
             }
           }}
-          className="mb-4 px-4 py-2 bg-sky-700 text-white rounded hover:bg-sky-800"
+          className="mb-4 px-4 py-2 bg-blue-950 rounded-2xl text-white  hover:bg-blue-900"
         >
           {isEditing ? "Save Routine" : "Update Routine"}
         </button>
+        </div>
+        
 
 
         {/* Class Cards */}
