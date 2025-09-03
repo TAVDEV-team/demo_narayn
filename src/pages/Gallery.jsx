@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import API from "../api/api";
-import {
-  Plus,
-  ImagePlus,
-  FolderPlus,
-  Trash2,
-  MoreVertical,
-  X,
-} from "lucide-react";
+import { Plus, ImagePlus, FolderPlus, Trash2, MoreVertical, X } from "lucide-react";
 
 // Category Form Modal
 function CategoryForm({ setShowCategoryForm, newCategory, setNewCategory, fetchCategories }) {
@@ -27,15 +20,11 @@ function CategoryForm({ setShowCategoryForm, newCategory, setNewCategory, fetchC
             <X className="w-5 h-5" />
           </button>
         </div>
-
         <form
           onSubmit={async (e) => {
             e.preventDefault();
             try {
-              await API.post(
-                "/gallery/categories/",
-                newCategory
-              );
+              await API.post("/gallery/categories/", newCategory);
               setShowCategoryForm(false);
               setNewCategory({ name: "", description: "" });
               fetchCategories();
@@ -93,12 +82,7 @@ function CategoryForm({ setShowCategoryForm, newCategory, setNewCategory, fetchC
 export default function Gallery() {
   const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    image: null,
-    category: "",
-  });
+  const [formData, setFormData] = useState({ title: "", description: "", image: null, category: "" });
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
   const [menuOpen, setMenuOpen] = useState(null);
@@ -111,9 +95,7 @@ export default function Gallery() {
 
   const fetchCategories = async () => {
     try {
-      const res = await API.get(
-        "/gallery/categories/"
-      );
+      const res = await API.get("/gallery/categories/");
       setCategories(res.data);
     } catch (err) {
       console.error("Error fetching categories:", err);
@@ -122,18 +104,14 @@ export default function Gallery() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData({ ...formData, image: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    if (name === "image") setFormData({ ...formData, image: files[0] });
+    else setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setStatus(null);
-
     try {
       const data = new FormData();
       data.append("title", formData.title);
@@ -141,12 +119,7 @@ export default function Gallery() {
       data.append("image", formData.image);
       data.append("category", parseInt(formData.category, 10));
       data.append("date_uploaded", new Date().toISOString());
-
-      await API.post(
-        "/gallery/photos/",
-        data
-      );
-
+      await API.post("/gallery/photos/", data);
       setStatus("success");
       setFormData({ title: "", description: "", image: null, category: "" });
       fetchCategories();
@@ -162,9 +135,7 @@ export default function Gallery() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this photo?")) return;
     try {
-      await API.delete(
-        `/gallery/photos/${id}/`
-      );
+      await API.delete(`/gallery/photos/${id}/`);
       fetchCategories();
     } catch (err) {
       console.error("Error deleting photo:", err);
@@ -172,40 +143,41 @@ export default function Gallery() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white py-12 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto mt-8">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white py-8 px-4 sm:px-6 md:px-8">
+      <div className="max-w-7xl mx-auto">
+
         {/* Header */}
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-4xl font-extrabold text-center text-blue-950 mb-12 tracking-tight"
+          className="text-3xl sm:text-4xl font-extrabold text-center text-blue-950 mb-10 tracking-tight mt-14"
         >
           📸 Our School Gallery
         </motion.h1>
 
-        {/* Add buttons */}
+        {/* Add Buttons */}
         {!showForm && !showCategoryForm && (
-          <div className="flex justify-center gap-6 mb-10">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
             <button
               onClick={() => setShowForm(true)}
-              className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-xl shadow hover:bg-blue-700 transition"
+              className="flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-xl shadow hover:bg-blue-700 transition w-full sm:w-auto justify-center"
             >
               <ImagePlus className="w-5 h-5" /> Add Photo
             </button>
             <button
               onClick={() => setShowCategoryForm(true)}
-              className="flex items-center gap-2 bg-emerald-600 text-white px-5 py-2 rounded-xl shadow hover:bg-emerald-700 transition"
+              className="flex items-center gap-2 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow hover:bg-emerald-700 transition w-full sm:w-auto justify-center"
             >
               <FolderPlus className="w-5 h-5" /> Add Category
             </button>
           </div>
         )}
 
-        {/* Upload Photo form */}
+        {/* Upload Form */}
         {showForm && (
           <div className="flex justify-center items-center mb-10">
-            <div className="bg-white rounded-2xl shadow-lg p-8 space-y-4 w-full max-w-md border border-gray-100">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 w-full max-w-md border border-gray-100">
               <h2 className="text-2xl font-semibold mb-4 text-blue-800 text-center flex items-center justify-center gap-2">
                 <Plus className="w-6 h-6" /> Upload a Photo
               </h2>
@@ -253,13 +225,9 @@ export default function Gallery() {
                   required
                 />
 
-                {loading && <Loading message="Uploading"/>}
-                {status === "success" && (
-                  <p className="text-green-600">✅ Upload successful!</p>
-                )}
-                {status === "error" && (
-                  <p className="text-red-600">❌ Upload failed.</p>
-                )}
+                {loading && <p className="text-blue-600">Uploading...</p>}
+                {status === "success" && <p className="text-green-600">✅ Upload successful!</p>}
+                {status === "error" && <p className="text-red-600">❌ Upload failed.</p>}
 
                 <button
                   type="submit"
@@ -283,18 +251,18 @@ export default function Gallery() {
           />
         )}
 
-        {/* Render categories */}
+        {/* Render categories and photos */}
         {categories.map((cat) => (
-          <div key={cat.id} className="mb-16">
-            <h2 className="text-2xl font-bold text-blue-900 mb-3 flex items-center gap-2">
+          <div key={cat.id} className="mb-12">
+            <h2 className="text-xl sm:text-2xl font-bold text-blue-900 mb-2 flex items-center gap-2">
               📂 {cat.name}
             </h2>
-            <p className="text-gray-600 mb-6">{cat.description}</p>
+            <p className="text-gray-600 mb-4">{cat.description}</p>
 
             {cat.photos.length === 0 ? (
               <p className="text-gray-400 italic">No photos in this category yet.</p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                 {cat.photos.map((photo, index) => (
                   <motion.div
                     key={photo.id}
@@ -306,7 +274,7 @@ export default function Gallery() {
                     <img
                       src={photo.image}
                       alt={photo.title}
-                      className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500"
+                      className="w-full h-56 sm:h-64 md:h-52 lg:h-64 object-cover transform group-hover:scale-110 transition duration-500"
                     />
                     <div className="absolute top-2 right-2 flex flex-col items-end">
                       <button
@@ -336,4 +304,3 @@ export default function Gallery() {
     </div>
   );
 }
-  
