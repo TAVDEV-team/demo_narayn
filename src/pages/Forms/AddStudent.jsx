@@ -6,15 +6,17 @@ export default function AddStudent() {
   const [formData, setFormData] = useState({
     class_name: "",
     group: "science",
+    roll_number:"",
     account: {
       user: {
         username: "",
         first_name: "",
         last_name: "",
-        email: "",
-        password: "",
-        confirm_password: "",
+        email: "student_email@gmail.com",
+        password: "student1234",
+        confirm_password: "student1234",
       },
+      
       image: null,
       date_of_birth: "",
       mobile: "",
@@ -24,7 +26,8 @@ export default function AddStudent() {
       last_educational_institute: "",
     },
   });
-
+  // const roll = API.get()
+  
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -71,15 +74,10 @@ export default function AddStudent() {
           .replace(/\s/g, "") || "student" + Date.now();
     }
 
-    if (!formData.account.user.password) {
-      formData.account.user.password = "student1234";
-      formData.account.user.confirm_password = "student1234";
-    }
-
     try {
       const token = localStorage.getItem("token");
       const data = buildFormData(formData);
-
+      
       await API.post(
         "/user/students/",
         data,
@@ -90,7 +88,7 @@ export default function AddStudent() {
           },
         }
       );
-
+      console.log( data );
       setSuccessMessage("✅ Student added successfully!");
     } catch (err) {
       console.error("Server response:", err.response?.data || err.message);
@@ -100,15 +98,15 @@ export default function AddStudent() {
     }
   };
 
-  const getValue = (name) => {
-    const keys = name.split(".");
-    let val = formData;
-    for (let key of keys) {
-      if (!val[key]) return "";
-      val = val[key];
-    }
-    return val;
-  };
+const getValue = (name) => {
+  const keys = name.split(".");
+  let val = formData;
+  for (let key of keys) {
+    if (val[key] === undefined) return "";  // ✅ only bail if truly undefined
+    val = val[key];
+  }
+  return val;
+};
 
   const renderInput = ({ label, name, type = "text", required = false }) => (
     <div className="flex flex-col space-y-1">
@@ -150,7 +148,7 @@ export default function AddStudent() {
       {/* Class & Group */}
       <div>
         <h3 className="text-base md:text-lg font-semibold text-indigo-600 mb-3 mt-5">
-          Class & Group Info
+          Class & Group Info  
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -202,11 +200,10 @@ export default function AddStudent() {
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
+            {label: "Registration Number", name: "account.user.username", required: true },
             { label: "First Name", name: "account.user.first_name", required: true },
-            { label: "Last Name", name: "account.user.last_name" },
+            { label: "Last Name", name: "account.user.last_name", required: true },
             { label: "Email", name: "account.user.email", type: "email" },
-            { label: "Password", name: "account.user.password", type: "password" },
-            { label: "Confirm Password", name: "account.user.confirm_password", type: "password" },
           ].map(renderInput)}
         </div>
       </div>
@@ -219,12 +216,13 @@ export default function AddStudent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { label: "Image", name: "account.image", type: "file" },
+            { label: "Roll Number", name: "roll_number", type: "number" },
             { label: "Date of Birth", name: "account.date_of_birth", type: "date", required: true },
             { label: "Mobile", name: "account.mobile", required: true },
-            { label: "Religion", name: "account.religion" },
+            { label: "Religion", name: "account.religion" , required: true},
             { label: "Address", name: "account.address", required: true },
             { label: "Admission Date", name: "account.joining_date", type: "date", required: true },
-            { label: "Last Educational Institute", name: "account.last_educational_institute" },
+            { label: "Last Educational Institute", name: "account.last_educational_institute", required: true },
           ].map(renderInput)}
         </div>
       </div>

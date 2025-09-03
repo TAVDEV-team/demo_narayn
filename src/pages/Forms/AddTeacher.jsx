@@ -434,7 +434,7 @@ useEffect(() => {
           </div>
 
           {/* Class Teacher Of */}
-          <div className="flex flex-col">
+          {(form.is_class_teacher==="yes") && <div className="flex flex-col">
             <label
               htmlFor="class_teacher_of"
               className="text-sm font-semibold mb-2"
@@ -456,7 +456,7 @@ useEffect(() => {
               ))}
             </select>
           </div>
-
+                  }
           {/* Submit Button */}
           <div className="mt-8 sm:mt-10 col-span-full">
             <button
