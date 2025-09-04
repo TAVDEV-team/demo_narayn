@@ -19,13 +19,13 @@ import GradeHandler from './pages/GradeHandler';
 import Gallery from './pages/Gallery';
 import Profile from './pages/Profile/Profile';
 import AddResult from "./pages/Results/AddResult"
-import TeacherInformation from './pages/TeacherInfo';
-import StaffsInformation from './pages/StaffsInformation';
+import TeacherInformation from './pages/PeopleListing/TeacherInfo';
+import StaffsInformation from './pages/PeopleListing/StaffsInformation';
 import ExamCard from './pages/ExamCard';
 import ResultsClasses from "./pages/Results/ResultsClasses";
 import ResultsTable from "./pages/ResultsTable";
 import Routine from './pages/Routine';
-import GoverningBody from './pages/GoverningBody';
+import GoverningBody from './pages/PeopleListing/GoverningBody';
 import SyllabusPage from './pages/Syllabus';
 import SyllabusViewer from "./pages/SyllabusViewer";
 import RoutineForm from './pages/RoutineForm';
@@ -69,7 +69,7 @@ function App() {
         <Route path="/results/:examId" element={<ResultsClasses />} />
         <Route path="/results/:examId/:classId" element={<ResultsTable />} />
         <Route path="routine" element={<Routine />} />
-        <Route path="governing-body" element={<GoverningBody/>} />
+        <Route path="/governing-body" element={<GoverningBody/>} />
         <Route path="syllabus" element={<SyllabusPage/>} />
         <Route path="/syllabus/:id" element={<SyllabusViewer />} />
         <Route path="update-routine" element={<RoutineForm />} />

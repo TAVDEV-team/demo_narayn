@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import API from "../api/api"
-import Loading from "../components/Loading";
+import API from "../../api/api"
+import Loading from "../../components/Loading";
+import ListHeaders from "../../components/Titles/ListHeaders";
 
 export default function StaffsInformation() {
   const [staffs, setStaffs] = useState([]);
@@ -32,9 +33,13 @@ export default function StaffsInformation() {
      <div className="min-h-screen bg-sky-50 py-10 px-4">
       <div className="max-w-6xl mx-auto mt-6 space-y-10">
 
-        <div className="rounded-xl text-center mt-8 p-6">
+        {/* <div className="rounded-xl text-center mt-8 p-6">
           <h1 className="text-lg sm:text-xl rounded-xl mt-8 p-6  bg-blue-950 text-stone-50 font-bold ">Staffs Information</h1>
-        </div>
+        </div> */}
+
+        <ListHeaders
+text={"Staff Informations"}
+/>
         {/* Teacher cards */}
         {staffs.length === 0 ? (
           <p className="text-center text-gray-500 text-lg">No staffs found.</p>

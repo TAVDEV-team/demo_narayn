@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader2, Bell } from "lucide-react";
 import Loading from "../../components/Loading";
-import CardHeader from "./CardHeads";
+import CardHeader from "../../components/Titles/CardHeads";
 import API from "../../api/api";
 export default function LatestNotices() {
   const [notices, setNotices] = useState([]);

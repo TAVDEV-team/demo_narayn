@@ -5,7 +5,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import API from "../../api/api";
-import CardHeader from "./CardHeads";
+import CardHeader from "../../components/Titles/CardHeads";
 
 
 export default function MessageCarousel() {

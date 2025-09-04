@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import API from "../../../api/api";
 import TextInput from "../BaseAccount/TextInput";
+import CardHeader from "../../../components/Titles/CardHeads";
 
 export default function ChangePassword() {
   const [form, setForm] = useState({
@@ -57,9 +58,10 @@ export default function ChangePassword() {
   ];
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Change Password</h2>
-
+    <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded-2xl shadow-md">
+      <CardHeader
+      text={"Change Password"}
+      />
       <form onSubmit={handleSubmit} className="space-y-4">
         {fields.map(({ label, id, name, placeholder }) => (
           <TextInput

@@ -1,6 +1,6 @@
 import React from "react";
 import { BookOpen, Calendar, Users, Images, PhoneCall } from "lucide-react";
-import CardHeader from "./CardHeads";
+import CardHeader from "../../components/Titles/CardHeads";
 
 
 

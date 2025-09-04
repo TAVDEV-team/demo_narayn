@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import API from "../api/api"
-import Loading from "../components/Loading";
+import API from "../../api/api"
+import Loading from "../../components/Loading";
 export default function TeacherInformation() {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
