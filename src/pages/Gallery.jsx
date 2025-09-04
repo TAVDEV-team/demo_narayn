@@ -153,7 +153,7 @@ export default function Gallery() {
           transition={{ duration: 0.6 }}
           className="text-3xl sm:text-4xl font-extrabold text-center text-blue-950 mb-10 tracking-tight mt-14"
         >
-          📸 Our School Gallery
+         Our School Gallery
         </motion.h1>
 
         {/* Add Buttons */}
