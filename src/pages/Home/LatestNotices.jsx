@@ -35,7 +35,7 @@ export default function LatestNotices() {
                 className="bg-blue-50 border border-blue-400 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden"
               >
                 {/* Header */}
-                <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-300 to-blue-600 text-white">
+                <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-black to-blue-950 text-white">
                   <Bell className="w-5 h-5" />
                   <h3 className="font-semibold text-base sm:text-lg truncate">
                     {notice.title}
@@ -56,21 +56,22 @@ export default function LatestNotices() {
                   </span>
 
                   {/* Details Button */}
-                  <div className="text-right mt-4">
-                    <Link
-                      to={`/notices/${notice.id}`}
-                      state={{ from: "approved" }}
-                      className="inline-block bg-gradient-to-r from-gray-300 to-blue-600 text-white px-4 py-2 rounded-xl font-medium shadow-md hover:shadow-lg hover:scale-105 transition"
-                    >
-                      Details →
-                    </Link>
-                  </div>
+                   <div className="text-right mt-auto">
+                                 <Link
+                                to={`/notices/${notice.id}`}
+                                state={{ from: "approved" }}   // ✅ pass state
+                                className="inline-block bg-blue-950 text-white px-4 py-2 rounded-xl font-medium shadow-md hover:shadow-lg hover:scale-105 transition"
+                              >
+                                Details →
+                              </Link>
+                  
+                                </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="max-w-md mx-auto bg-blue-50 border border-blue-400 rounded-2xl shadow-lg p-6 text-center">
+          <div className="max-w-md mx-auto bg-black border border-blue-950 rounded-2xl shadow-lg p-6 text-center">
             <p className="text-blue-800 font-semibold text-lg">
               📌 No approved notices available
             </p>
@@ -81,8 +82,8 @@ export default function LatestNotices() {
         {notices.length > 0 && (
           <div className="mt-10 text-center">
             <Link
-              to="/notices"
-              className="inline-block bg-gradient-to-r from-gray-400 to-blue-600 text-white px-6 py-3 rounded-2xl font-semibold shadow-md hover:shadow-lg hover:scale-105 transition"
+              to="/notice-approved"
+              className="inline-block bg-gradient-to-r from-black to-blue-950 text-white px-6 py-3 rounded-2xl font-semibold shadow-md hover:shadow-lg hover:scale-105 transition"
             >
               View More →
             </Link>
