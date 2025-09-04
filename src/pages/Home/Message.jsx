@@ -43,7 +43,7 @@ export default function MessageCarousel() {
               {/* Image */}
               <div className="flex justify-center md:justify-start">
                 <img
-                  src={"/default.png"}
+                  src={msg.message_of.image || "/default.png"}
                   alt={msg.message_of.full_name}
                   className="w-64 sm:w-80 md:w-96 h-auto rounded-xl shadow-lg object-cover transition-transform duration-500 hover:scale-105"
                 />
