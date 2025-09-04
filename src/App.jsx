@@ -30,7 +30,7 @@ import SyllabusPage from './pages/Syllabus';
 import SyllabusViewer from "./pages/SyllabusViewer";
 import RoutineForm from './pages/RoutineForm';
 import AddStaffs from './pages/Forms/AddStaffs';
-
+import ChangePassword from './pages/Forms/Updates/ChangePassword';
 
 function App() {
   return (
@@ -74,6 +74,7 @@ function App() {
         <Route path="/syllabus/:id" element={<SyllabusViewer />} />
         <Route path="update-routine" element={<RoutineForm />} />
          <Route path="add-staffs" element={<AddStaffs />} />
+         <Route path="change-pass" element={<ChangePassword/>}/>
         </Route>
       </Routes>
     </Router>
