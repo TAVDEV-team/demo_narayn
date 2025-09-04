@@ -37,7 +37,7 @@ export default function WelcomeMessage() {
           {/* Left: Text */}
           <div>
             <p className="text-base sm:text-lg md:text-xl leading-relaxed text-gray-600">
-              Today, it accommodates thousands of students across Bangla and English
+              Today, it accommodates thousands of students in Bangla 
               versions, housed in multiple multi-storied buildings. The school was
               founded with the vision of providing quality education and has grown
               from a small setup into a fully established institution, now educating
