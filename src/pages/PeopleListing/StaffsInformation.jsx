@@ -30,7 +30,7 @@ export default function StaffsInformation() {
   }
 
   return (
-     <div className="min-h-screen bg-sky-50 py-10 px-4">
+     <div className="min-h-screen bg-sky-50 py-10 px-4 mt-10">
       <div className="max-w-6xl mx-auto mt-6 space-y-10">
 
         {/* <div className="rounded-xl text-center mt-8 p-6">
