@@ -1,4 +1,7 @@
 import { useState } from "react";
+import CardHeader from "../../components/Titles/CardHeads";
+
+
 
 export default function ClickToPlayVideo() {
   const [play, setPlay] = useState(false);

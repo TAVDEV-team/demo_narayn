@@ -1,5 +1,5 @@
 
-import LatestNotices from "../../components/LatestNotices";
+import LatestNotices from "./LatestNotices";
 import ClickToPlayVideo from "./ClickToPlayVideo";
 import Hero from "./Hero";
 import Message from "./Message";

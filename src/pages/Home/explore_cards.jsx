@@ -1,5 +1,9 @@
 import React from "react";
 import { BookOpen, Calendar, Users, Images, PhoneCall } from "lucide-react";
+import CardHeader from "../../components/Titles/CardHeads";
+
+
+
 export default function ExploreCards() {
       const features = [
     
@@ -28,10 +32,9 @@ export default function ExploreCards() {
   ];
   return (
       <section className="max-w-6xl mx-auto px-6 py-16">
-       <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-800 text-center mb-12 tracking-tight">
-      Explore Our School
-    </h2>
-
+    <CardHeader 
+    text={"Explore Our School"}
+    />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {features.map((item, idx) => (
             <div

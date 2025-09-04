@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import API from "../../api/api";
+import CardHeader from "../../components/Titles/CardHeads";
+
 
 export default function MessageCarousel() {
   const [messages, setMessages] = useState([]);
@@ -23,6 +25,9 @@ export default function MessageCarousel() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-20 py-16">
+    <CardHeader
+    text="Teachers Message"
+    />
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={40}
@@ -38,7 +43,7 @@ export default function MessageCarousel() {
               {/* Image */}
               <div className="flex justify-center md:justify-start">
                 <img
-                  src={  "/default.png"}
+                  src={"/default.png"}
                   alt={msg.message_of.full_name}
                   className="w-64 sm:w-80 md:w-96 h-auto rounded-xl shadow-lg object-cover transition-transform duration-500 hover:scale-105"
                 />

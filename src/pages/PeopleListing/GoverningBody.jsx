@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import API from "../api/api";
+import API from "../../api/api";
 import { motion } from "framer-motion";
 import { FaSpinner, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
-import Loading from "../components/Loading";
+import Loading from "../../components/Loading";
+import ListHeaders from "../../components/Titles/ListHeaders";
+
+
 export default function GoverningBody() {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,15 +27,17 @@ export default function GoverningBody() {
 
   return (
     <section className="bg-sky-50 py-12 min-h-screen mt-10">
-      <motion.h1
+      {/* <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="text-4xl font-extrabold text-center w-96 mx-auto rounded-full text-white bg-blue-950 mb-12 py-2"
       >
         Governing Body
-      </motion.h1>
-
+      </motion.h1> */}
+    <ListHeaders
+    text={"Governing Body"}
+    />
       {loading ? (
         <Loading/>
       ) : error ? (
@@ -96,5 +101,8 @@ export default function GoverningBody() {
  
       )}
     </section>
+
+
+
   );
 }

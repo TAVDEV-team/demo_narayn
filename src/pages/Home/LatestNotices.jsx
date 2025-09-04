@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { Loader2, Bell } from "lucide-react";
-import Loading from "./Loading";
-
+import Loading from "../../components/Loading";
+import CardHeader from "../../components/Titles/CardHeads";
+import API from "../../api/api";
 export default function LatestNotices() {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("https://narayanpur-high-school.onrender.com/api/nphs/notices/approved/")
-      .then((res) => setNotices(res.data.slice(0, 5))) // latest 5 notices
+    API
+      .get("/nphs/notices/approved/")
+      .then((res) => setNotices(res.data.slice(0, 5)))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);
@@ -19,10 +19,10 @@ export default function LatestNotices() {
   return (
     <section className="py-12 px-4 sm:px-6 md:px-20 ">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-10 text-center tracking-tight">
-          Latest Notices
-        </h2>
 
+      <CardHeader
+      text={"Latest Notices"}
+      />
         {loading ? (
           <Loading
           message="Loading"
