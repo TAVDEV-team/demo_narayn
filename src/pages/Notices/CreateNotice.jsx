@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import API from "../../api/api";
 import { Loader2 } from "lucide-react";
-import Loading from "../../components/Loading";
+import LoadingButton from "../../components/buttons/LoadingButton";
+
 export default function CreateNotice({ onCreate }) { // ✅ accept callback
   const [form, setForm] = useState({
     title: "",
@@ -133,7 +134,7 @@ export default function CreateNotice({ onCreate }) { // ✅ accept callback
               disabled={loading}
             >
               {loading ? (
-                <Loading message="Creating"/>
+                 <LoadingButton loading={loading}>Creating..</LoadingButton>
               ) : (
                 "➕ Create Notice"
               )}

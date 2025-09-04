@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from "../api/api"
-import Loading from '../components/Loading';
-
-
+import LoadingButton from "../components/buttons/LoadingButton";
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -94,9 +92,9 @@ const Login = () => {
               : "bg-blue-600 hover:bg-blue-700 text-white"
           }`}
         >
-          {loading ? (
+          {/* {loading ? (
             <>
-              {/* Small spinner */}
+              
               <svg
                 className="w-5 h-5 animate-spin text-white"
                 xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +119,8 @@ const Login = () => {
             </>
           ) : (
             "Login"
-          )}
+          )} */}
+           <LoadingButton loading={loading}>Login</LoadingButton>
         </button>
 
 
