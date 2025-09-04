@@ -31,6 +31,9 @@ import SyllabusViewer from "./pages/SyllabusViewer";
 import RoutineForm from './pages/RoutineForm';
 import AddStaffs from './pages/Forms/AddStaffs';
 import ChangePassword from './pages/Forms/Updates/ChangePassword';
+import AddMessage from './pages/Forms/MessagesForm';
+
+
 
 function App() {
   return (
@@ -75,6 +78,7 @@ function App() {
         <Route path="update-routine" element={<RoutineForm />} />
          <Route path="add-staffs" element={<AddStaffs />} />
          <Route path="change-pass" element={<ChangePassword/>}/>
+         <Route path="add-message" element={<AddMessage/>}/>
         </Route>
       </Routes>
     </Router>
