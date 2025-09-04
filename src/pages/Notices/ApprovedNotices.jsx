@@ -42,18 +42,18 @@ export default function ApprovedNotices() {
             >
               {/* Notice Header */}
              
-<div className="flex justify-between items-start border-b border-blue-950 pb-1 mb-2">
-  <h3 className="text-base sm:text-lg font-semibold text-blue-950 truncate">
-    {notice.title}
-  </h3>
-  <span className="text-xs sm:text-sm text-blue-950 opacity-70 whitespace-nowrap">
-    {new Date(notice.notice_for_date).toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    })}
-  </span>
-</div>
+          <div className="flex justify-between items-start border-b border-blue-950 pb-1 mb-2">
+            <h3 className="text-base sm:text-lg font-semibold text-blue-950 truncate">
+              {notice.title}
+            </h3>
+            <span className="text-xs sm:text-sm text-blue-950 opacity-70 whitespace-nowrap">
+              {new Date(notice.notice_for_date).toLocaleDateString("en-US", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
+          </div>
 
                <p className="text-xs sm:text-sm text-blue-950 opacity-80 line-clamp-1 mb-3">
                 {notice.description}....
@@ -62,12 +62,12 @@ export default function ApprovedNotices() {
               {/* See More Button */}
               <div className="text-right mt-auto">
                <Link
-  to={`/notices/${notice.id}`}
-  state={{ from: "approved" }}   // ✅ pass state
-  className="inline-block bg-blue-950 text-white px-4 py-2 rounded-xl font-medium shadow-md hover:shadow-lg hover:scale-105 transition"
->
-  Details →
-</Link>
+              to={`/notices/${notice.id}`}
+              state={{ from: "approved" }}   // ✅ pass state
+              className="inline-block bg-blue-950 text-white px-4 py-2 rounded-xl font-medium shadow-md hover:shadow-lg hover:scale-105 transition"
+            >
+              Details →
+            </Link>
 
               </div>
             </div>
