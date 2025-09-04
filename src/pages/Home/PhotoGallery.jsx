@@ -14,8 +14,9 @@ export default function PhotoGallery() {
         const res = await API.get(
           "/gallery/photos/"
         );
+        console.log(res.data)
         // Assuming API returns an array of image objects with `url` field
-        setImages(res.data.map((img) => img.url));
+        setImages(res.data); 
       } catch (err) {
         console.error("Failed to fetch gallery images:", err);
       }
@@ -65,9 +66,10 @@ export default function PhotoGallery() {
             key={idx}
             className="flex-shrink-0 w-60 h-40 sm:w-72 sm:h-48 md:w-80 md:h-56 rounded-lg overflow-hidden shadow-md hover:scale-105 transform transition border-4 border-gray-200"
           >
+
             <img
-              src={img}
-              alt={`Gallery ${idx + 1}`}
+              src={img.image}
+              alt={img.title}
               className="w-full h-full object-cover"
             />
           </div>
