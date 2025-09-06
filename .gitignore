@@ -1,18 +1,32 @@
 # dependencies
 /node_modules
 
-# production build
+# build outputs
 /dist
 /build
+/node_modules/.vite
+
+# env files
+.env
+.env*.local
 
 # misc
-.env
 .DS_Store
+Thumbs.db
 *.log
 
-# local IDE configs
+# IDE
 .vscode
 .idea
 
-# deploy folder (if using gh-pages)
+# deploy
 gh-pages
+
+# testing
+coverage
+
+# lockfiles (ignore if not used)
+/package-lock.json
+/yarn.lock
+/pnpm-lock.yaml
+node_modules/
