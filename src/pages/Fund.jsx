@@ -194,7 +194,6 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
               <option value="Cash">Cash</option>
               <option value="Bkash">Bkash</option>
               <option value="Bank Transfer">Bank Transfer</option>
-              <option value="Rocket">Rocket</option>
             </select>
           </div>
           {validationError && <div className="text-red-500 text-xs">{validationError}</div>}
