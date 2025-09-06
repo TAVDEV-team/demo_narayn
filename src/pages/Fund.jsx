@@ -25,26 +25,11 @@ function safeDateString(raw) {
 }
 
 // --- API helpers ---
-async function handleResponse(res) {
-  const text = await res.text();
-  let data;
-  try { data = text ? JSON.parse(text) : {}; } catch { data = { message: text }; }
-  if (!res.ok) {
-    const message = data?.detail || data?.message || `HTTP ${res.status}`;
-    const error = new Error(message);
-    error.code = res.status;
-    throw error;
-  }
-  return data;
-}
-
-async function fetchBalance(signal) {
-  const headers = await getAuthHeaders();
-  console.log("Balance headers being sent:", headers);  
-  const res = await API.get("/funds/balance/", { method: 'GET', signal, headers });
-
-  const data = await handleResponse(res);
+async function fetchBalance() {
+  const res = await API.get("/funds/balance/");
+  const data = res.data;   // axios automatically parses JSON
   console.log("Balance API response:", data);
+
   if (Array.isArray(data) && data.length > 0) {
     const num = parseFloat(data[0].balance);
     return isNaN(num) ? 0 : num;
@@ -52,22 +37,20 @@ async function fetchBalance(signal) {
   return 0;
 }
 
-async function fetchHistory(signal) {
-  const headers = await getAuthHeaders();
-  console.log("History headers being sent:", headers);   
-  const res = await API.get("/funds/transactions/", { signal, headers });
-  const data = await handleResponse(res);
+async function fetchHistory() {
+  const res = await API.get("/funds/transactions/");
+  const data = res.data;
   console.log("History API response:", data);
+
   return Array.isArray(data) ? data : data.results || [];
 }
 
-
 async function postAddFunds({ amount, reason, type, payment_method, date }, signal) {
-  const headers = { 'Content-Type': 'application/json', ...(await getAuthHeaders()) };
-  const body = JSON.stringify({ type, amount, reason, payment_method, date });
-  const res = await API.post(`/funds/transactions/`, { signal, headers, body });
-  return await handleResponse(res);
+  const body = { type, amount, reason, payment_method, date };
+  const res = await API.post("/funds/transactions/", body, { signal });
+  return res.data;
 }
+
 
 // --- UI Components ---
 function WalletOverview({ balance, onAddClick, loading }) {
@@ -194,7 +177,6 @@ function AddFundsModal({ onClose, onSubmit, currentBalance, submitting, apiError
               <option value="Cash">Cash</option>
               <option value="Bkash">Bkash</option>
               <option value="Bank Transfer">Bank Transfer</option>
-              <option value="Rocket">Rocket</option>
             </select>
           </div>
           {validationError && <div className="text-red-500 text-xs">{validationError}</div>}

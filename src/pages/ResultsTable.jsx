@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SavePDF from "../components/buttons/save_pdf"; 
 import API from "../api/api";
+
 import {
   Users,
   CheckCircle2,
@@ -11,6 +12,8 @@ import {
   Hash,
   Loader2,
 } from "lucide-react";
+
+
 import Loading from "../components/Loading";
 
 export default function ClassResult() {
@@ -151,13 +154,16 @@ export default function ClassResult() {
                   {res.status}
                 </td>
                 <td className="border px-4 py-2 text-center">
-                  <a
-                    href={`/result/card_pdf/${examId}/${classId}/${res.id}/`}
-                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg shadow-md"
-                  >
-                    <FileDown className="w-4 h-4" />
-                    Download
-                  </a>
+            <a
+              href={`${API.defaults.baseURL}/result/card_pdf/${examId}/${classId}/${res.id}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg shadow-md"
+            >
+              <FileDown className="w-4 h-4" />
+              Download
+            </a>
+
                 </td>
               </tr>
             ))}
